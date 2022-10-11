@@ -1,7 +1,7 @@
 import {
     StyleSheet,
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { COLORS } from '../../constant';
 
 const styles = StyleSheet.create({
@@ -21,56 +21,56 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.primaryBackgroungColor,
     },
     profilePictureWrapper: {
-        height: hp('26%'),
-        width: wp('53%'),
-        borderRadius: wp('3%'),
+        height: moderateScale(180),
+        width: moderateScale(180),
+        borderRadius: moderateScale(10),
         backgroundColor: COLORS.secondaryColor,
         justifyContent: 'center',
         alignItems: 'center'
     },
     profileImage: {
-        height: hp('24%'),
-        width: wp('49%'),
+        height: moderateScale(170),
+        width: moderateScale(170),
+        borderRadius: moderateScale(5),
         resizeMode: 'contain',
-        borderRadius: wp('1%')
     },
     cameraButton: {
-        height: hp('5%'),
-        width: wp('10%'),
+        height: moderateScale(35),
+        width: moderateScale(35),
+        borderRadius: moderateScale(35 / 2),
         backgroundColor: COLORS.secondaryColor,
         position: 'absolute',
-        borderRadius: wp('6%'),
-        bottom: hp('2.5%'),
-        right: wp('5%'),
+        bottom: moderateVerticalScale(15),
+        right: moderateScale(15),
         justifyContent: 'center',
         alignItems: 'center'
     },
     cameraImage: {
-        height: hp('3%'),
-        width: wp('6%'),
+        height: moderateScale(22),
+        width: moderateScale(22),
         resizeMode: 'contain',
     },
     formSectionWrapper: {
         flex: 1,
         justifyContent: 'space-between',
-        marginHorizontal: wp('3%'),
+        marginHorizontal: moderateScale(15),
+        //backgroundColor: 'brown'
     },
     buttonSectionWrapper:{
-        height: hp('10%'),
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginHorizontal: wp('2%')
+        marginVertical: moderateVerticalScale(10),
         //backgroundColor: 'yellow'
     },
     updatePasswordlabelWrapper: {
-        height: hp('5%'),
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: hp('2%')
+        marginTop: moderateVerticalScale(25),
+        //backgroundColor: 'pink'
     },
     updatePasswordlabel:{
-        fontSize: wp('4%'),
+        fontSize: scale(15),
         fontWeight: '500',
         color: COLORS.highLightColor,
         textDecorationLine: 'underline'

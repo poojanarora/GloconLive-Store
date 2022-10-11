@@ -9,7 +9,7 @@ import {
 import styles from './styles.js';
 import { images } from '../../constant'
 import IconInput from '../../components/IconInput.jsx';
-import PrimaryButton from '../../components/PrimaryButton.jsx';
+import ButtonComp from '../../components/ButtonComp.jsx';
 
 const Login = ({ navigation }) => {
 
@@ -24,7 +24,7 @@ const Login = ({ navigation }) => {
 
     return(
        <SafeAreaView style={styles.safeAreaViewStyle}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            {/* <ScrollView showsVerticalScrollIndicator={false}> */}
                 <View style={styles.body}>
                     <View style={styles.mainSectionWrapper}>
                         <View style={styles.headerSectionWrapper}>
@@ -37,12 +37,12 @@ const Login = ({ navigation }) => {
                                 <Text style={styles.signUpLabel}>Dont have an account? <Text style={styles.labelPrimary}>Sign Up</Text></Text>
                             </View>
                             <View style={styles.buttonSectionWrapper}>
-                                <PrimaryButton text="Sign In" action={handelLogin} />
+                                <ButtonComp btnText="Sign In" action={handelLogin} />
                             </View>
                         </View>
                     </View>
                 </View>
-            </ScrollView> 
+            {/* </ScrollView>  */}
        </SafeAreaView> 
     )
 };

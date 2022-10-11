@@ -1,7 +1,7 @@
 import {
     StyleSheet,
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { COLORS } from '../../constant';
 
 const styles = StyleSheet.create({
@@ -11,19 +11,27 @@ const styles = StyleSheet.create({
     },
     listSectionWrapper:{
         //backgroundColor: 'yellow',
-        marginHorizontal: wp('2%'),
+        marginHorizontal: moderateScale(15),
         flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
     },
     flatListColumnWrapper:{
         flexWrap: 'wrap',
         justifyContent: 'center',
     },
     listItemWrapper: {
-        height: hp('18%'),
-        width: wp('42%'),
-        marginVertical: hp('1%'),
-        marginHorizontal: hp('1%'),
-        borderRadius: wp('2%'),
+        // height: hp('18%'),
+        // width: wp('42%'),
+        height: moderateScale(100),
+        width: moderateScale(125),
+        //marginVertical: hp('1%'),
+        //marginHorizontal: hp('1%'),
+        //borderRadius: wp('2%'),
+        marginVertical: moderateVerticalScale(4),
+        marginHorizontal: moderateScale(5),
+        borderRadius: moderateScale(10),
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: COLORS.white    
@@ -41,31 +49,28 @@ const styles = StyleSheet.create({
             height: 5,
         },
         shadowOpacity: 0.10,
-        shadowRadius: wp('1%'),
     },
     listItemImage: {
-        width: wp('12%'),
-        height: hp('6%'),
+        height: moderateScale(40),
+        width: moderateScale(40),
         resizeMode: 'contain',
-        marginBottom: hp('1%')
+        marginBottom: moderateVerticalScale(4)
     },
     listItemTitle: {
-        fontSize: wp('4%'),
+        fontSize: scale(12),
         fontWeight: '800',
         color: COLORS.black,
-        marginBottom: hp('0.50%')
+        marginBottom: moderateVerticalScale(2)
     },
     listItemSubTitle: {
-        fontSize: wp('3.5%'),
+        fontSize: scale(10),
         fontWeight: '500',
         color: COLORS.secondaryTextColor
     },
     buttonSectionWrapper: {
         //backgroundColor: 'green',
-        //paddingBottom: hp('4%'),
-        height: hp('10%'),
-        alignItems: 'center',
-        justifyContent: 'center'
+        marginVertical: moderateVerticalScale(10),
+        alignItems: 'center'
     }
 });
 

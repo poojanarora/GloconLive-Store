@@ -5,11 +5,11 @@ import {
     Text,
     TouchableOpacity,
     Image,
-    FlatList
+    ScrollView
 } from 'react-native';
 import styles from './deviceListingStyles';
 import { images } from '../../constant';
-import PrimaryButton from '../../components/PrimaryButton';
+import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 
@@ -23,7 +23,10 @@ const DeviceListing = () => {
         {'id': 5, 'title': 'iPhone Pro', 'sub_title': 'Hardware'},
         {'id': 6, 'title': 'iphone 13', 'sub_title': 'Mobile'},
         {'id': 7, 'title': 'iPhone 12', 'sub_title': 'Mobile'},
-        {'id': 7, 'title': 'iPhone 11', 'sub_title': 'Mobile'},
+        {'id': 8, 'title': 'iPhone 11', 'sub_title': 'Mobile'},
+        {'id': 9, 'title': 'iphone 13', 'sub_title': 'Mobile'},
+        {'id': 10, 'title': 'iPhone 12', 'sub_title': 'Mobile'},
+        {'id': 11, 'title': 'iPhone 11', 'sub_title': 'Mobile'},
     ];
     const [addDeviceModalVisible, setAddDeviceModalVisible] = useState(false);
 
@@ -42,21 +45,18 @@ const DeviceListing = () => {
         setAddDeviceModalVisible(false);
     };
 
-
-    const Item = ({ item }) => {
+    const renderDevicetListing = () => {
         return(
-            <TouchableOpacity style={[styles.listItemWrapper, styles.shadow]}>
-                <Image style={styles.listItemImage} source={images.ipad} />
-                <Text style={[styles.listItemTitle]}>{item.title}</Text>
-                <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text>
-            </TouchableOpacity>
-        );
-    };
-
-    const renderItem = ({ item }) => {
-        return(
-            <Item item={item} />
-        );
+            devices.map((item, key) => {
+                return(
+                    <TouchableOpacity key={item.id} style={[styles.listItemWrapper, styles.shadow]}>
+                        <Image style={styles.listItemImage} source={images.ipad} />
+                        <Text style={[styles.listItemTitle]}>{item.title}</Text>
+                        <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text>
+                    </TouchableOpacity>
+                )
+            })
+        )
     };
 
     const renderAddDeviceModal = () => {
@@ -67,6 +67,7 @@ const DeviceListing = () => {
                 title="Add Devices"
                 subTitle="Please add new device."
                 primaryButtonText="Add"
+                dangerButtonText="Cancel"
             >
                 <IconInputWithoutLabel placeholder="New Department dropdown" name="newDevice" showIcon={true} icon={images.tick} error={false} errorMessage="Please select new device." />
                 <IconInputWithoutLabel placeholder="Assign Department" name="newDepartment" showIcon={true} icon={images.tick} error={false} errorMessage="Please assign department." />
@@ -77,26 +78,13 @@ const DeviceListing = () => {
     return(
         <View style={styles.body}>
             {renderAddDeviceModal()}
-            <View style={styles.listSectionWrapper}>
-                <FlatList
-                    data={devices}
-                    //onRefresh={() => fetchRecipients()}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    showsVerticalScrollIndicator={false}
-                    numColumns={4} // set number of columns 
-                    columnWrapperStyle={styles.flatListColumnWrapper}
-                    //refreshing={isRecipientListingLoading}
-                    // ItemSeparatorComponent={(props) => {
-                    //     return (
-                    //         <View style={{ marginHorizontal: wp('1%'), height: hp('0.10%'), backgroundColor: COLORS.imageBorderSecondary}} />
-                    //     );
-                    // }}
-                    //ListEmptyComponent={<FlatlistNoRecordFound />}
-                />
-            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.listSectionWrapper}>
+                    {renderDevicetListing()}
+                </View>
+            </ScrollView>
             <View style={styles.buttonSectionWrapper}>
-                <PrimaryButton text="Add Devices" action={showModal}/>
+                <ButtonComp btnText="Add Devices" action={showModal} />
             </View>
         </View>
     )

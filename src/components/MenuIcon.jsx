@@ -3,7 +3,7 @@ import {
     Image,
     TouchableOpacity
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { moderateScale } from 'react-native-size-matters';
 import { images } from "../constant";
 
 const MenuIcon = (props) => {
@@ -14,7 +14,7 @@ const MenuIcon = (props) => {
 
     return(
         <TouchableOpacity onPress={handelMenuIconClick}>
-            <Image style={{width: wp('9%'), height: hp('5%'), resizeMode: 'contain'}} source={images.menu} />
+            <Image style={{width: moderateScale(30), height: moderateScale(30), resizeMode: 'contain'}} source={images.menu} />
         </TouchableOpacity>
     )
 }

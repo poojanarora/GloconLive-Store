@@ -6,7 +6,7 @@ import {
     TextInput,
     Image
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { COLORS } from "../constant";
 
 const IconInput = (props) => {
@@ -43,51 +43,50 @@ const IconInput = (props) => {
 
 const styles = StyleSheet.create({
     inputSectionWrapper: {
-        height: hp('10%'),
         flexDirection: 'row',
         backgroundColor: COLORS.white,
-        marginHorizontal: wp('3%'),
-        marginTop: hp('3%'),
-        borderRadius: wp('1.5%'),
+        marginTop: moderateVerticalScale(25),
+        borderRadius: moderateScale(5),
         elevation: 5,
     },
     error:{
-        borderWidth: wp('0.30%'),
+        borderWidth: 1,
         borderColor: 'red'
     },
     errorMessageWrapper:{
-        //backgroundColor: 'yellow',
-        marginHorizontal: wp('4%'),
-        marginTop: hp('1%'),
+        marginHorizontal: moderateScale(5),
+        marginTop: moderateVerticalScale(2),
     },
     errorMessage: {
+        fontSize: scale(12),
+        color: 'red'
     },
     inputLeftSectionWrapper: {
         flex: 5,
         justifyContent: 'center',
     },
     inputWrapper: {
-        paddingLeft: wp('3%'),
+        paddingLeft: moderateScale(10),
     },
     inputLabel: {
-        marginHorizontal: hp('0.50%'),
-        marginTop: hp('1%'),
-        fontSize: wp('4%')
+        marginHorizontal: moderateScale(5),
+        marginTop: moderateVerticalScale(10),
+        fontSize: scale(12)
     },
     input: {
-        height: hp('5%'),
-        fontSize: wp('4%'),
+        paddingVertical: moderateVerticalScale(2),
+        fontSize: scale(12),
         fontWeight: '500',
-        color:COLORS.black
+        color:COLORS.black,
     },
     inputRightSectionWrapper: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        //backgroundColor: 'blue'
     },
     iconImage:{
-        width: wp('6%'),
+        width: moderateScale(20),
+        height: moderateScale(20),
         resizeMode: 'contain',
     }
 });

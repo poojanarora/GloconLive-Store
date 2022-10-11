@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     StyleSheet,
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { COLORS, images } from '../constant';
 
 const CustomDrawerScreen = (props) => {
@@ -77,8 +77,6 @@ const styles = StyleSheet.create({
     },
     drawerContentWrapper: {
         flex: 1,
-        marginVertical: hp('5%'),
-        marginHorizontal: wp('5%'),
         //backgroundColor: 'blue'
     },
     drawerTopSection: {
@@ -87,40 +85,42 @@ const styles = StyleSheet.create({
     },
     drawerBottomSection: {
         //backgroundColor: 'pink',
-        paddingHorizontal: wp('2%'),
+        paddingHorizontal: moderateScale(20),
+        paddingVertical: moderateVerticalScale(10)
     },
     drawerHeaderWrapper: {
-        height: hp('15%'),
+        height: moderateScale(100),
         justifyContent: 'center',
-        paddingLeft: wp('2%'),
+        paddingLeft: moderateScale(20),
         //backgroundColor: 'yellow'
     },
     logoLabel: {
-        fontSize: wp('7%'),
+        fontSize: scale(25),
         fontWeight: '500',
         color: COLORS.primaryTextColor
     },
     drawerListWrapper: {
-        //height: hp('70%'),
-        paddingHorizontal: wp('2%'),
+        flex: 1,
+        paddingHorizontal: moderateScale(15),
         //backgroundColor: 'orange'
     },
     drawerListItem: {
         flexDirection: 'row',
-        height: hp('5%'),
+        height: moderateScale(30),
         //backgroundColor: 'green',
-        marginBottom: hp('1%'),
+        marginBottom: moderateScale(8),
         alignItems: 'center',
-        borderRadius: wp('2%')
+        borderRadius: moderateScale(5)
     },
     iconImage: {
-        width: wp('5%'),
+        width: moderateScale(20),
+        height: moderateScale(20),
         resizeMode: 'contain',
-        marginLeft: wp('2%'),
-        marginRight: wp('3%'),
+        marginLeft: moderateScale(5),
+        marginRight: moderateScale(8),
     },
     listLabel: {
-        fontSize: wp('4%'),
+        fontSize: scale(15),
         fontWeight: '400',
         color: COLORS.black
     },

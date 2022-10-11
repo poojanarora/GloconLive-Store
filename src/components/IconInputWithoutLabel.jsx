@@ -6,7 +6,7 @@ import {
     TextInput,
     Image
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { COLORS } from "../constant";
 
 const IconInputWithoutLabel = (props) => {
@@ -45,12 +45,11 @@ const IconInputWithoutLabel = (props) => {
 
 const styles = StyleSheet.create({
     inputSectionWrapper: {
-        height: hp('8%'),
         flexDirection: 'row',
         backgroundColor: COLORS.white,
-        marginHorizontal: wp('4%'),
-        marginTop: hp('3%'),
-        borderRadius: wp('1.5%'),
+        marginHorizontal: moderateScale(15),
+        marginTop: moderateScale(15),
+        borderRadius: moderateScale(5),
         shadowOffset: {
             width: 0,
             height: 3,
@@ -60,13 +59,13 @@ const styles = StyleSheet.create({
         elevation: 4
     },
     error:{
-        borderWidth: wp('0.30%'),
+        borderWidth: 1,
         borderColor: 'red'
     },
     errorMessageWrapper:{
         //backgroundColor: 'yellow',
-        marginHorizontal: wp('4%'),
-        marginTop: hp('1%'),
+        marginHorizontal: moderateScale(15),
+        marginTop: moderateVerticalScale(2),
     },
     errorMessage: {
         color: 'red'
@@ -76,12 +75,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     inputWrapper: {
-        paddingLeft: wp('3%'),
+        paddingLeft: moderateScale(10),
         //backgroundColor: 'yellow',
     },
     input: {
-        height: hp('6%'),
-        fontSize: wp('4%'),
+        paddingVertical: moderateVerticalScale(8),
+        fontSize: scale(12),
         fontWeight: '500',
         color:COLORS.black,
         //backgroundColor: 'orange',
@@ -93,7 +92,8 @@ const styles = StyleSheet.create({
         //backgroundColor: 'blue'
     },
     iconImage:{
-        width: wp('6%'),
+        width: moderateScale(20),
+        height: moderateScale(20),
         resizeMode: 'contain',
     }
 });

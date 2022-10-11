@@ -6,11 +6,11 @@ import {
     TouchableOpacity,
     Image,
 } from 'react-native';
+import { scale, moderateScale } from 'react-native-size-matters';
 import styles from './viewProfileStyles';
-import { images } from '../../constant';
+import { COLORS, images } from '../../constant';
 import IconInput from '../../components/IconInput';
-import PrimaryButton from '../../components/PrimaryButton';
-import SecondaryButton from '../../components/SecondaryButton';
+import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 
@@ -90,8 +90,29 @@ const ViewProfile = () => {
                         
                     </View>
                     <View style={styles.buttonSectionWrapper}>
-                        <SecondaryButton text="Upload Store Video" height="6%" width="50%" action={showAddStoreVideoModal} />
-                        <PrimaryButton text="SAVE" height="6%" width="35%" />
+                        <ButtonComp 
+                            btnText="Upload Store Video" 
+                            action={showAddStoreVideoModal}
+                            btnStyle={{
+                                backgroundColor: COLORS.secondaryColor,
+                                width: moderateScale(160),
+                                shadowColor: COLORS.secondaryColor,
+                            }}
+                            btnTextStyle={{
+                                fontSize: scale(14),
+                                color: COLORS.black,
+                            }}
+                        />
+
+                        <ButtonComp 
+                            btnText="SAVE" 
+                            btnStyle={{
+                                width: moderateScale(100),
+                            }}
+                            btnTextStyle={{
+                                fontSize: scale(14),
+                            }}
+                        />
                     </View>
                 </View>
                 

@@ -7,41 +7,57 @@ import {
     Image,
     Modal
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { COLORS, images } from '../constant';
-import PrimaryButton from './PrimaryButton';
-import DangerButton from './DangerButton';
+import ButtonComp from './ButtonComp';
 
 const PopupModal = (props) => {
     return(
-        // <View style={styles.centeredView}>
-            <Modal
-                animationType="slide"
-                transparent={false}
-                visible={props.show}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <View style={styles.modalContentWrapper}>
-                            <TouchableOpacity style={styles.modalCloseButtonWrapper} onPress={props.closeAction}>
-                                <Image style={styles.modalCloseImage} source={images.close} />
-                            </TouchableOpacity>
-                            <View style={styles.modalHeaderWrapper}>
-                                <Text style={styles.modalTitle}>{props.title}</Text>
-                                <Text style={styles.modalSubTitle}>{props.subTitle}</Text>
-                            </View>
-                            <View style={styles.modalBodyWrapper}>
-                                {props.children}
-                            </View>
-                            <View style={styles.modalFooterWrapper}>
-                                <DangerButton text={props.dangerButtonText} height="6%" width="35%" action={props.closeAction} />
-                                <PrimaryButton text={props.primaryButtonText} height="6%" width="25%" />
-                            </View>
+        <Modal
+            animationType="slide"
+            transparent={false}
+            visible={props.show}
+        >
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    <View style={styles.modalContentWrapper}>
+                        <TouchableOpacity style={styles.modalCloseButtonWrapper} onPress={props.closeAction}>
+                            <Image style={styles.modalCloseImage} source={images.close} />
+                        </TouchableOpacity>
+                        <View style={styles.modalHeaderWrapper}>
+                            <Text style={styles.modalTitle}>{props.title}</Text>
+                            <Text style={styles.modalSubTitle}>{props.subTitle}</Text>
+                        </View>
+                        <View style={styles.modalBodyWrapper}>
+                            {props.children}
+                        </View>
+                        <View style={styles.modalFooterWrapper}>
+                            <ButtonComp 
+                                btnStyle={{
+                                    width: moderateScale(100),
+                                    backgroundColor: COLORS.dangerButtonColor,
+                                    shadowColor: COLORS.dangerButtonColor,
+                                }}
+                                btnTextStyle={{
+                                    fontSize: scale(14),
+                                }}
+                                btnText={props.dangerButtonText}
+                                action={props.closeAction}
+                            />
+                            <ButtonComp 
+                                btnStyle={{
+                                    width: moderateScale(100),
+                                }}
+                                btnTextStyle={{
+                                    fontSize: scale(14),
+                                }}
+                                btnText={props.primaryButtonText}
+                            />
                         </View>
                     </View>
                 </View>
-            </Modal>
-        // </View>
+            </View>
+        </Modal>
     )
 }
 
@@ -54,10 +70,9 @@ const styles = StyleSheet.create({
     },
     modalView: {
         backgroundColor: "white",
-        paddingBottom: hp('4%'),
-        //height: hp('40%'),
-        width: wp('85%'),
-        borderRadius: wp('3%'),
+        paddingBottom: moderateVerticalScale(15),
+        width: moderateScale(300),
+        borderRadius:moderateScale(10),
         shadowColor: "#000",
         shadowOffset: {
         width: 0,
@@ -69,40 +84,41 @@ const styles = StyleSheet.create({
     },
     modalContentWrapper:{},
     modalHeaderWrapper: {
-        marginTop: hp('5%'),
+        marginTop: moderateVerticalScale(15),
         alignItems: 'center'
     },
     modalTitle: {
-        fontSize: wp('5%'),
+        fontSize: scale(18),
         color: COLORS.black,
         fontWeight: '400'
     },
     modalSubTitle: {
-        fontSize: wp('3.5%'),
+        fontSize: scale(12),
         fontWeight: '500',
         color: COLORS.secondaryTextColor,
-        marginTop: hp('1%')
+        marginTop: moderateVerticalScale(6)
     },
     modalBodyWrapper: {
-        marginTop: hp('1%'),
+        marginTop: moderateVerticalScale(6)
     },
     modalFooterWrapper:{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginHorizontal: wp('4%'),
-        marginTop: wp('10%'),
+        marginHorizontal: moderateScale(15),
+        marginTop: moderateVerticalScale(25)
     },
     modalCloseButtonWrapper: {
-        height: hp('8%'),
-        width: wp('16%'),
+        height: moderateScale(40),
+        width: moderateScale(40),
         position: 'absolute',
-        right: wp('0%'),
+        right: moderateScale(2),
         justifyContent: 'center',
         alignItems: 'center',
+        //backgroundColor: 'red'
     },
     modalCloseImage: {
-        width: wp('8%'),
-        height: hp('4%'),
+        width:moderateScale(25),
+        height: moderateScale(25),
         resizeMode: 'contain',
     }
 });

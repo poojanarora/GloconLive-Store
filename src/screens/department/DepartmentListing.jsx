@@ -5,11 +5,11 @@ import {
     Text,
     TouchableOpacity,
     Image,
-    FlatList
+    ScrollView
 } from 'react-native';
 import styles from './departmentListingStyles';
 import { images } from '../../constant';
-import PrimaryButton from '../../components/PrimaryButton';
+import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 
@@ -23,7 +23,11 @@ const DepartmentListing = () => {
         {'id': 5, 'title': 'Shirts', 'sub_title': '2 Devices'},
         {'id': 6, 'title': 'Tshirts', 'sub_title': '2 Devices'},
         {'id': 7, 'title': 'Accessories', 'sub_title': '2 Devices'},
-        {'id': 7, 'title': 'Mobiles', 'sub_title': '2 Devices'},
+        {'id': 8, 'title': 'Mobiles', 'sub_title': '2 Devices'},
+        {'id': 9, 'title': 'Accessories', 'sub_title': '2 Devices'},
+        {'id': 10, 'title': 'Mobiles', 'sub_title': '2 Devices'},
+        {'id': 11, 'title': 'Accessories', 'sub_title': '2 Devices'},
+        {'id': 12, 'title': 'Mobiles', 'sub_title': '2 Devices'},
     ];
     const [addDepartmentModalVisible, setAddDepartmentModalVisible] = useState(false);
 
@@ -43,23 +47,19 @@ const DepartmentListing = () => {
     };
 
 
-    const Item = ({ item }) => {
+    const renderDepartmentListing = () => {
         return(
-            <TouchableOpacity style={[styles.listItemWrapper, styles.shadow]}>
-                <Image style={styles.listItemImage} source={images.demo1} />
-                <Text style={[styles.listItemTitle]}>{item.title}</Text>
-                <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text>
-            </TouchableOpacity>
-        );
+            departments.map((item, key) => {
+                return(
+                    <TouchableOpacity key={item.id} style={[styles.listItemWrapper, styles.shadow]}>
+                        <Image style={styles.listItemImage} source={images.demo1} />
+                        <Text style={[styles.listItemTitle]}>{item.title}</Text>
+                        <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text>
+                    </TouchableOpacity>
+                )
+            })
+        )
     };
-
-    const renderItem = ({ item }) => {
-        return(
-            <Item item={item} />
-        );
-    };
-
-
 
     const renderAddDepartmentModal = () => {
         return(
@@ -69,6 +69,7 @@ const DepartmentListing = () => {
                 title="Add Department"
                 subTitle="Please add new department."
                 primaryButtonText="Add"
+                dangerButtonText="Cancel"
             >
                 <IconInputWithoutLabel placeholder="New Department Name here" name="newDepartment" showIcon={true} icon={images.tick} error={false} errorMessage="Please enter new department name." />
             </PopupModal>
@@ -78,26 +79,13 @@ const DepartmentListing = () => {
     return(
         <View style={styles.body}>
             {renderAddDepartmentModal()}
+            <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.listSectionWrapper}>
-                <FlatList
-                    data={departments}
-                    //onRefresh={() => fetchRecipients()}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    showsVerticalScrollIndicator={false}
-                    numColumns={4} // set number of columns 
-                    columnWrapperStyle={styles.flatListColumnWrapper}
-                    //refreshing={isRecipientListingLoading}
-                    // ItemSeparatorComponent={(props) => {
-                    //     return (
-                    //         <View style={{ marginHorizontal: wp('1%'), height: hp('0.10%'), backgroundColor: COLORS.imageBorderSecondary}} />
-                    //     );
-                    // }}
-                    //ListEmptyComponent={<FlatlistNoRecordFound />}
-                />
+                {renderDepartmentListing()}
             </View>
+            </ScrollView>
             <View style={styles.buttonSectionWrapper}>
-                <PrimaryButton text="Add Department" action={showModal}/>
+                <ButtonComp btnText="Add Department" action={showModal} />
             </View>
         </View>
     )

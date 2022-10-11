@@ -1,7 +1,7 @@
 import {
     StyleSheet
 } from 'react-native';
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { scale } from 'react-native-size-matters';
 import { COLORS } from '../../constant';
 
 const styles = StyleSheet.create({
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     logoLabel: {
-        fontSize: wp('10%'),
+        fontSize: scale(35),
         fontWeight: '500',
         color: COLORS.white
     }
