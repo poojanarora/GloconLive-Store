@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         marginHorizontal: moderateScale(18)
     },
     listItemWrapper: {
-        height : moderateScale(65),
+        height : moderateScale(75),
         borderRadius: moderateScale(5),
         elevation: 5,
         shadowColor: COLORS.primaryBackgroungDarkColor,
@@ -40,12 +40,12 @@ const styles = StyleSheet.create({
 
     },
     listItemTitle: {
-        fontSize: scale(15),
+        fontSize: scale(14),
         fontWeight: '800',
         color: COLORS.black
     },
     listItemSubTitle: {
-        fontSize: scale(12),
+        fontSize: scale(10),
         fontWeight: '500',
         marginTop: moderateVerticalScale(5),
         color: COLORS.secondaryTextColor

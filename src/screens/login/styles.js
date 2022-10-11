@@ -34,21 +34,21 @@ const styles = StyleSheet.create({
         marginVertical: moderateVerticalScale(5),
     },
     signUpLabelWrapper:{
-        marginTop: moderateVerticalScale(30),
+        marginTop: moderateVerticalScale(40),
         justifyContent: 'center',
         alignItems: 'center'
     },
     signUpLabel: {
         color: COLORS.secondaryTextColor,
-        fontSize: scale(15)
+        fontSize: scale(12)
     },
     labelPrimary: {
         color: COLORS.primaryTextColor,
-        fontSize: scale(15),
+        fontSize: scale(12),
         fontWeight: '700'
     },
     buttonSectionWrapper:{
-        marginTop: moderateVerticalScale(20),
+        marginTop: moderateVerticalScale(30),
         justifyContent: 'center',
         alignItems: 'center'
     }

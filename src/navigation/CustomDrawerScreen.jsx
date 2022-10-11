@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     },
     drawerListItem: {
         flexDirection: 'row',
-        height: moderateScale(30),
+        height: moderateScale(35),
         //backgroundColor: 'green',
         marginBottom: moderateScale(8),
         alignItems: 'center',
@@ -116,11 +116,11 @@ const styles = StyleSheet.create({
         width: moderateScale(20),
         height: moderateScale(20),
         resizeMode: 'contain',
-        marginLeft: moderateScale(5),
+        marginLeft: moderateScale(8),
         marginRight: moderateScale(8),
     },
     listLabel: {
-        fontSize: scale(15),
+        fontSize: scale(12),
         fontWeight: '400',
         color: COLORS.black
     },
