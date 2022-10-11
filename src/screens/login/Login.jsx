@@ -34,7 +34,7 @@ const Login = ({ navigation }) => {
                             <IconInput label="Email" placeholder="mynamein@gmail.com" name="email" icon={images.tick} isSecure={false} error={false} errorMessage="Please enter email" />
                             <IconInput label="Password" placeholder="********" name="password" icon={images.password_hidden_eye} isSecure={true} error={false} errorMessage="Please enter password" />
                             <View style={styles.signUpLabelWrapper}>
-                                <Text style={styles.signUpLabel}>Dont have an account? <Text style={styles.labelPrimary}>Sign Up</Text></Text>
+                                <Text style={styles.signUpLabel}>Don't have an account? <Text style={styles.labelPrimary}>Sign Up</Text></Text>
                             </View>
                             <View style={styles.buttonSectionWrapper}>
                                 <ButtonComp btnText="Sign In" action={handelLogin} />

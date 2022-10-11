@@ -2,12 +2,15 @@ import * as React from 'react';
 import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import { Dimensions } from 'react-native'
 import CustomDrawerScreen from './CustomDrawerScreen';
 import IncomingCallStackScreen from './IncomingCallStackScreen';
 import LocationStackScreen from './LocationStackScreen';
 import ProfileStackScreen from './ProfileStackScreen';
 
 const DrawerScreen = () => {
+    const windowWidth = Dimensions.get('window').width;
+    const drawerWidth = windowWidth*70/100
     const Drawer = createDrawerNavigator();
     return(
         
@@ -16,7 +19,7 @@ const DrawerScreen = () => {
             
             screenOptions={{ 
                 headerShown: false, //This will hide header from all the screens
-                drawerStyle: {width: '70%' }
+                drawerStyle: {width: drawerWidth }
                 //drawerPosition: 'left',
                 //drawerType: 'front',
                 // headerTitleAlign: "center",
