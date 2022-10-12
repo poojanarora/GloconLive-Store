@@ -22,15 +22,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     listItemWrapper: {
-        // height: hp('18%'),
-        // width: wp('42%'),
-        height: moderateScale(100),
-        width: moderateScale(125),
-        //marginVertical: hp('1%'),
-        //marginHorizontal: hp('1%'),
-        //borderRadius: wp('2%'),
-        marginVertical: moderateVerticalScale(4),
-        marginHorizontal: moderateScale(5),
+        height: moderateScale(125),
+        width: moderateScale(150),
+        marginVertical: moderateVerticalScale(6),
+        marginHorizontal: moderateScale(6),
         borderRadius: moderateScale(10),
         justifyContent: 'center',
         alignItems: 'center',
@@ -57,13 +52,13 @@ const styles = StyleSheet.create({
         marginBottom: moderateVerticalScale(4)
     },
     listItemTitle: {
-        fontSize: scale(12),
+        fontSize: scale(10),
         fontWeight: '800',
         color: COLORS.black,
         marginBottom: moderateVerticalScale(2)
     },
     listItemSubTitle: {
-        fontSize: scale(10),
+        fontSize: scale(9),
         fontWeight: '500',
         color: COLORS.secondaryTextColor
     },

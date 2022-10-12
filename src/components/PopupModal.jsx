@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
     modalView: {
         backgroundColor: "white",
         paddingBottom: moderateVerticalScale(15),
-        width: moderateScale(300),
+        //height: moderateScale(400),
+        width: moderateScale(400),
         borderRadius:moderateScale(10),
         shadowColor: "#000",
         shadowOffset: {
@@ -88,28 +89,28 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     modalTitle: {
-        fontSize: scale(18),
+        fontSize: scale(15),
         color: COLORS.black,
-        fontWeight: '400'
+        fontWeight: '600'
     },
     modalSubTitle: {
-        fontSize: scale(12),
+        fontSize: scale(11),
         fontWeight: '500',
         color: COLORS.secondaryTextColor,
         marginTop: moderateVerticalScale(6)
     },
     modalBodyWrapper: {
-        marginTop: moderateVerticalScale(6)
+        marginTop: moderateVerticalScale(10)
     },
     modalFooterWrapper:{
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginHorizontal: moderateScale(15),
-        marginTop: moderateVerticalScale(25)
+        marginTop: moderateVerticalScale(40)
     },
     modalCloseButtonWrapper: {
-        height: moderateScale(40),
-        width: moderateScale(40),
+        height: moderateScale(45),
+        width: moderateScale(45),
         position: 'absolute',
         right: moderateScale(2),
         justifyContent: 'center',
@@ -117,8 +118,8 @@ const styles = StyleSheet.create({
         //backgroundColor: 'red'
     },
     modalCloseImage: {
-        width:moderateScale(25),
-        height: moderateScale(25),
+        width:moderateScale(30),
+        height: moderateScale(30),
         resizeMode: 'contain',
     }
 });

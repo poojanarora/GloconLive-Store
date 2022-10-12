@@ -66,11 +66,11 @@ const styles = StyleSheet.create({
     updatePasswordlabelWrapper: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: moderateVerticalScale(25),
+        marginTop: moderateVerticalScale(35),
         //backgroundColor: 'pink'
     },
     updatePasswordlabel:{
-        fontSize: scale(15),
+        fontSize: scale(12),
         fontWeight: '500',
         color: COLORS.highLightColor,
         textDecorationLine: 'underline'

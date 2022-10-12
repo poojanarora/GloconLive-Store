@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: COLORS.white,
         marginHorizontal: moderateScale(15),
-        marginTop: moderateScale(15),
+        marginTop: moderateScale(20),
         borderRadius: moderateScale(5),
         shadowOffset: {
             width: 0,
@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
         marginTop: moderateVerticalScale(2),
     },
     errorMessage: {
-        color: 'red'
+        color: 'red',
+        fontSize: scale(12)
     },
     inputLeftSectionWrapper: {
         flex: 5,
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
         //backgroundColor: 'yellow',
     },
     input: {
-        paddingVertical: moderateVerticalScale(8),
+        paddingVertical: moderateVerticalScale(20),
         fontSize: scale(12),
         fontWeight: '500',
         color:COLORS.black,

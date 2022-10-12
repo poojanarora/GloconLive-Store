@@ -71,13 +71,14 @@ const styles = StyleSheet.create({
     inputLabel: {
         marginHorizontal: moderateScale(5),
         marginTop: moderateVerticalScale(10),
-        fontSize: scale(12)
+        fontSize: scale(10)
     },
     input: {
-        paddingVertical: moderateVerticalScale(2),
-        fontSize: scale(12),
+        paddingVertical: moderateVerticalScale(10),
+        fontSize: scale(10),
         fontWeight: '500',
         color:COLORS.black,
+        paddingLeft: moderateScale(5),
     },
     inputRightSectionWrapper: {
         flex: 1,

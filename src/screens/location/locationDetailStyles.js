@@ -12,17 +12,17 @@ const styles = StyleSheet.create({
     },
     headerSectionWrapper: {
         alignItems: 'center',
-        paddingTop: moderateVerticalScale(15),
+        paddingTop: moderateVerticalScale(25),
         //backgroundColor: 'orange'
     },
     headerTitle: {
-        fontSize: scale(20),
-        fontWeight: '700',
+        fontSize: scale(18),
+        fontWeight: '800',
         color: COLORS.black,
         marginBottom: moderateScale(5)
     },
     headerSubTitle: {
-        fontSize: scale(14),
+        fontSize: scale(12),
         fontWeight: '400',
         color: COLORS.black,
         marginBottom: moderateScale(20)
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     optionWrapper: {
         flexDirection: 'row',
         height: moderateScale(40),
-        width: moderateScale(240),
+        width: moderateScale(280),
         borderRadius: moderateScale(5),
         shadowOffset: {
             width: 0,

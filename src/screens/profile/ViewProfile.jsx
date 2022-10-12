@@ -95,11 +95,11 @@ const ViewProfile = () => {
                             action={showAddStoreVideoModal}
                             btnStyle={{
                                 backgroundColor: COLORS.secondaryColor,
-                                width: moderateScale(160),
+                                width: moderateScale(190),
                                 shadowColor: COLORS.secondaryColor,
                             }}
                             btnTextStyle={{
-                                fontSize: scale(14),
+                                fontSize: scale(12),
                                 color: COLORS.black,
                             }}
                         />
@@ -110,7 +110,7 @@ const ViewProfile = () => {
                                 width: moderateScale(100),
                             }}
                             btnTextStyle={{
-                                fontSize: scale(14),
+                                fontSize: scale(12),
                             }}
                         />
                     </View>
