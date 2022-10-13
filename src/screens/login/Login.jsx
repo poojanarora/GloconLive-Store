@@ -4,26 +4,107 @@ import {
     View,
     Text,
     ScrollView,
-    useWindowDimensions
 } from 'react-native';
 import styles from './styles.js';
 import { images } from '../../constant'
 import IconInput from '../../components/IconInput.jsx';
 import ButtonComp from '../../components/ButtonComp.jsx';
+import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC.js';
+import axiosPublic from "../../config/api.js";
+import showAlertPopup from "../../components/AlertComp";
+import useSetAuth from "../../hooks/useSetAuth.js";
+import { localStorageSetItem } from '../../hooks/useAsyncStorage.js';
+
+const OverlaySpinner = OverlaySpinnerHOC(View);
+
+const initialFormValues = {
+    email: "",
+    password: ""
+};
+
+const initialErrors = {
+    email: "",
+    password: "",
+};
 
 const Login = ({ navigation }) => {
 
-    const { height, width } = useWindowDimensions();
-    console.log('Height of device is ',height);
-    console.log('width of device is ',width);
+    const setAuth = useSetAuth();
+    const [isLoading, setIsLoading] = useState(false);
+    const [formValues, setFormValues] = useState(initialFormValues);
+    const [formErrors, setFormErrors] = useState(initialErrors);
 
-    const handelLogin = () => {
-        console.log('Clicked on login');
-        navigation.replace('PrivateStackScreen');
-    }
+    const handelEmail = (e) => {
+        setFormValues({
+            ...formValues,
+            email: e
+        });
+    };
+
+    const handelPassword = (e) => {
+        setFormValues({
+            ...formValues,
+            password: e
+        });
+    };
+
+    const validate = (values) => {
+        let errors = {};
+        if(!values.email){
+            errors.email = 'Please enter email.';
+        } else {
+            const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+            const emailValidCheck = emailRegExp.test(values.email);
+            if(emailValidCheck === false) {
+                errors.email = 'Please enter a valid email address.';
+            }
+        }
+        if(!values.password){
+            errors.password = 'Please enter password.';
+        }
+        return errors;
+    };
+
+    const handelLogin = async () => {
+        try {
+            let validateResponse = validate(formValues);
+            if(Object.keys(validateResponse).length > 0) {
+                setFormErrors(validateResponse);
+            }
+            else {
+                setIsLoading(true);
+                let response = await axiosPublic.post("/store/login", formValues);
+                if(true) {
+                    let obj = {
+                        id: 101,
+                        name: "Sohel Patel",
+                        emailId: "sohelahr@gmail.com",
+                        accessToken: "d87a887985433f6368c9648d9d9fd5b9",
+                        isLoggedIn: true
+                    };
+                    setAuth(obj);
+                    localStorageSetItem(obj);
+                    setIsLoading(false);
+                    navigation.replace('PrivateStackScreen');
+                } else {
+                    setIsLoading(false);
+                    showAlertPopup("Opps", response.data?.message, "Cancel");
+                }
+            }
+        } catch(error) {
+            console.log("In catch block");
+            setIsLoading(false);
+            if(error?.message === "Network Error") {
+                showAlertPopup(error?.message, "Please check your internet connectivity.", 'Ok');
+            } else {
+                showAlertPopup("Opps", error?.message, 'Cancel');
+            }
+        }
+    };
 
     return(
        <SafeAreaView style={styles.safeAreaViewStyle}>
+        <OverlaySpinner isLoading={isLoading}>
             {/* <ScrollView showsVerticalScrollIndicator={false}> */}
                 <View style={styles.body}>
                     <View style={styles.mainSectionWrapper}>
@@ -31,8 +112,26 @@ const Login = ({ navigation }) => {
                             <Text style={styles.logoLabel}>GLOCON Live</Text>
                         </View>
                         <View style={styles.formSectionWrapper}>
-                            <IconInput label="Email" placeholder="mynamein@gmail.com" name="email" icon={images.tick} isSecure={false} error={false} errorMessage="Please enter email" />
-                            <IconInput label="Password" placeholder="********" name="password" icon={images.password_hidden_eye} isSecure={true} error={false} errorMessage="Please enter password" />
+                            <IconInput 
+                                label="Email" 
+                                placeholder="mynamein@gmail.com" 
+                                name="email" 
+                                value={formValues.email}
+                                icon={images.tick} 
+                                isSecure={false} 
+                                error={formErrors.email} 
+                                onChangeText={handelEmail}
+                            />
+                            <IconInput 
+                                label="Password" 
+                                placeholder="********" 
+                                name="password" 
+                                value={formValues.password}
+                                icon={images.password_hidden_eye} 
+                                isSecure={true} 
+                                error={formErrors.password}   
+                                onChangeText={handelPassword}
+                            />
                             <View style={styles.signUpLabelWrapper}>
                                 <Text style={styles.signUpLabel}>Dont have an account? <Text style={styles.labelPrimary}>Sign Up</Text></Text>
                             </View>
@@ -43,6 +142,7 @@ const Login = ({ navigation }) => {
                     </View>
                 </View>
             {/* </ScrollView>  */}
+            </OverlaySpinner>
        </SafeAreaView> 
     )
 };

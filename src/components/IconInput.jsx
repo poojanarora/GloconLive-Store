@@ -12,7 +12,7 @@ import { COLORS } from "../constant";
 const IconInput = (props) => {
     return(
         <>
-        <View style={[styles.inputSectionWrapper, (props.error === true) && styles.error]}>
+        <View style={[styles.inputSectionWrapper, (props.error.length > 0) && styles.error]}>
             <View style={styles.inputLeftSectionWrapper}>
                 <View style={styles.inputWrapper}>
                     <Text style={styles.inputLabel}>{props.label}</Text>
@@ -21,6 +21,8 @@ const IconInput = (props) => {
                         placeholder={props.placeholder}
                         name={props.name}
                         secureTextEntry={props.isSecure}
+                        value={props.value}
+                        onChangeText={props.onChangeText}
                     />
                 </View>
                 
@@ -30,9 +32,9 @@ const IconInput = (props) => {
             </View>
         </View>
         {
-            (props.error === true) && (
+            (props.error.length > 0) && (
                 <View style={styles.errorMessageWrapper}>
-                    <Text style={styles.errorMessage}>{props.errorMessage}</Text>
+                    <Text style={styles.errorMessage}>{props.error}</Text>
                 </View>
             )
         }

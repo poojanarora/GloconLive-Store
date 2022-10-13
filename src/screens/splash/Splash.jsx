@@ -5,13 +5,19 @@ import {
     Text
 } from 'react-native';
 import styles from './styles';
+import useAuth from '../../hooks/useAuth';
 
 
 const Splash = ({ navigation }) => {
 
+    const auth = useAuth();
     useEffect(() => {
         setTimeout(() => {
-            navigation.replace('PublicStackScreen');
+            if(auth?.isLoggedIn === true) {
+                navigation.replace('PrivateStackScreen');
+            } else {
+                navigation.replace('PublicStackScreen');
+            }
         },4000)
     },[]);
 
