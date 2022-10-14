@@ -45,9 +45,6 @@ const CustomDrawerScreen = (props) => {
     //Function to handel logout
     const handelLogout = async () => {
         let obj = {
-            id: '',
-            name: '',
-            emailId: '',
             accessToken: '',
             isLoggedIn: false
         };

@@ -22,3 +22,13 @@ export const localStorageUpdateToken = async (token) => {
         localStorageSetItem(data);
     }
 }
+
+export const localStorageGetAccessToken = async () => {
+    const data = await AsyncStorage.getItem('GLOCON_LIVE_APP');
+    if(data != null) {
+        let parsedData = JSON.parse(data);
+        return parsedData.accessToken;
+    } else {
+        return '';
+    }
+};

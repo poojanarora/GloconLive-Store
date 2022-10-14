@@ -10,7 +10,7 @@ import { images } from '../../constant'
 import IconInput from '../../components/IconInput.jsx';
 import ButtonComp from '../../components/ButtonComp.jsx';
 import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC.js';
-import {axiosPublic} from "../../config/api.js";
+import axiosPublic from '../../config/publicApi.js';
 import showAlertPopup from "../../components/AlertComp";
 import useSetAuth from "../../hooks/useSetAuth.js";
 import { localStorageSetItem } from '../../hooks/useAsyncStorage.js';
@@ -76,12 +76,9 @@ const Login = ({ navigation }) => {
             else {
                 setIsLoading(true);
                 let response = await axiosPublic.post("/store/login", formValues);
-                if(true) {
+                if(response.data.success === true) {
                     let obj = {
-                        id: 101,
-                        name: "Sohel Patel",
-                        emailId: "sohelahr@gmail.com",
-                        accessToken: "d87a887985433f6368c9648d9d9fd5b9",
+                        accessToken: response.data?.token,
                         isLoggedIn: true
                     };
                     setAuth(obj);

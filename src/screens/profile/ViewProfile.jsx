@@ -16,7 +16,8 @@ import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import useAuth from "../../hooks/useAuth.js";
-import { axiosPrivate } from '../../config/api.js';
+import axiosPrivate from '../../config/privateApi';
+import showAlertPopup from '../../components/AlertComp';
 import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC';
 
 const OverlaySpinner = OverlaySpinnerHOC(View);
@@ -60,17 +61,26 @@ const ViewProfile = () => {
     useEffect(() => {
         console.log("Profile component mounted");
         
-        const getProfile = () => {
+        //Function to fetch profile information
+        const getProfile = async () => {
             console.log("Fetching profile information");
             try {
-                setEditProfileFormValues({
-                    ...editProfileFormValues,
-                    email: auth?.emailId
+                setIsLoading(true);
+                const response = await axiosPrivate.post("/store/get-profile", {
+                    email: 'spatel1@katalysttech.com',
                 });
-                setRefreshing(false);
+                if(response.data?.success === true) {
+                    setEditProfileFormValues({
+                        ...editProfileFormValues,
+                        email: response.data?.data?.email,
+                        companyName: response.data?.data?.company_name
+                    });
+                    setIsLoading(false);
+                    setRefreshing(false);
+                }
             } catch(error) {
-                console.log("In Catch Block");
-                console.log(error);
+                setIsLoading(false);
+                setRefreshing(false);
             }
         };
 
@@ -83,23 +93,28 @@ const ViewProfile = () => {
         }
     },[fetchProfile]);
 
+    //Function to show change password modal
     const showUpdatePasswordModal = () => {
         setUpdatePasswordModalVisible(true);
     };
 
+    //Function to hide change password modal
     const hideUpdatePasswordModal = () => {
         setUpdatePasswordModalVisible(false);
         setChangePasswordFormErrors(initialChangePasswordErrors);
     };
 
+    //Function to show add store video modal
     const showAddStoreVideoModal = () => {
         setAddStoreVideoModalVisible(true);
     };
 
+    //Function to hide add store video modal
     const hideAddStoreVideoModal = () => {
         setAddStoreVideoModalVisible(false);
     };
 
+    //Function to render change password modal
     const renderUpdatePasswordModal = () => {
         return(
             <PopupModal
@@ -145,6 +160,7 @@ const ViewProfile = () => {
         )
     };
 
+    //Function to render add store video modal
     const renderAddStoreVideoModal = () => {
         return(
             <PopupModal
@@ -160,26 +176,31 @@ const ViewProfile = () => {
         )
     };
 
+    //Function to handel profile refresh
     const onRefresh = () => {
         setRefreshing(true);
         setFetchProfile(!fetchProfile);
     };
 
+    //Function to handel old password
     const handelOldPassword = (e) => {
         setChangePasswordFormValues({...changePasswordFormValues, oldPassword: e.replace(/\s/g, '')});
         setChangePasswordFormErrors({...changePasswordFormErrors, oldPassword: ""});
     };
 
+    //Function to handel new password
     const handelNewPassword = (e) => {
         setChangePasswordFormValues({...changePasswordFormValues, newPassword: e.replace(/\s/g, '')});
         setChangePasswordFormErrors({...changePasswordFormErrors, newPassword: ""});
     };
 
+    //Function to handel confirm password
     const handelConfirmPassword = (e) => {
         setChangePasswordFormValues({...changePasswordFormValues, confirmPassword: e.replace(/\s/g, '')});
         setChangePasswordFormErrors({...changePasswordFormErrors, confirmPassword: ""});
     };
 
+    //Function to validate change password form
     const validateChangePasswordForm = (values) => {
         let errors = {};
         if(!values.oldPassword){
@@ -194,6 +215,7 @@ const ViewProfile = () => {
         return errors;
     };
 
+    //Funcion to update password
     const handelChangePassword = async () => {
         try {
             let validateResponse = validateChangePasswordForm(changePasswordFormValues);
@@ -202,16 +224,21 @@ const ViewProfile = () => {
             }
             else {
                 setIsLoading(true);
-                const response = await axiosPrivate("/store/update-password", {
-                    email: auth?.emailId,
+                const response = await axiosPrivate.post("/store/update-password", {
+                    email: 'spatel1@katalysttech.com',
                     old_password: changePasswordFormValues.oldPassword,
                     new_password: changePasswordFormValues.newPassword,
                 });
-                console.log(response);
+                if(response.data.success === true) {
+                    setIsLoading(false);
+                    hideUpdatePasswordModal();
+                    showAlertPopup("Success", response.data?.message, "Ok");
+                } else {
+                    setIsLoading(false);
+                    showAlertPopup("Opps", response.data?.message, "Cancel");
+                }
             }
         } catch(error) {
-            console.log("In catch block")
-            console.log(error);
             setIsLoading(false);
         }
     };
@@ -220,9 +247,8 @@ const ViewProfile = () => {
         
         <SafeAreaView style={styles.safeAreaViewStyle}>
             <OverlaySpinner isLoading={isLoading} style={styles.safeAreaViewStyle}>
-            {renderUpdatePasswordModal()}
-            {renderAddStoreVideoModal()}
-            
+                {renderUpdatePasswordModal()}
+                {renderAddStoreVideoModal()}
                 <View style={styles.topSectionWrapper}>
                     <View style={styles.profilePictureWrapper}>
                         <Image style={styles.profileImage} source={images.user1} />
