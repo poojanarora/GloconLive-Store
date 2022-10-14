@@ -10,18 +10,16 @@ import { images } from '../../constant'
 import IconInput from '../../components/IconInput.jsx';
 import ButtonComp from '../../components/ButtonComp.jsx';
 import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC.js';
-import axiosPublic from "../../config/api.js";
+import {axiosPublic} from "../../config/api.js";
 import showAlertPopup from "../../components/AlertComp";
 import useSetAuth from "../../hooks/useSetAuth.js";
 import { localStorageSetItem } from '../../hooks/useAsyncStorage.js';
 
 const OverlaySpinner = OverlaySpinnerHOC(View);
-
 const initialFormValues = {
     email: "",
     password: ""
 };
-
 const initialErrors = {
     email: "",
     password: "",
@@ -34,6 +32,7 @@ const Login = ({ navigation }) => {
     const [formValues, setFormValues] = useState(initialFormValues);
     const [formErrors, setFormErrors] = useState(initialErrors);
 
+    //Function to handel email
     const handelEmail = (e) => {
         setFormValues({
             ...formValues,
@@ -41,6 +40,7 @@ const Login = ({ navigation }) => {
         });
     };
 
+    //Function to handel password
     const handelPassword = (e) => {
         setFormValues({
             ...formValues,
@@ -48,6 +48,7 @@ const Login = ({ navigation }) => {
         });
     };
 
+    //Function to validate data
     const validate = (values) => {
         let errors = {};
         if(!values.email){
@@ -65,6 +66,7 @@ const Login = ({ navigation }) => {
         return errors;
     };
 
+    //Function to handel login
     const handelLogin = async () => {
         try {
             let validateResponse = validate(formValues);

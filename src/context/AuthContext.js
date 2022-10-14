@@ -1,19 +1,34 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { localStorageGetItem } from "../hooks/useAsyncStorage";
 
 export const AuthContext = createContext({});
 
 export const AuthProvider = ({children}) => {
     const initialAuth = {
-        userId: '',
+        id: '',
         name: '',
         emailId: '',
-        profilePic: '',
         accessToken: '',
         isLoggedIn: false
     };
-    const localStorageData = localStorageGetItem();
-    const [auth, setAuth] = useState((localStorageData) ? localStorageData : initialAuth);
+    const [auth, setAuth] = useState(initialAuth);
+
+    const getAuthState = async () => {
+        try {
+            const localStorageData = await localStorageGetItem();
+            if(localStorageData) {
+                setAuth(localStorageData);
+            } 
+        } catch (err) {
+            setAuth(initialAuth);
+        }
+    };
+
+    useEffect(() => {
+        console.log("In Auth Provider use effect");
+        getAuthState();
+    }, []);
+
     return(
         <AuthContext.Provider value={{ auth, setAuth }}>
             {children}

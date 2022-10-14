@@ -9,9 +9,9 @@ import useAuth from '../../hooks/useAuth';
 
 
 const Splash = ({ navigation }) => {
-
     const auth = useAuth();
     useEffect(() => {
+        console.log("Splash screen mounted");
         setTimeout(() => {
             if(auth?.isLoggedIn === true) {
                 navigation.replace('PrivateStackScreen');
@@ -19,6 +19,10 @@ const Splash = ({ navigation }) => {
                 navigation.replace('PublicStackScreen');
             }
         },4000)
+
+        return () => {
+            console.log("Splash screen unmounted");
+        }
     },[]);
 
     return(

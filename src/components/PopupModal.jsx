@@ -52,6 +52,7 @@ const PopupModal = (props) => {
                                     fontSize: scale(14),
                                 }}
                                 btnText={props.primaryButtonText}
+                                action={props.submitAction}
                             />
                         </View>
                     </View>
@@ -72,7 +73,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         paddingBottom: moderateVerticalScale(15),
         //height: moderateScale(400),
-        width: moderateScale(400),
+        //width: moderateScale(400),
+        width: '85%',
         borderRadius:moderateScale(10),
         shadowColor: "#000",
         shadowOffset: {

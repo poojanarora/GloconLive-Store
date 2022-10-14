@@ -12,14 +12,17 @@ import { COLORS } from "../constant";
 const IconInputWithoutLabel = (props) => {
     return(
         <>
-        <View style={[styles.inputSectionWrapper, (props.error === true) && styles.error]}>
+        <View style={[styles.inputSectionWrapper, (props.error.length > 0 === true) && styles.error]}>
             <View style={styles.inputLeftSectionWrapper}>
                 <View style={styles.inputWrapper}>
                     <TextInput
                         style={styles.input}
                         placeholder={props.placeholder}
+                        secureTextEntry={(props.isSecure) ? props.isSecure : false}
                         name={props.name}
                         placeholderTextColor={COLORS.black}
+                        value={props.value}
+                        onChangeText={props.onChangeText}
                     />
                 </View>
             </View>
@@ -32,9 +35,9 @@ const IconInputWithoutLabel = (props) => {
             }
         </View>
         {
-            (props.error === true) && (
+            (props.error.length > 0) && (
                 <View style={styles.errorMessageWrapper}>
-                    <Text style={styles.errorMessage}>{props.errorMessage}</Text>
+                    <Text style={styles.errorMessage}>{props.error}</Text>
                 </View>
             )
         }

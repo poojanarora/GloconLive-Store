@@ -8,9 +8,12 @@ import {
 } from 'react-native';
 import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { COLORS, images } from '../constant';
+import useSetAuth from '../hooks/useSetAuth';
+import { localStorageRemoveItem } from '../hooks/useAsyncStorage'; 
 
 const CustomDrawerScreen = (props) => {
 
+    const setAuth = useSetAuth();
     const menus = [
         {
             id: 1,
@@ -39,6 +42,20 @@ const CustomDrawerScreen = (props) => {
         props.navigation.navigate(menu.navigatTo);
     }
 
+    //Function to handel logout
+    const handelLogout = async () => {
+        let obj = {
+            id: '',
+            name: '',
+            emailId: '',
+            accessToken: '',
+            isLoggedIn: false
+        };
+        await localStorageRemoveItem();
+        setAuth(obj);
+        props.navigation.replace("PublicStackScreen");
+    };
+
     return(
         <View style={styles.drawerWrapper}>
             <View style={styles.drawerContentWrapper}>
@@ -60,10 +77,10 @@ const CustomDrawerScreen = (props) => {
                     </View>
                 </View>
                 <View style={styles.drawerBottomSection}>
-                    <View style={styles.drawerListItem}>
+                    <TouchableOpacity style={styles.drawerListItem} onPress={handelLogout}>
                         <Image style={styles.iconImage} source={images.logout} />
                         <Text style={styles.listLabel}>Log Out</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
