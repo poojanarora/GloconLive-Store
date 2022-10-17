@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
         borderColor: COLORS.primaryBackgroungDarkColor,
     },
     listItemActionButtonImage:{
-        width: moderateScale(30),
-        height: moderateScale(30),
+        width: moderateScale(20),
+        height: moderateScale(20),
         resizeMode: 'contain',
     }
 });

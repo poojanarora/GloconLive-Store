@@ -11,14 +11,17 @@ import 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import AppStackScreen from './src/navigation/AppStackScreen';
+import { AuthProvider } from './src/context/AuthContext';
 
 const App = () => {
   return(
-    <NavigationContainer>
-      <SafeAreaProvider>
-        <AppStackScreen />
-      </SafeAreaProvider>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <SafeAreaProvider>
+          <AppStackScreen />
+        </SafeAreaProvider>
+      </NavigationContainer>
+    </AuthProvider>
   );
 };
 

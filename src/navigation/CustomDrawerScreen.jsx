@@ -8,9 +8,12 @@ import {
 } from 'react-native';
 import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { COLORS, images } from '../constant';
+import useSetAuth from '../hooks/useSetAuth';
+import { localStorageRemoveItem } from '../hooks/useAsyncStorage'; 
 
 const CustomDrawerScreen = (props) => {
 
+    const setAuth = useSetAuth();
     const menus = [
         {
             id: 1,
@@ -39,12 +42,34 @@ const CustomDrawerScreen = (props) => {
         props.navigation.navigate(menu.navigatTo);
     }
 
+    //Function to handel logout
+    const handelLogout = async () => {
+        let obj = {
+            accessToken: '',
+            isLoggedIn: false
+        };
+        await localStorageRemoveItem();
+        setAuth(obj);
+        props.navigation.replace("PublicStackScreen");
+    };
+
+    //Function to close drawer
+    const handelMenuIconClick = () => {
+        props.navigation.toggleDrawer();
+    };
+
     return(
         <View style={styles.drawerWrapper}>
             <View style={styles.drawerContentWrapper}>
                 <View style={styles.drawerTopSection}>
                     <View style={styles.drawerHeaderWrapper}>
-                        <Text style={styles.logoLabel}>GLOCON Live</Text>
+                        <View style={styles.drawerIconWrapper}>
+                            <TouchableOpacity style={styles.menuIconWrapper} onPress={handelMenuIconClick}>
+                                <Image style={{width: moderateScale(22), height: moderateScale(22), resizeMode: 'contain'}} source={images.close} />
+                            </TouchableOpacity>
+                        </View>
+                        
+                        <Image style={styles.logoImage} source={images.logo_white} />
                     </View>
                     <View style={styles.drawerListWrapper}>
                         {
@@ -60,10 +85,10 @@ const CustomDrawerScreen = (props) => {
                     </View>
                 </View>
                 <View style={styles.drawerBottomSection}>
-                    <View style={styles.drawerListItem}>
+                    <TouchableOpacity style={styles.drawerListItem} onPress={handelLogout}>
                         <Image style={styles.iconImage} source={images.logout} />
                         <Text style={styles.listLabel}>Log Out</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -73,7 +98,7 @@ const CustomDrawerScreen = (props) => {
 const styles = StyleSheet.create({
     drawerWrapper: {
         flex: 1,
-        //backgroundColor: 'red'
+        backgroundColor: COLORS.primaryBackgroungColor
     },
     drawerContentWrapper: {
         flex: 1,
@@ -89,15 +114,27 @@ const styles = StyleSheet.create({
         paddingVertical: moderateVerticalScale(10)
     },
     drawerHeaderWrapper: {
-        height: moderateScale(100),
-        justifyContent: 'center',
+        height: moderateScale(125),
+        //justifyContent: 'center',
         paddingLeft: moderateScale(20),
         //backgroundColor: 'yellow'
     },
-    logoLabel: {
-        fontSize: scale(25),
-        fontWeight: '500',
-        color: COLORS.primaryTextColor
+    drawerIconWrapper: {
+        height: moderateScale(55),
+        //backgroundColor: 'orange',
+        justifyContent: 'center'
+    },
+    logoImage: {
+        resizeMode: 'contain',
+        width: moderateScale(160)
+    },
+    menuIconWrapper: {
+        height: moderateScale(32),
+        width: moderateScale(32),
+        borderRadius: scale(5),
+        backgroundColor: '#7dacaf',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     drawerListWrapper: {
         flex: 1,

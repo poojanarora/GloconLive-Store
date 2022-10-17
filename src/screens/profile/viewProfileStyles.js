@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: COLORS.primary,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     bottomSectionWrapper: {
         flex: 1.5,
@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     cameraImage: {
-        height: moderateScale(22),
-        width: moderateScale(22),
+        height: moderateScale(20),
+        width: moderateScale(20),
         resizeMode: 'contain',
     },
     formSectionWrapper: {
