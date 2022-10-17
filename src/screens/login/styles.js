@@ -25,10 +25,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    logoLabel: {
-        fontSize: scale(35),
-        fontWeight: '500',
-        color: COLORS.primaryTextColor
+    logoImage: {
+        resizeMode: 'contain',
     },
     formSectionWrapper: {
         marginVertical: moderateVerticalScale(5),

@@ -1,10 +1,12 @@
+const splash_screen = require('../../assets/images/spash-screen.png');
+const logo_white = require('../../assets/images/logo_white.png');
 const password_hidden_eye = require('../../assets/images/hide.png');
 const tick = require('../../assets/images/checked.png');
 const phone = require('../../assets/images/telephone.png');
 const location_pin = require('../../assets/images/pin.png');
 const my_account = require('../../assets/images/user.png');
 const logout = require('../../assets/images/logout.png');
-const menu = require('../../assets/images/hamburger.png');
+const menu = require('../../assets/images/menu.png');
 const forward_arrow = require('../../assets/images/arrow-right.png');
 const location_pin_2 = require("../../assets/images/pin2.png");
 const close = require("../../assets/images/cancel.png");
@@ -14,6 +16,8 @@ const user1 = require("../../assets/images/profile_pic.jpg");
 const camera = require("../../assets/images/camera.png");
 
 export default {
+    splash_screen,
+    logo_white,
     password_hidden_eye,
     tick,
     phone,

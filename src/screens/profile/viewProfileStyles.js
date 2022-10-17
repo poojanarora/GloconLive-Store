@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     cameraImage: {
-        height: moderateScale(22),
-        width: moderateScale(22),
+        height: moderateScale(20),
+        width: moderateScale(20),
         resizeMode: 'contain',
     },
     formSectionWrapper: {

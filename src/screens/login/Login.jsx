@@ -3,6 +3,7 @@ import {
     SafeAreaView,
     View,
     Text,
+    Image,
     ScrollView,
 } from 'react-native';
 import styles from './styles.js';
@@ -108,7 +109,7 @@ const Login = ({ navigation }) => {
                 <View style={styles.body}>
                     <View style={styles.mainSectionWrapper}>
                         <View style={styles.headerSectionWrapper}>
-                            <Text style={styles.logoLabel}>GLOCON Live</Text>
+                            <Image style={styles.logoImage} source={images.logo_white} />
                         </View>
                         <View style={styles.formSectionWrapper}>
                             <IconInput 
