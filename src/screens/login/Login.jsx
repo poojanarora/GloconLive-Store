@@ -113,7 +113,6 @@ const Login = ({ navigation }) => {
         }
     };
 
-<<<<<<< HEAD
     //Function to navigate to signup
     const navigateToSignUp = () => {
         navigation.navigate('CheckApplicationStatus');  
@@ -123,12 +122,6 @@ const Login = ({ navigation }) => {
        <SafeAreaView style={styles.safeAreaViewStyle}>
         <OverlaySpinner isLoading={isLoading}>
             {/* <ScrollView showsVerticalScrollIndicator={false}> */}
-=======
-    return (
-        <SafeAreaView style={styles.safeAreaViewStyle}>
-            <OverlaySpinner isLoading={isLoading}>
-                {/* <ScrollView showsVerticalScrollIndicator={false}> */}
->>>>>>> 24ff208fcc4f9c80db7b4b621dee34abf603b466
                 <View style={styles.body}>
                     <View style={styles.mainSectionWrapper}>
                         <View style={styles.headerSectionWrapper}>
@@ -161,11 +154,7 @@ const Login = ({ navigation }) => {
                             />
                             <Text></Text>
                             <View style={styles.signUpLabelWrapper}>
-<<<<<<< HEAD
                                 <Text style={styles.signUpLabel}>Dont have an account? <Text onPress={navigateToSignUp} style={styles.labelPrimary}>Sign Up</Text></Text>
-=======
-                                <Text style={styles.signUpLabel}>Don't have an account? <Text style={styles.labelPrimary}>Sign Up</Text></Text>
->>>>>>> 24ff208fcc4f9c80db7b4b621dee34abf603b466
                             </View>
                             <View style={styles.buttonSectionWrapper}>
                                 <ButtonComp btnText="Sign In" action={handelLogin} />
