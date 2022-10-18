@@ -6,6 +6,7 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({children}) => {
     const initialAuth = {
         accessToken: '',
+        email: '',
         isLoggedIn: false
     };
     const [auth, setAuth] = useState(initialAuth);

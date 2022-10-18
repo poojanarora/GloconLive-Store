@@ -14,22 +14,17 @@ import ButtonComp from '../../components/ButtonComp.jsx';
 import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC.js';
 import axiosPublic from '../../config/publicApi.js';
 import showAlertPopup from "../../components/AlertComp";
-import useSetAuth from "../../hooks/useSetAuth.js";
-import { localStorageSetItem } from '../../hooks/useAsyncStorage.js';
 
 const OverlaySpinner = OverlaySpinnerHOC(View);
 const initialFormValues = {
     email: "",
-    password: ""
 };
 const initialErrors = {
     email: "",
-    password: "",
 };
 
-const Login = ({ navigation }) => {
+const CheckApplicationStatus = ({ navigation }) => {
 
-    const setAuth = useSetAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [formValues, setFormValues] = useState(initialFormValues);
     const [formErrors, setFormErrors] = useState(initialErrors);
@@ -39,14 +34,6 @@ const Login = ({ navigation }) => {
         setFormValues({
             ...formValues,
             email: e
-        });
-    };
-
-    //Function to handel password
-    const handelPassword = (e) => {
-        setFormValues({
-            ...formValues,
-            password: e
         });
     };
 
@@ -62,14 +49,11 @@ const Login = ({ navigation }) => {
                 errors.email = 'Please enter a valid email address.';
             }
         }
-        if(!values.password){
-            errors.password = 'Please enter password.';
-        }
         return errors;
     };
 
     //Function to handel login
-    const handelLogin = async () => {
+    const handelCheckApplicationStatus = async () => {
         try {
             let validateResponse = validate(formValues);
             if(Object.keys(validateResponse).length > 0) {
@@ -77,21 +61,17 @@ const Login = ({ navigation }) => {
             }
             else {
                 setIsLoading(true);
-                let response = await axiosPublic.post("/store/login", formValues);
-                if(response.data.success === true) {
-                    let obj = {
-                        accessToken: response.data?.token,
-                        email: formValues.email,
-                        isLoggedIn: true
-                    };
-                    setAuth(obj);
-                    localStorageSetItem(obj);
+                let response = await axiosPublic.post("/check-application-status", formValues);
+                setTimeout(() => {
                     setIsLoading(false);
-                    navigation.replace('PrivateStackScreen');
-                } else {
-                    setIsLoading(false);
-                    showAlertPopup("Opps", response.data?.message, "Cancel");
-                }
+                    if(response.data.message !== "No data found.") {
+                        navigation.navigate('ApplicationStatus', {
+                            status: response.data?.message,
+                        });
+                    } else {
+                        showAlertPopup("Opps", response.data?.message, 'Cancel');
+                    }
+                },2000)
             }
         } catch(error) {
             console.log("In catch block");
@@ -104,10 +84,6 @@ const Login = ({ navigation }) => {
         }
     };
 
-    //Function to navigate to signup
-    const navigateToSignUp = () => {
-        navigation.navigate('CheckApplicationStatus');  
-    };
 
     return(
        <SafeAreaView style={styles.safeAreaViewStyle}>
@@ -129,21 +105,8 @@ const Login = ({ navigation }) => {
                                 error={formErrors.email} 
                                 onChangeText={handelEmail}
                             />
-                            <IconInput 
-                                label="Password" 
-                                placeholder="********" 
-                                name="password" 
-                                value={formValues.password}
-                                icon={images.password_hidden_eye} 
-                                isSecure={true} 
-                                error={formErrors.password}   
-                                onChangeText={handelPassword}
-                            />
-                            <View style={styles.signUpLabelWrapper}>
-                                <Text style={styles.signUpLabel}>Dont have an account? <Text onPress={navigateToSignUp} style={styles.labelPrimary}>Sign Up</Text></Text>
-                            </View>
                             <View style={styles.buttonSectionWrapper}>
-                                <ButtonComp btnText="Sign In" action={handelLogin} />
+                                <ButtonComp btnText="Check Application Status" action={handelCheckApplicationStatus} />
                             </View>
                         </View>
                     </View>
@@ -154,4 +117,4 @@ const Login = ({ navigation }) => {
     )
 };
 
-export default Login;
+export default CheckApplicationStatus;

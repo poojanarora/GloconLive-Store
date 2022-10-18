@@ -1,5 +1,7 @@
 import Splash from "./splash/Splash";
 import Login from "./login/Login";
+import CheckApplicationStatus from "./application-status/CheckApplicationStatus";
+import ApplicationStatus from "./application-status/ApplicationStatus";
 
 import IncomingCallListing from "./incomingcall/IncomingCallListing";
 import IncomingCallAdd from "./incomingcall/IncomingCallAdd";
@@ -13,6 +15,8 @@ import ViewProfile from "./profile/ViewProfile";
 export {
     Splash,
     Login,
+    CheckApplicationStatus,
+    ApplicationStatus,
     IncomingCallListing,
     IncomingCallAdd,
     LocationListing,

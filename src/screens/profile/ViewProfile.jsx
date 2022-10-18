@@ -67,7 +67,7 @@ const ViewProfile = () => {
             try {
                 setIsLoading(true);
                 const response = await axiosPrivate.post("/store/get-profile", {
-                    email: 'spatel1@katalysttech.com',
+                    email: auth.email,
                 });
                 if(response.data?.success === true) {
                     setEditProfileFormValues({
@@ -225,7 +225,7 @@ const ViewProfile = () => {
             else {
                 setIsLoading(true);
                 const response = await axiosPrivate.post("/store/update-password", {
-                    email: 'spatel1@katalysttech.com',
+                    email: auth.email,
                     old_password: changePasswordFormValues.oldPassword,
                     new_password: changePasswordFormValues.newPassword,
                 });

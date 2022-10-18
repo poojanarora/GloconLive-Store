@@ -46,6 +46,7 @@ const CustomDrawerScreen = (props) => {
     const handelLogout = async () => {
         let obj = {
             accessToken: '',
+            email: '',
             isLoggedIn: false
         };
         await localStorageRemoveItem();
