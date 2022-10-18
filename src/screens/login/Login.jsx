@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React,{ useState } from 'react';
 import {
     SafeAreaView,
     View,
@@ -30,9 +30,17 @@ const initialErrors = {
 const Login = ({ navigation }) => {
 
     const setAuth = useSetAuth();
+
     const [isLoading, setIsLoading] = useState(false);
     const [formValues, setFormValues] = useState(initialFormValues);
     const [formErrors, setFormErrors] = useState(initialErrors);
+    const [isHidden, setIsHidden] = useState(true)
+
+
+    const togglePassword = () => {
+        setIsHidden(!isHidden);
+        console.log("Clicked")
+    }
 
     //Function to handel email
     const handelEmail = (e) => {
@@ -53,16 +61,16 @@ const Login = ({ navigation }) => {
     //Function to validate data
     const validate = (values) => {
         let errors = {};
-        if(!values.email){
+        if (!values.email) {
             errors.email = 'Please enter email.';
         } else {
             const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
             const emailValidCheck = emailRegExp.test(values.email);
-            if(emailValidCheck === false) {
+            if (emailValidCheck === false) {
                 errors.email = 'Please enter a valid email address.';
             }
         }
-        if(!values.password){
+        if (!values.password) {
             errors.password = 'Please enter password.';
         }
         return errors;
@@ -70,15 +78,16 @@ const Login = ({ navigation }) => {
 
     //Function to handel login
     const handelLogin = async () => {
+        console.log("Clicked")
         try {
             let validateResponse = validate(formValues);
-            if(Object.keys(validateResponse).length > 0) {
+            if (Object.keys(validateResponse).length > 0) {
                 setFormErrors(validateResponse);
             }
             else {
                 setIsLoading(true);
                 let response = await axiosPublic.post("/store/login", formValues);
-                if(response.data.success === true) {
+                if (response.data.success === true) {
                     let obj = {
                         accessToken: response.data?.token,
                         email: formValues.email,
@@ -93,10 +102,10 @@ const Login = ({ navigation }) => {
                     showAlertPopup("Opps", response.data?.message, "Cancel");
                 }
             }
-        } catch(error) {
+        } catch (error) {
             console.log("In catch block");
             setIsLoading(false);
-            if(error?.message === "Network Error") {
+            if (error?.message === "Network Error") {
                 showAlertPopup(error?.message, "Please check your internet connectivity.", 'Ok');
             } else {
                 showAlertPopup("Opps", error?.message, 'Cancel');
@@ -104,6 +113,7 @@ const Login = ({ navigation }) => {
         }
     };
 
+<<<<<<< HEAD
     //Function to navigate to signup
     const navigateToSignUp = () => {
         navigation.navigate('CheckApplicationStatus');  
@@ -113,34 +123,49 @@ const Login = ({ navigation }) => {
        <SafeAreaView style={styles.safeAreaViewStyle}>
         <OverlaySpinner isLoading={isLoading}>
             {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+=======
+    return (
+        <SafeAreaView style={styles.safeAreaViewStyle}>
+            <OverlaySpinner isLoading={isLoading}>
+                {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+>>>>>>> 24ff208fcc4f9c80db7b4b621dee34abf603b466
                 <View style={styles.body}>
                     <View style={styles.mainSectionWrapper}>
                         <View style={styles.headerSectionWrapper}>
                             <Image style={styles.logoImage} source={images.logo_white} />
                         </View>
                         <View style={styles.formSectionWrapper}>
-                            <IconInput 
-                                label="Email" 
-                                placeholder="mynamein@gmail.com" 
-                                name="email" 
+                            <IconInput
+                                label="Email"
+                                placeholder="mynamein@gmail.com"
+                                name="email"
                                 value={formValues.email}
-                                icon={images.tick} 
-                                isSecure={false} 
-                                error={formErrors.email} 
+                                icon={images.tick}
+                                isSecure={false}
+                                error={formErrors.email}
                                 onChangeText={handelEmail}
+                                onClick={null}
                             />
-                            <IconInput 
-                                label="Password" 
-                                placeholder="********" 
-                                name="password" 
+                            <IconInput
+                                label="Password"
+                                placeholder="********"
+                                name="password"
                                 value={formValues.password}
-                                icon={images.password_hidden_eye} 
-                                isSecure={true} 
-                                error={formErrors.password}   
+                                icon={isHidden? images.password_hidden_eye: images.eye}
+                                isSecure={isHidden}
+                                error={formErrors.password}
                                 onChangeText={handelPassword}
+                                onClick={togglePassword}
+
+
                             />
+                            <Text></Text>
                             <View style={styles.signUpLabelWrapper}>
+<<<<<<< HEAD
                                 <Text style={styles.signUpLabel}>Dont have an account? <Text onPress={navigateToSignUp} style={styles.labelPrimary}>Sign Up</Text></Text>
+=======
+                                <Text style={styles.signUpLabel}>Don't have an account? <Text style={styles.labelPrimary}>Sign Up</Text></Text>
+>>>>>>> 24ff208fcc4f9c80db7b4b621dee34abf603b466
                             </View>
                             <View style={styles.buttonSectionWrapper}>
                                 <ButtonComp btnText="Sign In" action={handelLogin} />
@@ -148,9 +173,9 @@ const Login = ({ navigation }) => {
                         </View>
                     </View>
                 </View>
-            {/* </ScrollView>  */}
+                {/* </ScrollView>  */}
             </OverlaySpinner>
-       </SafeAreaView> 
+        </SafeAreaView>
     )
 };
 

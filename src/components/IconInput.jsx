@@ -1,44 +1,51 @@
-import React, {useState} from 'react';
+import React, { useContext, useState } from 'react';
 import {
     StyleSheet,
     View,
     Text,
     TextInput,
-    Image
+    Image,
+    TouchableOpacity
 } from 'react-native';
+
 import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { COLORS } from "../constant";
 
+
+
 const IconInput = (props) => {
-    return(
+
+    return (
         <>
-        <View style={[styles.inputSectionWrapper, (props.error.length > 0) && styles.error]}>
-            <View style={styles.inputLeftSectionWrapper}>
-                <View style={styles.inputWrapper}>
-                    <Text style={styles.inputLabel}>{props.label}</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={props.placeholder}
-                        name={props.name}
-                        secureTextEntry={props.isSecure}
-                        value={props.value}
-                        onChangeText={props.onChangeText}
-                    />
+            <View style={[styles.inputSectionWrapper, (props.error.length > 0) && styles.error]}>
+                <View style={styles.inputLeftSectionWrapper}>
+                    <View style={styles.inputWrapper}>
+                        <Text style={styles.inputLabel}>{props.label}</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={props.placeholder}
+                            name={props.name}
+                            secureTextEntry={props.isSecure}
+                            value={props.value}
+                            onChangeText={props.onChangeText}
+
+                        />
+                    </View>
+
                 </View>
-                
+
+                <TouchableOpacity style={styles.inputRightSectionWrapper} onPress={props.onClick}>
+                    <Image style={styles.iconImage} source={props.icon} />
+                </TouchableOpacity>
             </View>
-            <View style={styles.inputRightSectionWrapper}>
-                <Image style={styles.iconImage} source={props.icon} />
-            </View>
-        </View>
-        {
-            (props.error.length > 0) && (
-                <View style={styles.errorMessageWrapper}>
-                    <Text style={styles.errorMessage}>{props.error}</Text>
-                </View>
-            )
-        }
-        
+            {
+                (props.error.length > 0) && (
+                    <View style={styles.errorMessageWrapper}>
+                        <Text style={styles.errorMessage}>{props.error}</Text>
+                    </View>
+                )
+            }
+
         </>
     )
 }
@@ -51,11 +58,11 @@ const styles = StyleSheet.create({
         borderRadius: moderateScale(5),
         elevation: 5,
     },
-    error:{
+    error: {
         borderWidth: 1,
         borderColor: 'red'
     },
-    errorMessageWrapper:{
+    errorMessageWrapper: {
         marginHorizontal: moderateScale(5),
         marginTop: moderateVerticalScale(2),
     },
@@ -79,7 +86,7 @@ const styles = StyleSheet.create({
         paddingVertical: moderateVerticalScale(10),
         fontSize: scale(10),
         fontWeight: '500',
-        color:COLORS.black,
+        color: COLORS.black,
         paddingLeft: moderateScale(5),
     },
     inputRightSectionWrapper: {
@@ -87,11 +94,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    iconImage:{
+    iconImage: {
         width: moderateScale(20),
         height: moderateScale(20),
         resizeMode: 'contain',
     }
 });
 
-export default IconInput;
+export default IconInput
+
+

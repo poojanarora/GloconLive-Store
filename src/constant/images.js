@@ -17,6 +17,9 @@ const ipad = require("../../assets/images/ipad.png");
 const user1 = require("../../assets/images/profile_pic.jpg");
 const camera = require("../../assets/images/camera.png");
 
+
+const eye = require("../../assets/images/eye.png");
+
 export default {
     splash_screen,
     application_status,
@@ -35,5 +38,6 @@ export default {
     ipad,
     user1,
     camera,
-    arrow_left
+    arrow_left,
+    eye
 };
