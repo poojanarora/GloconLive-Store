@@ -37,6 +37,7 @@ const Login = ({ navigation }) => {
     const [isHidden, setIsHidden] = useState(true);
 
 
+    //Function to toggle password visibility
     const togglePassword = () => {
         setIsHidden(!isHidden);
     };
