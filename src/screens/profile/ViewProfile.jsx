@@ -16,6 +16,7 @@ import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import useAuth from "../../hooks/useAuth.js";
+import useSetAuth from '../../hooks/useSetAuth';
 import axiosPrivate from '../../config/privateApi';
 import showAlertPopup from '../../components/AlertComp';
 import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC';
@@ -46,6 +47,7 @@ const initialChangePasswordErrors = {
 const ViewProfile = () => {
 
     const auth = useAuth();
+    const setAuth = useSetAuth();
     const [fetchProfile, setFetchProfile] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -70,11 +72,13 @@ const ViewProfile = () => {
                     email: auth.email,
                 });
                 if(response.data?.success === true) {
+                    auth.storeId = response.data?.data?.id;
                     setEditProfileFormValues({
                         ...editProfileFormValues,
                         email: response.data?.data?.email,
                         companyName: response.data?.data?.company_name
                     });
+                    setAuth(auth);
                     setIsLoading(false);
                     setRefreshing(false);
                 }

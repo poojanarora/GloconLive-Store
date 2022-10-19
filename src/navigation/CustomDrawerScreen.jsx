@@ -34,7 +34,7 @@ const CustomDrawerScreen = (props) => {
             navigatTo: 'Profile'
         }
     ];
-    const [selectedMenu, setSelectedMenu] = useState(1);
+    const [selectedMenu, setSelectedMenu] = useState(3);
 
     //Function to handel menu click
     const handelMenuClick = (menu) => {
@@ -46,6 +46,7 @@ const CustomDrawerScreen = (props) => {
     const handelLogout = async () => {
         let obj = {
             accessToken: '',
+            storeId: '',
             email: '',
             isLoggedIn: false
         };

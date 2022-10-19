@@ -31,7 +31,7 @@ const DrawerScreen = () => {
                 //     fontWeight: '600',
                 // },
             }}
-            initialRouteName="IncomingCall"
+            initialRouteName="Profile"
         >
             <Drawer.Screen 
                 name="IncomingCall" 

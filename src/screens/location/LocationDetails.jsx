@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     SafeAreaView,
     View,
@@ -8,9 +8,9 @@ import {
 import styles from './locationDetailStyles';
 import DepartmentListing from '../department/DepartmentListing';
 import DeviceListing from '../device/DeviceListing';
-const LocationDetails = () => {
+const LocationDetails = ({ route, navigation }) => {
     
-
+    const { locationId, locationName, locationAddress } = route.params;
     const [selectedOption, setSelectedOption] = useState("departments");
 
     const handelOptionChange = (option) => {
@@ -20,8 +20,8 @@ const LocationDetails = () => {
     return(
         <SafeAreaView style={styles.safeAreaViewStyle}>
             <View style={styles.headerSectionWrapper}>
-                <Text style={styles.headerTitle}>Seattle, WA</Text>
-                <Text style={styles.headerSubTitle}>100 Address Ln. Seattle, WA 98101</Text>
+                <Text style={styles.headerTitle}>{locationName}</Text>
+                <Text style={styles.headerSubTitle}>{locationAddress}</Text>
                 <View style={styles.optionWrapper}>
                     <TouchableOpacity style={[styles.option, (selectedOption === "departments") && styles.selectedOption]} onPress={() => handelOptionChange("departments")}>
                         <Text style={[styles.optionText, (selectedOption === "departments") && styles.selectedOptionText]}>Departments</Text>
@@ -33,9 +33,9 @@ const LocationDetails = () => {
             </View>
             {
                 (selectedOption === "departments") ? (
-                        <DepartmentListing />
+                        <DepartmentListing locationId={locationId} />
                     ) : (
-                        <DeviceListing />
+                        <DeviceListing locationId={locationId} />
                     )
             }
         </SafeAreaView>

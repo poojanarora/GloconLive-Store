@@ -5,62 +5,82 @@ import {
     Text,
     TouchableOpacity,
     Image,
-    ScrollView
+    ScrollView,
+    RefreshControl
 } from 'react-native';
 import styles from './departmentListingStyles';
 import { images } from '../../constant';
 import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
+import axiosPrivate from '../../config/privateApi';
+import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC';
 
-const DepartmentListing = () => {
+const OverlaySpinner = OverlaySpinnerHOC(View);
+const DepartmentListing = ({locationId}) => {
 
-    const departments = [
-        {'id': 1, 'title': 'Suits', 'sub_title': '2 Devices'},
-        {'id': 2, 'title': 'Kitchen', 'sub_title': '2 Devices'},
-        {'id': 3, 'title': 'Hardware', 'sub_title': '2 Devices'},
-        {'id': 4, 'title': 'Shoes', 'sub_title': '2 Devices'},
-        {'id': 5, 'title': 'Shirts', 'sub_title': '2 Devices'},
-        {'id': 6, 'title': 'Tshirts', 'sub_title': '2 Devices'},
-        {'id': 7, 'title': 'Accessories', 'sub_title': '2 Devices'},
-        {'id': 8, 'title': 'Mobiles', 'sub_title': '2 Devices'},
-        {'id': 9, 'title': 'Accessories', 'sub_title': '2 Devices'},
-        {'id': 10, 'title': 'Mobiles', 'sub_title': '2 Devices'},
-        {'id': 11, 'title': 'Accessories', 'sub_title': '2 Devices'},
-        {'id': 12, 'title': 'Mobiles', 'sub_title': '2 Devices'},
-    ];
+    
+    const [isLoading, setIsLoading] = useState(false);
+    const [fetchDepartment, setFetchDepartment] = useState(false);
+    const [departments, setDepartments] = useState([])
     const [addDepartmentModalVisible, setAddDepartmentModalVisible] = useState(false);
 
     useEffect(() => {
         console.log("Department component mounted");
+        
+        //Function to fetch department
+        const fetchDepartments = async () => {
+            try {
+                setIsLoading(true);
+                const response = await axiosPrivate.post("/store/get-departments", {
+                    location_id: locationId,
+                });
+                setDepartments(response.data?.data);
+                setIsLoading(false);
+            } catch(error) {
+                setIsLoading(false);
+            }
+        };
+
+        //Function callings
+        fetchDepartments();
+
         return () => {
             console.log("Department component unmounted");
         }
-    },[]);
+    },[fetchDepartment]);
 
+    //Function to handel department refresh
+    const onRefresh = () => {
+        setFetchDepartment(!fetchDepartment);
+    };
+
+    //Function to show add department modal
     const showModal = () => {
         setAddDepartmentModalVisible(true);
     };
 
+    //Function to hide add department modal
     const hideModal = () => {
         setAddDepartmentModalVisible(false);
     };
 
-
+    //Function to render department listing
     const renderDepartmentListing = () => {
         return(
             departments.map((item, key) => {
                 return(
                     <TouchableOpacity key={item.id} style={[styles.listItemWrapper, styles.shadow]}>
                         <Image style={styles.listItemImage} source={images.demo1} />
-                        <Text style={[styles.listItemTitle]}>{item.title}</Text>
-                        <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text>
+                        <Text style={[styles.listItemTitle]}>{item.name}</Text>
+                        {/* <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text> */}
                     </TouchableOpacity>
                 )
             })
         )
     };
 
+    //Function to render add deparment modal
     const renderAddDepartmentModal = () => {
         return(
             <PopupModal
@@ -78,15 +98,26 @@ const DepartmentListing = () => {
 
     return(
         <View style={styles.body}>
-            {renderAddDepartmentModal()}
-            <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.listSectionWrapper}>
-                {renderDepartmentListing()}
-            </View>
-            </ScrollView>
-            <View style={styles.buttonSectionWrapper}>
-                <ButtonComp btnText="Add Department" action={showModal} />
-            </View>
+            <OverlaySpinner isLoading={isLoading} style={styles.body}>
+                {renderAddDepartmentModal()}
+                <ScrollView 
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={isLoading}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
+                <View style={styles.listSectionWrapper}>
+                    {renderDepartmentListing()}
+                </View>
+                </ScrollView>
+                <View style={styles.buttonSectionWrapper}>
+                    <ButtonComp btnText="Add Department" action={showModal} />
+                </View>
+            </OverlaySpinner>
         </View>
     )
 }

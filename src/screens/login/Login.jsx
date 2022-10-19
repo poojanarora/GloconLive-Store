@@ -34,13 +34,12 @@ const Login = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [formValues, setFormValues] = useState(initialFormValues);
     const [formErrors, setFormErrors] = useState(initialErrors);
-    const [isHidden, setIsHidden] = useState(true)
+    const [isHidden, setIsHidden] = useState(true);
 
 
     const togglePassword = () => {
         setIsHidden(!isHidden);
-        console.log("Clicked")
-    }
+    };
 
     //Function to handel email
     const handelEmail = (e) => {
@@ -78,7 +77,6 @@ const Login = ({ navigation }) => {
 
     //Function to handel login
     const handelLogin = async () => {
-        console.log("Clicked")
         try {
             let validateResponse = validate(formValues);
             if (Object.keys(validateResponse).length > 0) {
@@ -90,6 +88,7 @@ const Login = ({ navigation }) => {
                 if (response.data.success === true) {
                     let obj = {
                         accessToken: response.data?.token,
+                        storeId: '',
                         email: formValues.email,
                         isLoggedIn: true
                     };
