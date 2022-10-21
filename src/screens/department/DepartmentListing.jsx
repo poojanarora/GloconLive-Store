@@ -20,6 +20,7 @@ import useAuth from '../../hooks/useAuth';
 
 const OverlaySpinner = OverlaySpinnerHOC(View);
 const initialFormValues = {
+  departmentId: '',
   departmentName: '',
 };
 const initialFormErrors = {
@@ -27,8 +28,9 @@ const initialFormErrors = {
 };
 
 const DepartmentListing = ({locationId}) => {
+  const ADD_DEPARTMENT_URL = '/store/add-department';
+  const UPDATE_DEPARTMENT_URL = '/store/update-department';
   const auth = useAuth();
-
   const [isLoading, setIsLoading] = useState(false);
   const [fetchDepartment, setFetchDepartment] = useState(false);
   const [departments, setDepartments] = useState([]);
@@ -36,20 +38,21 @@ const DepartmentListing = ({locationId}) => {
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [addDepartmentModalVisible, setAddDepartmentModalVisible] =
     useState(false);
+  const [action, setAction] = useState('Add');
 
   useEffect(() => {
     console.log('Department component mounted');
-
     //Function to fetch department
     const fetchDepartments = async () => {
       try {
         setIsLoading(true);
-        const response = await axiosPrivate.post('/store/get-department', {
+        const response = await axiosPrivate.post('/store/get-departments', {
           location_id: locationId,
         });
         setDepartments(response.data?.data);
         setIsLoading(false);
       } catch (error) {
+        console.log(error);
         setIsLoading(false);
       }
     };
@@ -80,11 +83,27 @@ const DepartmentListing = ({locationId}) => {
   };
 
   //Function to handle department name
-
   const handelDepartmentName = e => {
     setFormValues({...formValues, departmentName: e});
     setFormErrors({...formErrors, departmentName: ''});
     // console.log(formValues.departmentName)
+  };
+
+  //Function to handel add department
+  const handelAddDepartment = () => {
+    setAction('Add');
+    showModal();
+  };
+
+  //Function to handel edit department
+  const handelEditDepartment = item => {
+    setFormValues({
+      ...formValues,
+      departmentId: item.id,
+      departmentName: item.name,
+    });
+    setAction('Update');
+    showModal();
   };
 
   //Function to validate add location form
@@ -96,23 +115,41 @@ const DepartmentListing = ({locationId}) => {
     return errors;
   };
 
-  //Function to handle add department
-
-  const handelAddDepartment = async () => {
+  //Function to handle add and update department
+  const handelSubmit = async () => {
     try {
       let validateResponse = validate(formValues);
       if (Object.keys(validateResponse).length > 0) {
         setFormErrors(validateResponse);
       } else {
         setIsLoading(true);
-        const response = await axiosPrivate.post('/store/add-department', {
+        let url = ADD_DEPARTMENT_URL;
+        let payload = {
           location_id: locationId,
           name: formValues.departmentName,
           status: '1',
-        });
-        console.log(response.data);
+        };
+        if (action === 'Update') {
+          payload.id = formValues.departmentId;
+          url = UPDATE_DEPARTMENT_URL;
+        }
+        const response = await axiosPrivate.post(url, payload);
         if (response.data.success === true) {
-          setDepartments(current => [...current, response.data?.data]);
+          if (action === 'Add') {
+            setDepartments(current => [...current, response.data?.data]);
+          } else {
+            setDepartments(current => {
+              const newState = current.map(obj => {
+                //if id equals to updated loaction id then update
+                if (obj.id === formValues.departmentId) {
+                  return response.data?.data;
+                }
+                //otherwise return object as is
+                return obj;
+              });
+              return newState;
+            });
+          }
           setIsLoading(false);
           hideModal();
           showAlertPopup('Success', response.data?.message, 'Ok');
@@ -134,6 +171,11 @@ const DepartmentListing = ({locationId}) => {
         <TouchableOpacity
           key={item.id}
           style={[styles.listItemWrapper, styles.shadow]}>
+          <TouchableOpacity
+            style={styles.editIconWrapper}
+            onPress={() => handelEditDepartment(item)}>
+            <Image style={styles.editIconStyle} source={images.edit} />
+          </TouchableOpacity>
           <Image style={styles.listItemImage} source={images.demo1} />
           <Text style={[styles.listItemTitle]}>{item.name}</Text>
           {/* <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text> */}
@@ -148,10 +190,14 @@ const DepartmentListing = ({locationId}) => {
       <PopupModal
         show={addDepartmentModalVisible}
         closeAction={hideModal}
-        submitAction={handelAddDepartment}
-        title="Add Department"
-        subTitle="Please add new department."
-        primaryButtonText="Add"
+        submitAction={handelSubmit}
+        title={`${action} Department`}
+        subTitle={
+          action === 'Add'
+            ? 'Please add new department.'
+            : 'Please update department.'
+        }
+        primaryButtonText={action}
         dangerButtonText="Cancel">
         <IconInputWithoutLabel
           placeholder="New Department Name here"
@@ -181,7 +227,7 @@ const DepartmentListing = ({locationId}) => {
           </View>
         </ScrollView>
         <View style={styles.buttonSectionWrapper}>
-          <ButtonComp btnText="Add Department" action={showModal} />
+          <ButtonComp btnText="Add Department" action={handelAddDepartment} />
         </View>
       </OverlaySpinner>
     </View>
