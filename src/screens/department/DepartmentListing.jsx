@@ -28,6 +28,7 @@ const initialFormErrors = {
 };
 
 const DepartmentListing = ({locationId}) => {
+  const FETCH_DEPARTMENTS_URL = '/store/get-departments';
   const ADD_DEPARTMENT_URL = '/store/add-department';
   const UPDATE_DEPARTMENT_URL = '/store/update-department';
   const auth = useAuth();
@@ -46,7 +47,7 @@ const DepartmentListing = ({locationId}) => {
     const fetchDepartments = async () => {
       try {
         setIsLoading(true);
-        const response = await axiosPrivate.post('/store/get-departments', {
+        const response = await axiosPrivate.post(FETCH_DEPARTMENTS_URL, {
           location_id: locationId,
         });
         setDepartments(response.data?.data);
