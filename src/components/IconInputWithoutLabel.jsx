@@ -10,11 +10,7 @@ import {COLORS} from '../constant';
 const IconInputWithoutLabel = props => {
   return (
     <>
-      <View
-        style={[
-          styles.inputSectionWrapper,
-          props.error.length > 0 === true && styles.error,
-        ]}>
+      <View style={[styles.inputSectionWrapper, props.error && styles.error]}>
         <View style={styles.inputLeftSectionWrapper}>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -34,7 +30,7 @@ const IconInputWithoutLabel = props => {
           </View>
         )}
       </View>
-      {props.error.length > 0 && (
+      {props.error && (
         <View style={styles.errorMessageWrapper}>
           <Text style={styles.errorMessage}>{props.error}</Text>
         </View>
