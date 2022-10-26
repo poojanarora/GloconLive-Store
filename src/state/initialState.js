@@ -1,5 +1,17 @@
 export const initialState = {
-    app: {
-        
-    }
-}
+  app: {
+    isLoading: false,
+    authConfig: {
+      accessToken: '',
+      storeId: '',
+      email: '',
+      isLoggedIn: false,
+    },
+  },
+  login: {
+    loginErrors: {
+      email: '',
+      password: '',
+    },
+  },
+};

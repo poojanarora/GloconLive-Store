@@ -1,3 +1,8 @@
 export const actionTypes = {
-    APP_ACTION: 'APP_ACTION'
+    IS_LOADING: 'IS_LOADING',
+    SET_AUTH_CONFIG: 'SET_AUTH_CONFIG',
+}
+
+export const loginActionTypes = {
+    SET_LOGIN_ERRORS: 'SET_LOGIN_ERRORS'
 }

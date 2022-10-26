@@ -1,15 +1,13 @@
 import React from 'react';
 import {
     View,
-    Text,
     Modal,
     ActivityIndicator,
     StyleSheet
 } from 'react-native';
-import { COLORS } from '../constant';
-import { scale, moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import { moderateScale } from 'react-native-size-matters';
 
-const OverlaySpinnerHOC = (Component) => ({isLoading = false, ...props}) => (
+const OverlaySpinnerHOC = (Component) => ({...props}) => (
     <>
         <Modal
             transparent={true}

@@ -4,8 +4,6 @@ import {
   View,
   Text,
   Image,
-  ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 import styles from './styles.js';
 import {images} from '../../constant';
@@ -16,25 +14,29 @@ import axiosPublic from '../../config/publicApi.js';
 import showAlertPopup from '../../components/AlertComp';
 import useSetAuth from '../../hooks/useSetAuth.js';
 import {localStorageSetItem} from '../../hooks/useAsyncStorage.js';
+import { connect } from 'react-redux';
+import { handleLogin } from '../../actions/loginActions.js';
 
 const OverlaySpinner = OverlaySpinnerHOC(View);
 const initialFormValues = {
   email: '',
   password: '',
 };
-const initialErrors = {
-  email: '',
-  password: '',
-};
+// const initialErrors = {
+//   email: '',
+//   password: '',
+// };
 
-const Login = ({navigation}) => {
+const LoginComponent = ({navigation, isLoading, onLogin, formErrors}) => {
   const setAuth = useSetAuth();
 
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
-  const [formErrors, setFormErrors] = useState(initialErrors);
+  // const [formErrors, setFormErrors] = useState(initialErrors);
   const [isHidden, setIsHidden] = useState(true);
 
+  const {email, password} = formErrors;
+  
   //Function to toggle password visibility
   const togglePassword = () => {
     setIsHidden(!isHidden);
@@ -56,63 +58,69 @@ const Login = ({navigation}) => {
     });
   };
 
+  const loginCallback = response => {
+    if (response) {
+      navigation.replace('PrivateStackScreen');
+    }
+  }
+
   //Function to validate data
-  const validate = values => {
-    let errors = {};
-    if (!values.email) {
-      errors.email = 'Please enter email.';
-    } else {
-      const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-      const emailValidCheck = emailRegExp.test(values.email);
-      if (emailValidCheck === false) {
-        errors.email = 'Please enter a valid email address.';
-      }
-    }
-    if (!values.password) {
-      errors.password = 'Please enter password.';
-    }
-    return errors;
-  };
+  // const validate = values => {
+  //   let errors = {};
+  //   if (!values.email) {
+  //     errors.email = 'Please enter email.';
+  //   } else {
+  //     const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+  //     const emailValidCheck = emailRegExp.test(values.email);
+  //     if (emailValidCheck === false) {
+  //       errors.email = 'Please enter a valid email address.';
+  //     }
+  //   }
+  //   if (!values.password) {
+  //     errors.password = 'Please enter password.';
+  //   }
+  //   return errors;
+  // };
 
   //Function to handel login
-  const handelLogin = async () => {
-    try {
-      let validateResponse = validate(formValues);
-      if (Object.keys(validateResponse).length > 0) {
-        setFormErrors(validateResponse);
-      } else {
-        setIsLoading(true);
-        let response = await axiosPublic.post('/store/login', formValues);
-        if (response.data.success === true) {
-          let obj = {
-            accessToken: response.data?.token,
-            storeId: '',
-            email: formValues.email,
-            isLoggedIn: true,
-          };
-          setAuth(obj);
-          localStorageSetItem(obj);
-          setIsLoading(false);
-          navigation.replace('PrivateStackScreen');
-        } else {
-          setIsLoading(false);
-          showAlertPopup('Opps', response.data?.message, 'Cancel');
-        }
-      }
-    } catch (error) {
-      console.log('In catch block');
-      setIsLoading(false);
-      if (error?.message === 'Network Error') {
-        showAlertPopup(
-          error?.message,
-          'Please check your internet connectivity.',
-          'Ok',
-        );
-      } else {
-        showAlertPopup('Opps', error?.message, 'Cancel');
-      }
-    }
-  };
+  // const onLogin = async () => {
+  //   try {
+  //     let validateResponse = validate(formValues);
+  //     if (Object.keys(validateResponse).length > 0) {
+  //       setFormErrors(validateResponse);
+  //     } else {
+  //       setIsLoading(true);
+  //       let response = await axiosPublic.post('/store/login', formValues);
+  //       if (response.data.success === true) {
+  //         let obj = {
+  //           accessToken: response.data?.token,
+  //           storeId: '',
+  //           email: formValues.email,
+  //           isLoggedIn: true,
+  //         };
+  //         setAuth(obj);
+  //         localStorageSetItem(obj);
+  //         setIsLoading(false);
+  //         navigation.replace('PrivateStackScreen');
+  //       } else {
+  //         setIsLoading(false);
+  //         showAlertPopup('Opps', response.data?.message, 'Cancel');
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log('In catch block');
+  //     setIsLoading(false);
+  //     if (error?.message === 'Network Error') {
+  //       showAlertPopup(
+  //         error?.message,
+  //         'Please check your internet connectivity.',
+  //         'Ok',
+  //       );
+  //     } else {
+  //       showAlertPopup('Opps', error?.message, 'Cancel');
+  //     }
+  //   }
+  // };
 
   //Function to navigate to signup
   const navigateToSignUp = () => {
@@ -136,7 +144,7 @@ const Login = ({navigation}) => {
                 value={formValues.email}
                 icon={images.tick}
                 isSecure={false}
-                error={formErrors.email}
+                error={email}
                 onChangeText={handelEmail}
                 onClick={null}
               />
@@ -147,7 +155,7 @@ const Login = ({navigation}) => {
                 value={formValues.password}
                 icon={isHidden ? images.password_hidden_eye : images.eye}
                 isSecure={isHidden}
-                error={formErrors.password}
+                error={password}
                 onChangeText={handelPassword}
                 onClick={togglePassword}
               />
@@ -161,7 +169,7 @@ const Login = ({navigation}) => {
                 </Text>
               </View>
               <View style={styles.buttonSectionWrapper}>
-                <ButtonComp btnText="Sign In" action={handelLogin} />
+                <ButtonComp btnText="Sign In" action={() => onLogin(formValues, loginCallback)} />
               </View>
             </View>
           </View>
@@ -172,4 +180,18 @@ const Login = ({navigation}) => {
   );
 };
 
+const mapStateToProps = state => {
+  return {
+    isLoading: state.app.isLoading,
+    formErrors: state.login.loginErrors,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onLogin: (formValues, loginCallback) => dispatch(handleLogin(formValues, loginCallback))
+  }
+}
+
+const Login = connect(mapStateToProps, mapDispatchToProps)(LoginComponent)
 export default Login;
