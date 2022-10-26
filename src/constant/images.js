@@ -18,6 +18,8 @@ const user1 = require('../../assets/images/profile_pic.jpg');
 const camera = require('../../assets/images/camera.png');
 const eye = require('../../assets/images/eye.png');
 const edit = require('../../assets/images/edit.png');
+const down_arrow = require('../../assets/images/down-arrow.png');
+const up_arrow = require('../../assets/images/up-arrow.png');
 
 export default {
   splash_screen,
@@ -40,4 +42,6 @@ export default {
   arrow_left,
   eye,
   edit,
+  down_arrow,
+  up_arrow,
 };
