@@ -42,14 +42,11 @@ const SelectInput = props => {
   };
 
   return (
-    <>
+    <View>
       <TouchableOpacity
         onPress={handelSelectClick}
         activeOpacity={0.8}
-        style={[
-          styles.inputSectionWrapper,
-          props.error.length > 0 === true && styles.error,
-        ]}>
+        style={[styles.inputSectionWrapper, props.error && styles.error]}>
         <View style={styles.inputLeftSectionWrapper}>
           <View style={styles.inputWrapper}>
             <Text style={styles.selectLabel}>
@@ -100,12 +97,12 @@ const SelectInput = props => {
           </ScrollView>
         </View>
       )}
-      {props.error.length > 0 && (
+      {props.error && (
         <View style={styles.errorMessageWrapper}>
           <Text style={styles.errorMessage}>{props.error}</Text>
         </View>
       )}
-    </>
+    </View>
   );
 };
 
@@ -172,10 +169,10 @@ const styles = StyleSheet.create({
   optionWrapper: {
     marginHorizontal: moderateScale(15),
     position: 'absolute',
-    top: 165,
-    //bottom: -55,
-    left: 0,
-    right: 0,
+    top: 78,
+    //bottom: 0,
+    //left: 0,
+    //right: 0,
     maxHeight: moderateScale(100),
     backgroundColor: COLORS.white,
     zIndex: 1,
@@ -186,7 +183,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.17,
     shadowRadius: 3.05,
     elevation: 4,
-    //borderWidth: 1,
+    width: '90%',
   },
   option: {
     //backgroundColor: 'green',
