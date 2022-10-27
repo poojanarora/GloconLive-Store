@@ -2,6 +2,7 @@ import React, {useState, useRef} from 'react';
 import {View, Button, StyleSheet} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Video from 'react-native-video';
+import ButtonComp from '../../components/ButtonComp';
 const ShopVideoPreview = () => {
   const [video, setVideo] = useState(null);
   const videoPlayer = useRef(null);
@@ -31,11 +32,10 @@ const ShopVideoPreview = () => {
         />
       )}
       <View style={styles.changeVideo}>
-        <Button
-          style={styles.changeVideoBtn}
-          title="Change Video"
-          color="red"
-          onPress={() => pickVideo()}
+        <ButtonComp
+          btnText="Change Video"
+          action={pickVideo}
+          btnStyle={styles.changeVideoBtn}
         />
       </View>
     </View>
