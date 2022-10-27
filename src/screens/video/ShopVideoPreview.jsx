@@ -1,10 +1,13 @@
-import React, {useState, useRef} from 'react';
-import {View, Button, StyleSheet} from 'react-native';
+import React, {useRef} from 'react';
+import {View, StyleSheet} from 'react-native';
+import {connect} from 'react-redux';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Video from 'react-native-video';
 import ButtonComp from '../../components/ButtonComp';
-const ShopVideoPreview = () => {
-  const [video, setVideo] = useState(null);
+import { handleVideoSelection } from '../../actions/shopVideoAction';
+import { moderateScale } from 'react-native-size-matters';
+
+const ShopVideoPreviewComponent = ({video, onChangeVideo}) => {
   const videoPlayer = useRef(null);
   const pickVideo = async () => {
     let result = await launchImageLibrary({
@@ -13,15 +16,16 @@ const ShopVideoPreview = () => {
     });
     console.log(result);
     if (!result.didCancel) {
-      setVideo(result.assets[0].uri);
+      onChangeVideo(result.assets[0]);
     }
   };
+  const {uri} = video;
   return (
     <View style={styles.videoBackground}>
-      {video && (
+      {uri && (
         <Video
           source={{
-            uri: video,
+            uri: uri,
           }} // Can be a URL or a local file.
           ref={videoPlayer}
           // onBuffer={this.onBuffer} // Callback when remote video is buffering
@@ -73,7 +77,24 @@ const styles = StyleSheet.create({
   },
   changeVideoBtn: {
     textTransform: 'none',
+    width: moderateScale(120),
   },
 });
 
+const mapStateToProps = state => {
+  return {
+    video: state.shopVideoPreview.shopVideo,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onChangeVideo: video => dispatch(handleVideoSelection(video)),
+  };
+};
+
+const ShopVideoPreview = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ShopVideoPreviewComponent);
 export default ShopVideoPreview;

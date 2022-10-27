@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, Component} from 'react';
+import React, {useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -44,13 +44,11 @@ const initialChangePasswordErrors = {
   confirmPassword: '',
 };
 
-const ViewProfileComponent = ({auth, fetchProfileInfo}) => {
+const ViewProfileComponent = ({auth, fetchProfileInfo, navigation}) => {
   const [fetchProfile, setFetchProfile] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
-    useState(false);
-  const [addStoreVideoModalVisible, setAddStoreVideoModalVisible] =
     useState(false);
   const [editProfileFormValues, setEditProfileFormValues] = useState(
     initialEditProfileFormValues,
@@ -102,12 +100,7 @@ const ViewProfileComponent = ({auth, fetchProfileInfo}) => {
 
   //Function to show add store video modal
   const showAddStoreVideoModal = () => {
-    setAddStoreVideoModalVisible(true);
-  };
-
-  //Function to hide add store video modal
-  const hideAddStoreVideoModal = () => {
-    setAddStoreVideoModalVisible(false);
+    navigation.navigate('AddStoreVideo')
   };
 
   //Function to render change password modal
@@ -150,28 +143,6 @@ const ViewProfileComponent = ({auth, fetchProfileInfo}) => {
           isSecure={true}
           error={changePasswordFormErrors.confirmPassword}
           onChangeText={handelConfirmPassword}
-        />
-      </PopupModal>
-    );
-  };
-
-  //Function to render add store video modal
-  const renderAddStoreVideoModal = () => {
-    return (
-      <PopupModal
-        show={addStoreVideoModalVisible}
-        closeAction={hideAddStoreVideoModal}
-        title="Add Store Video"
-        subTitle="Add store video and title for same video"
-        primaryButtonText="Upload"
-        dangerButtonText="Preview Video">
-        <IconInputWithoutLabel
-          placeholder="Video Title Here"
-          name="videoTitle"
-          showIcon={false}
-          icon={images.tick}
-          error={false}
-          errorMessage="Please enter video title."
         />
       </PopupModal>
     );
@@ -261,7 +232,6 @@ const ViewProfileComponent = ({auth, fetchProfileInfo}) => {
     <SafeAreaView style={styles.safeAreaViewStyle}>
       <OverlaySpinner isLoading={isLoading} style={styles.safeAreaViewStyle}>
         {renderUpdatePasswordModal()}
-        {renderAddStoreVideoModal()}
         <View style={styles.topSectionWrapper}>
           <View style={styles.profilePictureWrapper}>
             <Image style={styles.profileImage} source={images.user1} />

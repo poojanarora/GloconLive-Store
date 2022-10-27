@@ -11,6 +11,8 @@ import LocationDetails from "./location/LocationDetails";
 
 import ViewProfile from "./profile/ViewProfile";
 
+import ShopVideoPreview from "./video/ShopVideoPreview";
+import AddStoreVideo from "./video/AddStoreVideo";
 
 export {
     Splash,
@@ -21,5 +23,7 @@ export {
     IncomingCallAdd,
     LocationListing,
     LocationDetails,
-    ViewProfile
+    ViewProfile,
+    ShopVideoPreview,
+    AddStoreVideo
 };

@@ -14,4 +14,7 @@ export const initialState = {
       password: '',
     },
   },
+  shopVideoPreview: {
+    shopVideo: null,
+  },
 };

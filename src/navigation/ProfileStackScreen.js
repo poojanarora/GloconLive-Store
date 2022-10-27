@@ -1,8 +1,8 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {COLORS, images} from '../constant';
+import {COLORS} from '../constant';
 import MenuIcon from '../components/MenuIcon';
-import {ViewProfile} from '../screens';
+import {ShopVideoPreview, ViewProfile, AddStoreVideo} from '../screens';
 
 const ProfileStackScreen = ({navigation}) => {
   const ProfileStack = createNativeStackNavigator();
@@ -29,6 +29,21 @@ const ProfileStackScreen = ({navigation}) => {
         }}
         name="ViewProfile"
         component={ViewProfile}
+      />
+      <ProfileStack.Screen
+        options={{
+          //headerShown: false,
+          title: 'Preview Video',
+        }}
+        name="ShopVideoPreview"
+        component={ShopVideoPreview}
+      />
+      <ProfileStack.Screen
+      options={{
+          headerShown: false,
+        }}
+        name="AddStoreVideo"
+        component={AddStoreVideo}
       />
     </ProfileStack.Navigator>
   );
