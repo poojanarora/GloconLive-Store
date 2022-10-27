@@ -6,11 +6,9 @@ import {
   moderateVerticalScale,
 } from 'react-native-size-matters';
 import {COLORS, images} from '../constant';
-import useSetAuth from '../hooks/useSetAuth';
-import {localStorageRemoveItem} from '../hooks/useAsyncStorage';
-
+import {useDispatch} from 'react-redux';
+import {handleLogout} from '../actions/authActions';
 const CustomDrawerScreen = props => {
-  const setAuth = useSetAuth();
   const menus = [
     {
       id: 1,
@@ -31,6 +29,7 @@ const CustomDrawerScreen = props => {
       navigatTo: 'Profile',
     },
   ];
+  const dispatch = useDispatch();
   const [selectedMenu, setSelectedMenu] = useState(3);
 
   //Function to handel menu click
@@ -47,8 +46,7 @@ const CustomDrawerScreen = props => {
       email: '',
       isLoggedIn: false,
     };
-    await localStorageRemoveItem();
-    setAuth(obj);
+    dispatch(handleLogout(obj));
     props.navigation.replace('PublicStackScreen');
   };
 
