@@ -12,16 +12,16 @@ import axiosPublic from '../config/publicApi';
 export const handleLogin = (formValues, loginCallback) => async dispatch => {
   const {email} = formValues;
   try {
+    dispatch(setLoading(true));
     let response = await axiosPublic.post('/store/login', formValues);
     if (response.data.success === true) {
       let obj = {
         accessToken: response.data?.token,
-        storeId: '',
         email,
         isLoggedIn: true,
       };
-      dispatch(setAuth(obj));
       localStorageSetItem(obj);
+      dispatch(setAuth(obj));
       dispatch(setLoading(false));
       loginCallback(true);
     } else {

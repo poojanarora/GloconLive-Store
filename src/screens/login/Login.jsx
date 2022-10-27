@@ -4,11 +4,10 @@ import styles from './styles.js';
 import {images} from '../../constant';
 import IconInput from '../../components/IconInput.jsx';
 import ButtonComp from '../../components/ButtonComp.jsx';
-import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC.js';
+import Spinner from '../../components/Spinner.jsx';
 import {connect} from 'react-redux';
 import {handleLogin} from '../../actions/authActions.js';
 
-const OverlaySpinner = OverlaySpinnerHOC(View);
 const initialFormValues = {
   email: '',
   password: '',
@@ -108,57 +107,50 @@ const LoginComponent = ({navigation, isLoading, onLogin}) => {
 
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
-      <OverlaySpinner isLoading={isLoading}>
-        {/* <ScrollView showsVerticalScrollIndicator={false}> */}
-        <View style={styles.body}>
-          <View style={styles.mainSectionWrapper}>
-            <View style={styles.headerSectionWrapper}>
-              <Image style={styles.logoImage} source={images.logo_white} />
-            </View>
-            <View style={styles.formSectionWrapper}>
-              <IconInput
-                label="Email"
-                placeholder="mynamein@gmail.com"
-                name="email"
-                value={formValues.email}
-                icon={images.tick}
-                isSecure={false}
-                error={formErrors.email}
-                onChangeText={handelEmail}
-                onClick={null}
-              />
-              <IconInput
-                label="Password"
-                placeholder="********"
-                name="password"
-                value={formValues.password}
-                icon={isHidden ? images.password_hidden_eye : images.eye}
-                isSecure={isHidden}
-                error={formErrors.password}
-                onChangeText={handelPassword}
-                onClick={togglePassword}
-              />
-              <Text></Text>
-              <View style={styles.signUpLabelWrapper}>
-                <Text style={styles.signUpLabel}>
-                  Dont have an account?{' '}
-                  <Text onPress={navigateToSignUp} style={styles.labelPrimary}>
-                    Sign Up
-                  </Text>
+      <Spinner />
+      <View style={styles.body}>
+        <View style={styles.mainSectionWrapper}>
+          <View style={styles.headerSectionWrapper}>
+            <Image style={styles.logoImage} source={images.logo_white} />
+          </View>
+          <View style={styles.formSectionWrapper}>
+            <IconInput
+              label="Email"
+              placeholder="mynamein@gmail.com"
+              name="email"
+              value={formValues.email}
+              icon={images.tick}
+              isSecure={false}
+              error={formErrors.email}
+              onChangeText={handelEmail}
+              onClick={null}
+            />
+            <IconInput
+              label="Password"
+              placeholder="********"
+              name="password"
+              value={formValues.password}
+              icon={isHidden ? images.password_hidden_eye : images.eye}
+              isSecure={isHidden}
+              error={formErrors.password}
+              onChangeText={handelPassword}
+              onClick={togglePassword}
+            />
+            <Text></Text>
+            <View style={styles.signUpLabelWrapper}>
+              <Text style={styles.signUpLabel}>
+                Dont have an account?{' '}
+                <Text onPress={navigateToSignUp} style={styles.labelPrimary}>
+                  Sign Up
                 </Text>
-              </View>
-              <View style={styles.buttonSectionWrapper}>
-                <ButtonComp
-                  btnText="Sign In"
-                  //action={() => onLogin(formValues, loginCallback)}
-                  action={onSubmit}
-                />
-              </View>
+              </Text>
+            </View>
+            <View style={styles.buttonSectionWrapper}>
+              <ButtonComp btnText="Sign In" action={onSubmit} />
             </View>
           </View>
         </View>
-        {/* </ScrollView>  */}
-      </OverlaySpinner>
+      </View>
     </SafeAreaView>
   );
 };

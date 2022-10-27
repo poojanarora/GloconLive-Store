@@ -4,8 +4,8 @@ export const actionTypes = {
   UPDATE_AUTH: 'UPDATE_AUTH',
 };
 
-export const loginActionTypes = {
-  SET_LOGIN_ERRORS: 'SET_LOGIN_ERRORS',
+export const profileActionTypes = {
+  STORE_PROFILE: 'STORE_PROFILE',
 };
 
 export const shopVideoActionTypes = {
