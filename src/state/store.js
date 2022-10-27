@@ -1,16 +1,16 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { combineReducers } from 'redux'
+import {configureStore} from '@reduxjs/toolkit';
+import {combineReducers} from 'redux';
 
-import app from '../reducers/app'
-import login from '../reducers/login'
+import app from '../reducers/app';
+import profile from '../reducers/profile';
 
 const reducer = combineReducers({
   app,
-  login,
-})
+  profile,
+});
 
 const store = configureStore({
   reducer,
-})
+});
 
 export default store;

@@ -18,14 +18,13 @@ import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import {connect} from 'react-redux';
 import axiosPrivate from '../../config/privateApi';
 import showAlertPopup from '../../components/AlertComp';
-import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC';
-import {fetchProfileInfo} from '../../actions/profileActions';
-
-const OverlaySpinner = OverlaySpinnerHOC(View);
-const initialEditProfileFormValues = {
-  companyName: 'Demo Company',
-  email: '',
-};
+import Spinner from '../../components/Spinner.jsx';
+import {
+  fetchProfileInfo,
+  storeProfile,
+  changePassword,
+} from '../../actions/profileActions';
+import {setLoading} from '../../actions/appAction';
 
 const initialEditProfileErrors = {
   companyName: '',
@@ -44,17 +43,20 @@ const initialChangePasswordErrors = {
   confirmPassword: '',
 };
 
-const ViewProfileComponent = ({auth, fetchProfileInfo}) => {
+const ViewProfileComponent = ({
+  isLoading,
+  auth,
+  profile,
+  setLoading,
+  fetchProfileInfo,
+  updateProfileInfo,
+  changePassword,
+}) => {
   const [fetchProfile, setFetchProfile] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
     useState(false);
   const [addStoreVideoModalVisible, setAddStoreVideoModalVisible] =
     useState(false);
-  const [editProfileFormValues, setEditProfileFormValues] = useState(
-    initialEditProfileFormValues,
-  );
   const [editProfileFormErrors, setEditProfileFormErrors] = useState(
     initialEditProfileErrors,
   );
@@ -69,25 +71,13 @@ const ViewProfileComponent = ({auth, fetchProfileInfo}) => {
     console.log('Profile component mounted');
 
     //Calling functions
-    fetchProfileInfo(auth.email, fetchProfileInfoCallBack);
+    fetchProfileInfo(auth.email);
 
     //Cleanup function
     return () => {
       console.log('Profile component unmounted');
     };
   }, [fetchProfile]);
-
-  /**
-   * Function to handle fetch profile info sucess.
-   */
-  const fetchProfileInfoCallBack = response => {
-    setEditProfileFormValues({
-      ...editProfileFormValues,
-      email: response.email,
-      companyName: response.company_name,
-    });
-    setRefreshing(false);
-  };
 
   //Function to show change password modal
   const showUpdatePasswordModal = () => {
@@ -179,8 +169,17 @@ const ViewProfileComponent = ({auth, fetchProfileInfo}) => {
 
   //Function to handel profile refresh
   const onRefresh = () => {
-    setRefreshing(true);
     setFetchProfile(!fetchProfile);
+  };
+
+  //Function to handel company name
+  const handelCompanyName = e => {
+    updateProfileInfo({companyName: e});
+  };
+
+  //Function to handel email
+  const handelEmailId = e => {
+    updateProfileInfo({email: e});
   };
 
   //Function to handel old password
@@ -237,117 +236,112 @@ const ViewProfileComponent = ({auth, fetchProfileInfo}) => {
       if (Object.keys(validateResponse).length > 0) {
         setChangePasswordFormErrors(validateResponse);
       } else {
-        setIsLoading(true);
-        const response = await axiosPrivate.post('/store/update-password', {
+        await changePassword({
           email: auth.email,
           old_password: changePasswordFormValues.oldPassword,
           new_password: changePasswordFormValues.newPassword,
         });
-        if (response.data.success === true) {
-          setIsLoading(false);
-          hideUpdatePasswordModal();
-          showAlertPopup('Success', response.data?.message, 'Ok');
-        } else {
-          setIsLoading(false);
-          showAlertPopup('Opps', response.data?.message, 'Cancel');
-        }
+        hideUpdatePasswordModal();
       }
     } catch (error) {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
-      <OverlaySpinner isLoading={isLoading} style={styles.safeAreaViewStyle}>
-        {renderUpdatePasswordModal()}
-        {renderAddStoreVideoModal()}
-        <View style={styles.topSectionWrapper}>
-          <View style={styles.profilePictureWrapper}>
-            <Image style={styles.profileImage} source={images.user1} />
-            <TouchableOpacity style={styles.cameraButton}>
-              <Image style={styles.cameraImage} source={images.camera} />
-            </TouchableOpacity>
-          </View>
+      <Spinner />
+      {renderUpdatePasswordModal()}
+      {renderAddStoreVideoModal()}
+      <View style={styles.topSectionWrapper}>
+        <View style={styles.profilePictureWrapper}>
+          <Image style={styles.profileImage} source={images.user1} />
+          <TouchableOpacity style={styles.cameraButton}>
+            <Image style={styles.cameraImage} source={images.camera} />
+          </TouchableOpacity>
         </View>
-        <View style={styles.bottomSectionWrapper}>
-          <ScrollView
-            contentContainerStyle={{flexGrow: 1}}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
-            <View style={styles.formSectionWrapper}>
-              <View>
-                <IconInput
-                  label="Company Name"
-                  placeholder="User Company Name"
-                  name="companyName"
-                  value={editProfileFormValues.companyName}
-                  icon={images.tick}
-                  isSecure={false}
-                  error={editProfileFormErrors.companyName}
-                />
-                <IconInput
-                  label="Email ID"
-                  placeholder="usermailid@gmail.com"
-                  name="email"
-                  value={editProfileFormValues.email}
-                  icon={images.tick}
-                  isSecure={false}
-                  error={editProfileFormErrors.email}
-                />
-                <TouchableOpacity
-                  style={styles.updatePasswordlabelWrapper}
-                  onPress={showUpdatePasswordModal}>
-                  <Text style={styles.updatePasswordlabel}>
-                    Update Password
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.buttonSectionWrapper}>
-                <ButtonComp
-                  btnText="Upload Store Video"
-                  action={showAddStoreVideoModal}
-                  btnStyle={{
-                    backgroundColor: COLORS.secondaryColor,
-                    width: moderateScale(190),
-                    shadowColor: COLORS.secondaryColor,
-                  }}
-                  btnTextStyle={{
-                    fontSize: scale(12),
-                    color: COLORS.black,
-                  }}
-                />
-
-                <ButtonComp
-                  btnText="SAVE"
-                  btnStyle={{
-                    width: moderateScale(100),
-                  }}
-                  btnTextStyle={{
-                    fontSize: scale(12),
-                  }}
-                />
-              </View>
+      </View>
+      <View style={styles.bottomSectionWrapper}>
+        <ScrollView
+          contentContainerStyle={{flexGrow: 1}}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+          }>
+          <View style={styles.formSectionWrapper}>
+            <View>
+              <IconInput
+                label="Company Name"
+                placeholder="User Company Name"
+                name="companyName"
+                value={profile.companyName}
+                icon={images.tick}
+                isSecure={false}
+                error={editProfileFormErrors.companyName}
+                onChangeText={handelCompanyName}
+              />
+              <IconInput
+                label="Email ID"
+                placeholder="usermailid@gmail.com"
+                name="email"
+                value={profile.email}
+                icon={images.tick}
+                isSecure={false}
+                error={editProfileFormErrors.email}
+                onChangeText={handelEmailId}
+              />
+              <TouchableOpacity
+                style={styles.updatePasswordlabelWrapper}
+                onPress={showUpdatePasswordModal}>
+                <Text style={styles.updatePasswordlabel}>Update Password</Text>
+              </TouchableOpacity>
             </View>
-          </ScrollView>
-        </View>
-      </OverlaySpinner>
+            <View style={styles.buttonSectionWrapper}>
+              <ButtonComp
+                btnText="Upload Store Video"
+                action={showAddStoreVideoModal}
+                btnStyle={{
+                  backgroundColor: COLORS.secondaryColor,
+                  width: moderateScale(190),
+                  shadowColor: COLORS.secondaryColor,
+                }}
+                btnTextStyle={{
+                  fontSize: scale(12),
+                  color: COLORS.black,
+                }}
+              />
+
+              <ButtonComp
+                btnText="SAVE"
+                btnStyle={{
+                  width: moderateScale(100),
+                }}
+                btnTextStyle={{
+                  fontSize: scale(12),
+                }}
+              />
+            </View>
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
 
 const mapStateToProps = state => {
   return {
+    isLoading: state.app.isLoading,
     auth: state.app.auth,
+    profile: state.profile,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchProfileInfo: (email, fetchProfileInfoCallBack) =>
-      dispatch(fetchProfileInfo(email, fetchProfileInfoCallBack)),
+    setLoading: loading => dispatch(setLoading(loading)),
+    fetchProfileInfo: email => dispatch(fetchProfileInfo(email)),
+    updateProfileInfo: obj => dispatch(storeProfile(obj)),
+    changePassword: payload => dispatch(changePassword(payload)),
   };
 };
 

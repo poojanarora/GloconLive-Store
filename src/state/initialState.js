@@ -3,10 +3,21 @@ export const initialState = {
     isLoading: false,
     auth: {
       accessToken: '',
-      storeId: '',
       email: '',
       isLoggedIn: false,
     },
+  },
+  profile: {
+    id: '',
+    companyName: '',
+    email: '',
+    industry: '',
+    name: '',
+    phone: '',
+    status: '',
+    subscriptionId: '',
+    subscriptionStartDate: '',
+    titlePosition: '',
   },
   login: {
     loginErrors: {
