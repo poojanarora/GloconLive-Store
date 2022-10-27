@@ -1,128 +1,107 @@
 import React, {useState} from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Image,
-} from 'react-native';
+import {SafeAreaView, View, Text, Image} from 'react-native';
 import styles from './styles.js';
 import {images} from '../../constant';
 import IconInput from '../../components/IconInput.jsx';
 import ButtonComp from '../../components/ButtonComp.jsx';
 import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC.js';
-import axiosPublic from '../../config/publicApi.js';
-import showAlertPopup from '../../components/AlertComp';
-import useSetAuth from '../../hooks/useSetAuth.js';
-import {localStorageSetItem} from '../../hooks/useAsyncStorage.js';
-import { connect } from 'react-redux';
-import { handleLogin } from '../../actions/loginActions.js';
+import {connect} from 'react-redux';
+import {handleLogin} from '../../actions/authActions.js';
 
 const OverlaySpinner = OverlaySpinnerHOC(View);
 const initialFormValues = {
   email: '',
   password: '',
 };
-// const initialErrors = {
-//   email: '',
-//   password: '',
-// };
+const initialErrors = {
+  email: '',
+  password: '',
+};
 
-const LoginComponent = ({navigation, isLoading, onLogin, formErrors}) => {
-  const setAuth = useSetAuth();
-
-  // const [isLoading, setIsLoading] = useState(false);
+const LoginComponent = ({navigation, isLoading, onLogin}) => {
   const [formValues, setFormValues] = useState(initialFormValues);
-  // const [formErrors, setFormErrors] = useState(initialErrors);
+  const [formErrors, setFormErrors] = useState(initialErrors);
   const [isHidden, setIsHidden] = useState(true);
 
-  const {email, password} = formErrors;
-  
-  //Function to toggle password visibility
+  /**
+   * Function to handle password hide show.
+   */
   const togglePassword = () => {
     setIsHidden(!isHidden);
   };
 
-  //Function to handel email
+  /**
+   * Function to handle email.
+   */
   const handelEmail = e => {
     setFormValues({
       ...formValues,
       email: e,
     });
+    setFormErrors({
+      ...formErrors,
+      email: '',
+    });
   };
 
-  //Function to handel password
+  /**
+   * Function to handle passowrd.
+   */
   const handelPassword = e => {
     setFormValues({
       ...formValues,
       password: e,
     });
+    setFormErrors({
+      ...formErrors,
+      password: '',
+    });
   };
 
+  /**
+   * Function to handle login form validation.
+   */
+  const validate = values => {
+    let errors = {};
+    if (!values.email) {
+      errors.email = 'Please enter email.';
+    } else {
+      const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+      const emailValidCheck = emailRegExp.test(values.email);
+      if (emailValidCheck === false) {
+        errors.email = 'Please enter a valid email address.';
+      }
+    }
+    if (!values.password) {
+      errors.password = 'Please enter password.';
+    }
+    return errors;
+  };
+
+  /**
+   * Function to handle login form submit.
+   */
+  const onSubmit = () => {
+    let validateResponse = validate(formValues);
+    if (Object.keys(validateResponse).length > 0) {
+      setFormErrors(validateResponse);
+    } else {
+      onLogin(formValues, loginCallback);
+    }
+  };
+
+  /**
+   * Function to handle login sucess.
+   */
   const loginCallback = response => {
     if (response) {
       navigation.replace('PrivateStackScreen');
     }
-  }
+  };
 
-  //Function to validate data
-  // const validate = values => {
-  //   let errors = {};
-  //   if (!values.email) {
-  //     errors.email = 'Please enter email.';
-  //   } else {
-  //     const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-  //     const emailValidCheck = emailRegExp.test(values.email);
-  //     if (emailValidCheck === false) {
-  //       errors.email = 'Please enter a valid email address.';
-  //     }
-  //   }
-  //   if (!values.password) {
-  //     errors.password = 'Please enter password.';
-  //   }
-  //   return errors;
-  // };
-
-  //Function to handel login
-  // const onLogin = async () => {
-  //   try {
-  //     let validateResponse = validate(formValues);
-  //     if (Object.keys(validateResponse).length > 0) {
-  //       setFormErrors(validateResponse);
-  //     } else {
-  //       setIsLoading(true);
-  //       let response = await axiosPublic.post('/store/login', formValues);
-  //       if (response.data.success === true) {
-  //         let obj = {
-  //           accessToken: response.data?.token,
-  //           storeId: '',
-  //           email: formValues.email,
-  //           isLoggedIn: true,
-  //         };
-  //         setAuth(obj);
-  //         localStorageSetItem(obj);
-  //         setIsLoading(false);
-  //         navigation.replace('PrivateStackScreen');
-  //       } else {
-  //         setIsLoading(false);
-  //         showAlertPopup('Opps', response.data?.message, 'Cancel');
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log('In catch block');
-  //     setIsLoading(false);
-  //     if (error?.message === 'Network Error') {
-  //       showAlertPopup(
-  //         error?.message,
-  //         'Please check your internet connectivity.',
-  //         'Ok',
-  //       );
-  //     } else {
-  //       showAlertPopup('Opps', error?.message, 'Cancel');
-  //     }
-  //   }
-  // };
-
-  //Function to navigate to signup
+  /**
+   * Function to navigate to signup.
+   */
   const navigateToSignUp = () => {
     navigation.navigate('CheckApplicationStatus');
   };
@@ -144,7 +123,7 @@ const LoginComponent = ({navigation, isLoading, onLogin, formErrors}) => {
                 value={formValues.email}
                 icon={images.tick}
                 isSecure={false}
-                error={email}
+                error={formErrors.email}
                 onChangeText={handelEmail}
                 onClick={null}
               />
@@ -155,7 +134,7 @@ const LoginComponent = ({navigation, isLoading, onLogin, formErrors}) => {
                 value={formValues.password}
                 icon={isHidden ? images.password_hidden_eye : images.eye}
                 isSecure={isHidden}
-                error={password}
+                error={formErrors.password}
                 onChangeText={handelPassword}
                 onClick={togglePassword}
               />
@@ -169,7 +148,11 @@ const LoginComponent = ({navigation, isLoading, onLogin, formErrors}) => {
                 </Text>
               </View>
               <View style={styles.buttonSectionWrapper}>
-                <ButtonComp btnText="Sign In" action={() => onLogin(formValues, loginCallback)} />
+                <ButtonComp
+                  btnText="Sign In"
+                  //action={() => onLogin(formValues, loginCallback)}
+                  action={onSubmit}
+                />
               </View>
             </View>
           </View>
@@ -183,15 +166,15 @@ const LoginComponent = ({navigation, isLoading, onLogin, formErrors}) => {
 const mapStateToProps = state => {
   return {
     isLoading: state.app.isLoading,
-    formErrors: state.login.loginErrors,
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLogin: (formValues, loginCallback) => dispatch(handleLogin(formValues, loginCallback))
-  }
-}
+    onLogin: (formValues, loginCallback) =>
+      dispatch(handleLogin(formValues, loginCallback)),
+  };
+};
 
-const Login = connect(mapStateToProps, mapDispatchToProps)(LoginComponent)
+const Login = connect(mapStateToProps, mapDispatchToProps)(LoginComponent);
 export default Login;

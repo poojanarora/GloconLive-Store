@@ -8,10 +8,18 @@ const app = (state = initialState.app, action) => {
         ...state,
         isLoading: action.payload,
       };
-    case actionTypes.SET_AUTH_CONFIG:
+    case actionTypes.SET_AUTH:
       return {
         ...state,
-        authConfig: action.payload,
+        auth: action.payload,
+      };
+    case actionTypes.UPDATE_AUTH:
+      return {
+        ...state,
+        auth: {
+          ...state.auth,
+          ...action.payload,
+        },
       };
     default:
       return state;

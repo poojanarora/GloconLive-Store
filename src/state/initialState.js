@@ -1,7 +1,7 @@
 export const initialState = {
   app: {
     isLoading: false,
-    authConfig: {
+    auth: {
       accessToken: '',
       storeId: '',
       email: '',
