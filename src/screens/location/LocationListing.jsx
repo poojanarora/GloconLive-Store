@@ -19,6 +19,7 @@ import axiosPrivate from '../../config/privateApi';
 
 const OverlaySpinner = OverlaySpinnerHOC(View);
 const initialFormValues = {
+  locationId: '',
   locationName: '',
   locationAddress: '',
 };
@@ -27,6 +28,8 @@ const initialFormErrors = {
   locationAddress: '',
 };
 const LocationListing = ({navigation}) => {
+  const ADD_LOCATION_URL = '/store/add-location';
+  const UPDATE_LOCATION_URL = '/store/update-location';
   const auth = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [fetchLocations, setFetchLocations] = useState(false);
@@ -34,6 +37,7 @@ const LocationListing = ({navigation}) => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [modalVisible, setModalVisible] = useState(false);
+  const [action, setAction] = useState('Add');
 
   useEffect(() => {
     console.log('Location listing component mounted');
@@ -99,6 +103,24 @@ const LocationListing = ({navigation}) => {
     setFormErrors({...formErrors, locationAddress: ''});
   };
 
+  //Function to handel add location
+  const handelAddLocation = () => {
+    setAction('Add');
+    showModal();
+  };
+
+  //Function to handel edit location
+  const handelEditLocation = item => {
+    setFormValues({
+      ...formValues,
+      locationId: item.id,
+      locationName: item.name,
+      locationAddress: item.address,
+    });
+    setAction('Update');
+    showModal();
+  };
+
   //Function to validate add location form
   const validate = values => {
     let errors = {};
@@ -111,22 +133,42 @@ const LocationListing = ({navigation}) => {
     return errors;
   };
 
-  // Function to handel add location
-  const handelAddLocation = async () => {
+  // Function to handel add and update location
+  const handelSubmit = async () => {
     try {
       let validateResponse = validate(formValues);
       if (Object.keys(validateResponse).length > 0) {
         setFormErrors(validateResponse);
       } else {
         setIsLoading(true);
-        const response = await axiosPrivate.post('/store/add-location', {
+        let url = ADD_LOCATION_URL;
+        let payload = {
           store_id: auth.storeId,
           name: formValues.locationName,
           address: formValues.locationAddress,
           status: '1',
-        });
+        };
+        if (action === 'Update') {
+          payload.location_id = formValues.locationId;
+          url = UPDATE_LOCATION_URL;
+        }
+        const response = await axiosPrivate.post(url, payload);
         if (response.data.success === true) {
-          setLocations(current => [...current, response.data?.data]);
+          if (action === 'Add') {
+            setLocations(current => [...current, response.data?.data]);
+          } else {
+            setLocations(current => {
+              const newState = current.map(obj => {
+                //if id equals to updated loaction id then update
+                if (obj.id === formValues.locationId) {
+                  return response.data?.data;
+                }
+                //otherwise return object as is
+                return obj;
+              });
+              return newState;
+            });
+          }
           setIsLoading(false);
           hideModal();
           showAlertPopup('Success', response.data?.message, 'Ok');
@@ -148,6 +190,11 @@ const LocationListing = ({navigation}) => {
           key={item.id}
           style={[styles.listItemWrapper, styles.shadow]}
           onPress={() => handelSelectLocation(item)}>
+          <TouchableOpacity
+            style={styles.editIconWrapper}
+            onPress={() => handelEditLocation(item)}>
+            <Image style={styles.editIconStyle} source={images.edit} />
+          </TouchableOpacity>
           <Image style={styles.listItemImage} source={images.location_pin_2} />
           <Text style={[styles.listItemTitle]}>{item.name}</Text>
           <Text style={[styles.listItemSubTitle]}>Select Any One</Text>
@@ -162,10 +209,14 @@ const LocationListing = ({navigation}) => {
       <PopupModal
         show={modalVisible}
         closeAction={hideModal}
-        submitAction={handelAddLocation}
-        title="Add Location"
-        subTitle="Please add new locations."
-        primaryButtonText="Add"
+        submitAction={handelSubmit}
+        title={`${action} Location`}
+        subTitle={
+          action === 'Add'
+            ? 'Please add new location.'
+            : 'Please update location.'
+        }
+        primaryButtonText={action}
         dangerButtonText="Cancel">
         <IconInputWithoutLabel
           placeholder="New Location Name here"
@@ -205,7 +256,7 @@ const LocationListing = ({navigation}) => {
             </View>
           </ScrollView>
           <View style={styles.buttonSectionWrapper}>
-            <ButtonComp btnText="Add Location" action={showModal} />
+            <ButtonComp btnText="Add Location" action={handelAddLocation} />
           </View>
         </View>
       </OverlaySpinner>

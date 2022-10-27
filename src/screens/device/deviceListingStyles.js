@@ -33,6 +33,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLORS.white,
   },
+  editIconWrapper: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: COLORS.primary,
+    height: moderateScale(30),
+    width: moderateScale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopRightRadius: moderateScale(10),
+  },
+  editIconStyle: {
+    height: moderateScale(18),
+    width: moderateScale(18),
+    resizeMode: 'contain',
+  },
   listItemSelected: {
     backgroundColor: COLORS.primary,
   },

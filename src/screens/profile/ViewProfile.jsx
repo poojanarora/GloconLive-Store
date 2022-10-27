@@ -15,11 +15,11 @@ import IconInput from '../../components/IconInput';
 import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
-import useAuth from '../../hooks/useAuth.js';
-import useSetAuth from '../../hooks/useSetAuth';
+import {connect} from 'react-redux';
 import axiosPrivate from '../../config/privateApi';
 import showAlertPopup from '../../components/AlertComp';
 import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC';
+import {fetchProfileInfo} from '../../actions/profileActions';
 
 const OverlaySpinner = OverlaySpinnerHOC(View);
 const initialEditProfileFormValues = {
@@ -44,9 +44,7 @@ const initialChangePasswordErrors = {
   confirmPassword: '',
 };
 
-const ViewProfile = () => {
-  const auth = useAuth();
-  const setAuth = useSetAuth();
+const ViewProfileComponent = ({auth, fetchProfileInfo}) => {
   const [fetchProfile, setFetchProfile] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,14 +52,12 @@ const ViewProfile = () => {
     useState(false);
   const [addStoreVideoModalVisible, setAddStoreVideoModalVisible] =
     useState(false);
-
   const [editProfileFormValues, setEditProfileFormValues] = useState(
     initialEditProfileFormValues,
   );
   const [editProfileFormErrors, setEditProfileFormErrors] = useState(
     initialEditProfileErrors,
   );
-
   const [changePasswordFormValues, setChangePasswordFormValues] = useState(
     initialChangePasswordFormValues,
   );
@@ -72,39 +68,26 @@ const ViewProfile = () => {
   useEffect(() => {
     console.log('Profile component mounted');
 
-    //Function to fetch profile information
-    const getProfile = async () => {
-      console.log('Fetching profile information');
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.post('/store/get-profile', {
-          email: auth.email,
-        });
-        if (response.data?.success === true) {
-          auth.storeId = response.data?.data?.id;
-          setEditProfileFormValues({
-            ...editProfileFormValues,
-            email: response.data?.data?.email,
-            companyName: response.data?.data?.company_name,
-          });
-          setAuth(auth);
-          setIsLoading(false);
-          setRefreshing(false);
-        }
-      } catch (error) {
-        setIsLoading(false);
-        setRefreshing(false);
-      }
-    };
-
     //Calling functions
-    getProfile();
+    fetchProfileInfo(auth.email, fetchProfileInfoCallBack);
 
     //Cleanup function
     return () => {
       console.log('Profile component unmounted');
     };
   }, [fetchProfile]);
+
+  /**
+   * Function to handle fetch profile info sucess.
+   */
+  const fetchProfileInfoCallBack = response => {
+    setEditProfileFormValues({
+      ...editProfileFormValues,
+      email: response.email,
+      companyName: response.company_name,
+    });
+    setRefreshing(false);
+  };
 
   //Function to show change password modal
   const showUpdatePasswordModal = () => {
@@ -354,5 +337,23 @@ const ViewProfile = () => {
     </SafeAreaView>
   );
 };
+
+const mapStateToProps = state => {
+  return {
+    auth: state.app.auth,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchProfileInfo: (email, fetchProfileInfoCallBack) =>
+      dispatch(fetchProfileInfo(email, fetchProfileInfoCallBack)),
+  };
+};
+
+const ViewProfile = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ViewProfileComponent);
 
 export default ViewProfile;
