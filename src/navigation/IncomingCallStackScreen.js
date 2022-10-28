@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {COLORS, images} from '../constant';
 import MenuIcon from '../components/MenuIcon';
 import {IncomingCallListing, IncomingCallAdd} from '../screens';
+import CallPage from '../screens/incomingcall/CallPage';
 const IncomingCallStackScreen = ({navigation}) => {
   const IncomingCallStack = createNativeStackNavigator();
   return (
@@ -36,6 +37,13 @@ const IncomingCallStackScreen = ({navigation}) => {
         }}
         name="IncomingCallAdd"
         component={IncomingCallAdd}
+      />
+      <IncomingCallStack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="CallPage"
+        component={CallPage}
       />
     </IncomingCallStack.Navigator>
   );

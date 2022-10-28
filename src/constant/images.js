@@ -20,6 +20,10 @@ const eye = require('../../assets/images/eye.png');
 const edit = require('../../assets/images/edit.png');
 const down_arrow = require('../../assets/images/down-arrow.png');
 const up_arrow = require('../../assets/images/up-arrow.png');
+const mute = require('../../assets/images/mute.png');
+const more = require('../../assets/images/more.png');
+const video_camera = require('../../assets/images/video-camera.png');
+const hang_up = require('../../assets/images/phone-call.png');
 
 export default {
   splash_screen,
@@ -44,4 +48,8 @@ export default {
   edit,
   down_arrow,
   up_arrow,
+  mute,
+  more,
+  video_camera,
+  hang_up,
 };

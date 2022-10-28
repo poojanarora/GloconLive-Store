@@ -17,8 +17,11 @@
     "@react-navigation/native-stack": "^6.9.0",
     "@react-navigation/stack": "^6.3.1",
     "@reduxjs/toolkit": "^1.8.6",
+    "@zegocloud/zego-uikit-prebuilt-call-rn": "^1.2.1",
+    "@zegocloud/zego-uikit-rn": "^1.2.0",
     "axios": "^0.27.2",
     "react": "18.1.0",
+    "react-delegate-component": "^1.0.0",
     "react-native": "0.70.1",
     "react-native-gesture-handler": "^2.6.2",
     "react-native-image-picker": "^4.10.0",
@@ -28,7 +31,8 @@
     "react-native-size-matters": "^0.4.0",
     "react-native-video": "^5.2.1",
     "react-redux": "^8.0.4",
-    "redux": "^4.2.0"
+    "redux": "^4.2.0",
+    "zego-express-engine-reactnative": "^0.22.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

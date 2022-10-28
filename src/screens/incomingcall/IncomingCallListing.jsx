@@ -12,22 +12,29 @@ import {images} from '../../constant';
 
 const IncomingCallListing = ({navigation}) => {
   const incoming_calls = [
-    {id: 1, name: 'Sohel Patel', call_started_at: '10:00 am'},
-    {id: 2, name: 'Ahefaz Shaikh', call_started_at: '10:00 am'},
-    {id: 3, name: 'Rakesh Sarkar', call_started_at: '10:00 am'},
-    {id: 4, name: 'Haider Khan', call_started_at: '10:00 am'},
-    {id: 5, name: 'Sailesh Singh', call_started_at: '10:00 am'},
-    {id: 6, name: 'Rakesh Sarkar', call_started_at: '10:00 am'},
-    {id: 7, name: 'Haider Khan', call_started_at: '10:00 am'},
-    {id: 8, name: 'Sailesh Singh', call_started_at: '10:00 am'},
-    {id: 9, name: 'Sailesh Singh', call_started_at: '10:00 am'},
-    {id: 10, name: 'Rakesh Sarkar', call_started_at: '10:00 am'},
-    {id: 11, name: 'Haider Khan', call_started_at: '10:00 am'},
-    {id: 12, name: 'Raj Singh', call_started_at: '10:00 am'},
+    {id: '1', name: 'Sohel Patel', call_started_at: '10:00 am'},
+    {id: '2', name: 'Ahefaz Shaikh', call_started_at: '10:00 am'},
+    {id: '3', name: 'Rakesh Sarkar', call_started_at: '10:00 am'},
+    {id: '4', name: 'Haider Khan', call_started_at: '10:00 am'},
+    {id: '5', name: 'Sailesh Singh', call_started_at: '10:00 am'},
+    {id: '6', name: 'Rakesh Sarkar', call_started_at: '10:00 am'},
+    {id: '7', name: 'Haider Khan', call_started_at: '10:00 am'},
+    {id: '8', name: 'Sailesh Singh', call_started_at: '10:00 am'},
+    {id: '9', name: 'Sailesh Singh', call_started_at: '10:00 am'},
+    {id: '10', name: 'Rakesh Sarkar', call_started_at: '10:00 am'},
+    {id: '11', name: 'Haider Khan', call_started_at: '10:00 am'},
+    {id: '12', name: 'Raj Singh', call_started_at: '10:00 am'},
   ];
 
   const renderItem = ({item}) => {
     return <Item item={item} />;
+  };
+
+  const onJoinCall = item => {
+    const {id} = item;
+    navigation.navigate('CallPage', {
+      userID: id,
+    });
   };
 
   const Item = ({item}) => {
@@ -40,7 +47,9 @@ const IncomingCallListing = ({navigation}) => {
           </Text>
         </View>
         <View style={styles.listItemRightectionWrapper}>
-          <TouchableOpacity style={styles.listItemActionButton}>
+          <TouchableOpacity
+            style={styles.listItemActionButton}
+            onPress={() => onJoinCall(item)}>
             <Image
               style={styles.listItemActionButtonImage}
               source={images.forward_arrow}
