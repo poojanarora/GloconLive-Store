@@ -11,3 +11,9 @@ export const profileActionTypes = {
 export const shopVideoActionTypes = {
   SET_SHOP_VIDEO: 'SET_SHOP_VIDEO',
 };
+
+export const locationActionTypes = {
+  STORE_LOCATION: 'STORE_LOCATION',
+  APPEND_LOCATION: 'APPEND_LOCATION',
+  UPDATE_LOCATION: 'UPDATE_LOCATION',
+};

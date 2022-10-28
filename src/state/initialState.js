@@ -19,6 +19,7 @@ export const initialState = {
     subscriptionStartDate: '',
     titlePosition: '',
   },
+  location: [],
   login: {
     loginErrors: {
       email: '',

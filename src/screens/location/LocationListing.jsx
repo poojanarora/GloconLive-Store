@@ -13,11 +13,13 @@ import {images} from '../../constant';
 import ButtonComp from '../../components/ButtonComp';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import PopupModal from '../../components/PopupModal';
-import useAuth from '../../hooks/useAuth';
-import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC';
-import axiosPrivate from '../../config/privateApi';
-
-const OverlaySpinner = OverlaySpinnerHOC(View);
+import {connect} from 'react-redux';
+import {
+  fetchLocations,
+  addLocation,
+  updateLocation,
+} from '../../actions/locationAction';
+import Spinner from '../../components/Spinner';
 const initialFormValues = {
   locationId: '',
   locationName: '',
@@ -27,13 +29,16 @@ const initialFormErrors = {
   locationName: '',
   locationAddress: '',
 };
-const LocationListing = ({navigation}) => {
-  const ADD_LOCATION_URL = '/store/add-location';
-  const UPDATE_LOCATION_URL = '/store/update-location';
-  const auth = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  const [fetchLocations, setFetchLocations] = useState(false);
-  const [locations, setLocations] = useState([]);
+const LocationListingComponent = ({
+  isLoading,
+  profile,
+  locations,
+  fetchLocations,
+  addLocation,
+  updateLocation,
+  navigation,
+}) => {
+  const [fetchData, setFetchData] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [modalVisible, setModalVisible] = useState(false);
@@ -42,32 +47,18 @@ const LocationListing = ({navigation}) => {
   useEffect(() => {
     console.log('Location listing component mounted');
 
-    //Function to fetch locations
-    const fetchLocations = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.post('/store/get-locations', {
-          store_id: auth.storeId,
-        });
-        setLocations(response.data?.data);
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(false);
-      }
-    };
-
     //Function callings
-    fetchLocations();
+    fetchLocations(profile.id);
 
     //Clean up function
     return () => {
       console.log('Location listing component unmounted');
     };
-  }, [fetchLocations]);
+  }, [fetchData]);
 
   //Function to handel location refresh
   const onRefresh = () => {
-    setFetchLocations(!fetchLocations);
+    setFetchData(!fetchData);
   };
 
   // Function to show add location modal
@@ -135,72 +126,50 @@ const LocationListing = ({navigation}) => {
 
   // Function to handel add and update location
   const handelSubmit = async () => {
-    try {
-      let validateResponse = validate(formValues);
-      if (Object.keys(validateResponse).length > 0) {
-        setFormErrors(validateResponse);
+    let validateResponse = validate(formValues);
+    if (Object.keys(validateResponse).length > 0) {
+      setFormErrors(validateResponse);
+    } else {
+      let payload = {
+        store_id: profile.id,
+        name: formValues.locationName,
+        address: formValues.locationAddress,
+        status: '1',
+      };
+      if (action === 'Add') {
+        await addLocation(payload);
       } else {
-        setIsLoading(true);
-        let url = ADD_LOCATION_URL;
-        let payload = {
-          store_id: auth.storeId,
-          name: formValues.locationName,
-          address: formValues.locationAddress,
-          status: '1',
-        };
-        if (action === 'Update') {
-          payload.location_id = formValues.locationId;
-          url = UPDATE_LOCATION_URL;
-        }
-        const response = await axiosPrivate.post(url, payload);
-        if (response.data.success === true) {
-          if (action === 'Add') {
-            setLocations(current => [...current, response.data?.data]);
-          } else {
-            setLocations(current => {
-              const newState = current.map(obj => {
-                //if id equals to updated loaction id then update
-                if (obj.id === formValues.locationId) {
-                  return response.data?.data;
-                }
-                //otherwise return object as is
-                return obj;
-              });
-              return newState;
-            });
-          }
-          setIsLoading(false);
-          hideModal();
-          showAlertPopup('Success', response.data?.message, 'Ok');
-        } else {
-          setIsLoading(false);
-          showAlertPopup('Opps', response.data?.message, 'Cancel');
-        }
+        payload.location_id = formValues.locationId;
+        await updateLocation(payload);
       }
-    } catch (error) {
-      setIsLoading(false);
+      hideModal();
     }
   };
 
   // Function to render location listing
   const renderLocationListing = () => {
-    return locations.map((item, key) => {
-      return (
-        <TouchableOpacity
-          key={item.id}
-          style={[styles.listItemWrapper, styles.shadow]}
-          onPress={() => handelSelectLocation(item)}>
+    if (locations) {
+      return locations.map((item, key) => {
+        return (
           <TouchableOpacity
-            style={styles.editIconWrapper}
-            onPress={() => handelEditLocation(item)}>
-            <Image style={styles.editIconStyle} source={images.edit} />
+            key={item.id}
+            style={[styles.listItemWrapper, styles.shadow]}
+            onPress={() => handelSelectLocation(item)}>
+            <TouchableOpacity
+              style={styles.editIconWrapper}
+              onPress={() => handelEditLocation(item)}>
+              <Image style={styles.editIconStyle} source={images.edit} />
+            </TouchableOpacity>
+            <Image
+              style={styles.listItemImage}
+              source={images.location_pin_2}
+            />
+            <Text style={[styles.listItemTitle]}>{item.name}</Text>
+            <Text style={[styles.listItemSubTitle]}>Select Any One</Text>
           </TouchableOpacity>
-          <Image style={styles.listItemImage} source={images.location_pin_2} />
-          <Text style={[styles.listItemTitle]}>{item.name}</Text>
-          <Text style={[styles.listItemSubTitle]}>Select Any One</Text>
-        </TouchableOpacity>
-      );
-    });
+        );
+      });
+    }
   };
 
   // Function to render add location modal
@@ -242,26 +211,46 @@ const LocationListing = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
-      <OverlaySpinner isLoading={isLoading} style={styles.safeAreaViewStyle}>
-        <View style={styles.body}>
-          {renderAddLocationModal()}
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{flexGrow: 1}}
-            refreshControl={
-              <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
-            }>
-            <View style={styles.listSectionWrapper}>
-              {renderLocationListing()}
-            </View>
-          </ScrollView>
-          <View style={styles.buttonSectionWrapper}>
-            <ButtonComp btnText="Add Location" action={handelAddLocation} />
+      <Spinner />
+      <View style={styles.body}>
+        {renderAddLocationModal()}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flexGrow: 1}}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+          }>
+          <View style={styles.listSectionWrapper}>
+            {renderLocationListing()}
           </View>
+        </ScrollView>
+        <View style={styles.buttonSectionWrapper}>
+          <ButtonComp btnText="Add Location" action={handelAddLocation} />
         </View>
-      </OverlaySpinner>
+      </View>
     </SafeAreaView>
   );
 };
+
+const mapStateToProps = state => {
+  return {
+    isLoading: state.app.isLoading,
+    profile: state.profile,
+    locations: state.location,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchLocations: storeId => dispatch(fetchLocations(storeId)),
+    addLocation: payload => dispatch(addLocation(payload)),
+    updateLocation: payload => dispatch(updateLocation(payload)),
+  };
+};
+
+const LocationListing = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LocationListingComponent);
 
 export default LocationListing;
