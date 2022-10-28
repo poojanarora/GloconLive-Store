@@ -49,6 +49,7 @@ const ViewProfileComponent = ({
   fetchProfileInfo,
   updateProfileInfo,
   changePassword,
+  navigation,
 }) => {
   const [fetchProfile, setFetchProfile] = useState(false);
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
