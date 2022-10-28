@@ -6,8 +6,11 @@ export const actionTypes = {
 
 export const profileActionTypes = {
   STORE_PROFILE: 'STORE_PROFILE',
+<<<<<<< HEAD
 };
 
 export const shopVideoActionTypes = {
   SET_SHOP_VIDEO: 'SET_SHOP_VIDEO',
+=======
+>>>>>>> f1becffec93a2367cb6ef389a48fbfe68fcdd967
 };
