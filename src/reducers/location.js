@@ -1,4 +1,3 @@
-import {s} from 'react-native-size-matters';
 import {locationActionTypes} from '../actionTypes/actionTypes';
 import {initialState} from '../state/initialState';
 

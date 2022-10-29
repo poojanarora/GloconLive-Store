@@ -20,6 +20,7 @@ export const initialState = {
     titlePosition: '',
   },
   location: [],
+  department: [],
   login: {
     loginErrors: {
       email: '',

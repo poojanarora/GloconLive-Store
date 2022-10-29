@@ -1,19 +1,14 @@
 import React, {useEffect} from 'react';
 import {SafeAreaView, ImageBackground} from 'react-native';
 import styles from './styles';
-import useAuth from '../../hooks/useAuth';
 import {images} from '../../constant';
 
 const Splash = ({navigation}) => {
-  const auth = useAuth();
   useEffect(() => {
     console.log('Splash screen mounted');
+
     setTimeout(() => {
-      if (auth?.isLoggedIn === true) {
-        navigation.replace('PrivateStackScreen');
-      } else {
-        navigation.replace('PublicStackScreen');
-      }
+      navigation.replace('PublicStackScreen');
     }, 4000);
 
     return () => {
@@ -31,4 +26,5 @@ const Splash = ({navigation}) => {
     </SafeAreaView>
   );
 };
+
 export default Splash;
