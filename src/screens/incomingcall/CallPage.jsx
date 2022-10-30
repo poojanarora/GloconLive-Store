@@ -13,10 +13,10 @@ import CallMenuBar from './CallMenuBar';
 const CallPageComponent = props => {
   const {route, profile, navigation} = props;
   const {params} = route;
-  const {userID} = params;
+  const {userID, userName} = params;
   const {id, name} = profile;
   const [isJoin, setIsJoin] = useState(false);
-  const [isMute, setMute] = useState(false);
+  const [isMicOn, setMicOn] = useState(true);
   const [isCameraOn, setCameraOn] = useState(true);
   const [frontCamera, setFrontCamera] = useState(true);
 
@@ -44,13 +44,17 @@ const CallPageComponent = props => {
   };
 
   const onMicToggle = () => {
-    ZegoUIKit.turnMicrophoneOn(id.toString(), !isMute).then(() => {
-      setMute(!isMute);
+    ZegoUIKit.turnMicrophoneOn(id.toString(), !isMicOn).then(() => {
+      setMicOn(!isMicOn);
     });
   };
 
   const onMorePress = () => {
-    // navigation.navigate('InCallChat');
+    navigation.navigate('InCallChat', {
+      profileId: id,
+      userID,
+      userName,
+    });
   };
 
   return (

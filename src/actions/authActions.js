@@ -5,6 +5,7 @@ import {
 } from '../hooks/useAsyncStorage';
 import showAlertPopup from '../components/AlertComp';
 import axiosPublic from '../config/publicApi';
+import { initializeZim, zimLogin } from './chatActions';
 
 /**
  * Function to handle Login.
@@ -24,6 +25,7 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
       dispatch(setAuth(obj));
       dispatch(setLoading(false));
       loginCallback(true);
+      dispatch(initializeZim());
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Opps', response.data?.message, 'Cancel');
