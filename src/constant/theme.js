@@ -6,6 +6,7 @@ export const COLORS = {
     //App Color
 
     primary: "#00283d",
+    primaryTint: "#193d50",
 
     primaryBackgroungColor: "#f1f6fe",
     primaryBackgroungDarkColor: "#bcdbfa",
