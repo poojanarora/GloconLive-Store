@@ -9,6 +9,7 @@ import ZegoUIKit from '@zegocloud/zego-uikit-rn';
 import BackIcon from '../../components/BackIcon';
 import {moderateScale} from 'react-native-size-matters';
 import CallMenuBar from './CallMenuBar';
+import { appConfig } from '../../config/config';
 
 const CallPageComponent = props => {
   const {route, profile, navigation} = props;
@@ -64,8 +65,8 @@ const CallPageComponent = props => {
         <BackIcon navigate={navigation} />
       </View>
       <ZegoUIKitPrebuiltCall
-        appID={373788989}
-        appSign="32768ab51eb29a34fea1bbd74cd8849b5293dbb111bef180b9494a5931e189fa"
+        appID={appConfig.appID}
+        appSign={appConfig.appSign}
         userID={id.toString()}
         userName={name}
         callID={userID.toString()}

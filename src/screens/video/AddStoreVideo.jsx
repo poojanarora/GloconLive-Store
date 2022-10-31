@@ -1,18 +1,24 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
+import {connect} from 'react-redux';
 import BrowseFiles from '../../components/BrowseFiles';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import PopupContent from '../../components/PopupContent';
 import {COLORS, images} from '../../constant';
+import showAlertPopup from '../../components/AlertComp';
 
-const AddStoreVideo = ({navigation}) => {
+const AddStoreVideoComponent = ({navigation, video}) => {
   const onShowPreview = () => {
-    navigation.navigate('ShopVideoPreview');
+    if (video && video.uri) {
+      navigation.navigate('ShopVideoPreview');
+    } else {
+      showAlertPopup('Error', 'Please select a video for preview.', 'ok')
+    }
   };
 
   const onCancel = () => {
-    navigation.navigate('ViewProfile')
-  }
+    navigation.navigate('ViewProfile');
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
@@ -43,5 +49,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primaryBackgroungColor,
   },
 });
+
+const mapStateToProps = state => {
+  return {
+    video: state.shopVideoPreview.shopVideo,
+  };
+};
+
+const AddStoreVideo = connect(mapStateToProps, null)(AddStoreVideoComponent);
 
 export default AddStoreVideo;

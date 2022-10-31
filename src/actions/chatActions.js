@@ -1,28 +1,17 @@
 import ZIM from 'zego-zim-react-native';
 import {chatActionTypes} from '../actionTypes/actionTypes';
 import {appConfig} from '../config/config';
+
 ZIM.create(appConfig);
 const zimInstance = ZIM.getInstance();
-export const initializeZim = () => (dispatch, getState) => {
-  // const {chat} = getState();
-  // const {zim} = chat;
-  // let zimInstance = zim;
-  // if (zimInstance === null) {
-  //   ZIM.create(appConfig);
-  //   zimInstance = ZIM.getInstance();
-  //   dispatch({
-  //     type: chatActionTypes.INIT_ZIM_INSTANCE,
-  //     payload: zimInstance,
-  //   });
-  // }
+
+export const initializeZim = () => (dispatch) => {
   dispatch(initEvent(zimInstance));
 };
 
 const queryUsersInfo =
   (ids, isSelf = false) =>
-  (dispatch, getState) => {
-    const {chat} = getState();
-    const {zim} = chat;
+  (dispatch) => {
     zimInstance.queryUsersInfo(ids, {isQueryFromServer: true}).then(({userList}) => {
       if (isSelf) {
         dispatch({
@@ -43,9 +32,7 @@ const errorHandle = error => {
   return Promise.reject();
 };
 
-export const zimLogin = loginForm => (dispatch, getState) => {
-  const {chat} = getState();
-  const {zim} = chat;
+export const zimLogin = loginForm => async dispatch => {
   return zimInstance.login(loginForm, '04AAAAAGNgMgcAEG51Zmh1cGZkcHgydTA5Z3gAoHxbp6cNlrQEemrLKeyh1zhGKzsjBx4FiZ6cVwveXe9vM0Ym6tLWMI6kLdTkJJs4X3RNMcTHMGYTIdzkfdzmKgw1i/9x6DTnj1Cmcigfyq327LPmboZ5YN+RZls6PikSf04CqNyT+z39u/0lNgGlT2fmIV7BXFchQenFEz+elFruwMnQbbBwUwpiDT90t/SD86KZrv6bFD9dyCgXkKYDP3w=')
     .then(res => {
       queryUsersInfo([loginForm.userID], true);
@@ -58,13 +45,11 @@ export const zimLogin = loginForm => (dispatch, getState) => {
     .catch(errorHandle);
 };
 
-const logout = () => (dispatch, getState) => {
-  const {chat} = getState();
-  const {zim} = chat;
-  return zimInstance.logout();
+export const logoutZimChat = () => {
+  zimInstance.logout();
 };
 
-const initEvent = zim => (dispatch, getState) => {
+const initEvent = zim => (dispatch) => {
   zim.on('error', function (zim, errorInfo) {
     console.log('error', errorInfo.code, errorInfo.message);
   });
@@ -129,16 +114,14 @@ const transformMessages = messages => {
 };
 
 const setMessage = (id, messages) => dispatch => {
-  messages = messages.sort((a, b) => a.orderKey - b.orderKey);
+  messages = messages.sort((a, b) => b.orderKey - a.orderKey);
   dispatch({
     type: chatActionTypes.SET_CHAT,
     payload: {id, messages: transformMessages(messages)},
   });
 };
 
-export const queryHistoryMessage = conID => (dispatch, getState) => {
-  const {chat} = getState();
-  const {zim} = chat;
+export const queryHistoryMessage = conID => async (dispatch) => {
   return zimInstance
     .queryHistoryMessage(conID, 0, {count: 1000, reverse: true})
     .then(res => {
@@ -153,9 +136,7 @@ export const queryHistoryMessage = conID => (dispatch, getState) => {
     .catch(errorHandle);
 };
 
-export const sendChatMessage = (conID, message) => (dispatch, getState) => {
-  const {chat} = getState();
-  const {zim} = chat;
+export const sendChatMessage = (conID, message) => async (dispatch) => {
   return zimInstance
     .sendMessage(
       {message, type: 1},

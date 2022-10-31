@@ -5,7 +5,7 @@ import {
 } from '../hooks/useAsyncStorage';
 import showAlertPopup from '../components/AlertComp';
 import axiosPublic from '../config/publicApi';
-import { initializeZim, zimLogin } from './chatActions';
+import { initializeZim, logoutZimChat } from './chatActions';
 
 /**
  * Function to handle Login.
@@ -51,4 +51,5 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
 export const handleLogout = obj => async dispatch => {
   await localStorageRemoveItem();
   dispatch(setAuth(obj));
+  dispatch(logoutZimChat())
 };
