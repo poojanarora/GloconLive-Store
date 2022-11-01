@@ -9,14 +9,15 @@ import ZegoUIKit from '@zegocloud/zego-uikit-rn';
 import BackIcon from '../../components/BackIcon';
 import {moderateScale} from 'react-native-size-matters';
 import CallMenuBar from './CallMenuBar';
+import { appConfig } from '../../config/config';
 
 const CallPageComponent = props => {
   const {route, profile, navigation} = props;
   const {params} = route;
-  const {userID} = params;
+  const {userID, userName} = params;
   const {id, name} = profile;
   const [isJoin, setIsJoin] = useState(false);
-  const [isMute, setMute] = useState(false);
+  const [isMicOn, setMicOn] = useState(true);
   const [isCameraOn, setCameraOn] = useState(true);
   const [frontCamera, setFrontCamera] = useState(true);
 
@@ -44,13 +45,17 @@ const CallPageComponent = props => {
   };
 
   const onMicToggle = () => {
-    ZegoUIKit.turnMicrophoneOn(id.toString(), !isMute).then(() => {
-      setMute(!isMute);
+    ZegoUIKit.turnMicrophoneOn(id.toString(), !isMicOn).then(() => {
+      setMicOn(!isMicOn);
     });
   };
 
   const onMorePress = () => {
-    // navigation.navigate('InCallChat');
+    navigation.navigate('InCallChat', {
+      profileId: id,
+      userID,
+      userName,
+    });
   };
 
   return (
@@ -60,8 +65,8 @@ const CallPageComponent = props => {
         <BackIcon navigate={navigation} />
       </View>
       <ZegoUIKitPrebuiltCall
-        appID={373788989}
-        appSign="32768ab51eb29a34fea1bbd74cd8849b5293dbb111bef180b9494a5931e189fa"
+        appID={appConfig.appID}
+        appSign={appConfig.appSign}
         userID={id.toString()}
         userName={name}
         callID={userID.toString()}

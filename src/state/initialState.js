@@ -30,4 +30,16 @@ export const initialState = {
   shopVideoPreview: {
     shopVideo: null,
   },
+  chat: {
+    zim: null,
+    chatMap: {},
+    isZimLoggedIn: false,
+    userMap: {},
+    user: {
+      userName: '',
+      userID: '',
+      extendedData: 'My extendedData',
+      userAvatar: '',
+    },
+  },
 };

@@ -2,6 +2,7 @@ import {profileActionTypes} from '../actionTypes/actionTypes';
 import {setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
+import { zimLogin } from './chatActions';
 
 /**
  * Function to fetch profile information.
@@ -28,6 +29,8 @@ export const fetchProfileInfo = email => async dispatch => {
       };
       dispatch(storeProfile(profileObj));
       dispatch(setLoading(false));
+      const loginForm = {userID: data.id.toString(), userName: data.name}
+      dispatch(zimLogin(loginForm));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Opps', response.data?.message, 'Cancel');

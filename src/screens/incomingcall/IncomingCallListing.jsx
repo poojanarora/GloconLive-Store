@@ -31,9 +31,10 @@ const IncomingCallListing = ({navigation}) => {
   };
 
   const onJoinCall = item => {
-    const {id} = item;
+    const {id, name } = item;
     navigation.navigate('CallPage', {
       userID: id,
+      userName: name,
     });
   };
 

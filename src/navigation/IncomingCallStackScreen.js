@@ -4,6 +4,8 @@ import {COLORS, images} from '../constant';
 import MenuIcon from '../components/MenuIcon';
 import {IncomingCallListing, IncomingCallAdd} from '../screens';
 import CallPage from '../screens/incomingcall/CallPage';
+import BackIcon from '../components/BackIcon';
+import InCallChat from '../screens/chat/InCallChat';
 const IncomingCallStackScreen = ({navigation}) => {
   const IncomingCallStack = createNativeStackNavigator();
   return (
@@ -44,6 +46,16 @@ const IncomingCallStackScreen = ({navigation}) => {
         }}
         name="CallPage"
         component={CallPage}
+      />
+       <IncomingCallStack.Screen
+        options={{
+          title: '',
+          headerLeft: () => {
+            return <BackIcon navigate={navigation} />;
+          },
+        }}
+        name="InCallChat"
+        component={InCallChat}
       />
     </IncomingCallStack.Navigator>
   );
