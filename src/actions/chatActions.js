@@ -33,7 +33,7 @@ const errorHandle = error => {
 };
 
 export const zimLogin = loginForm => async dispatch => {
-  return zimInstance.login(loginForm, '04AAAAAGNgMgcAEG51Zmh1cGZkcHgydTA5Z3gAoHxbp6cNlrQEemrLKeyh1zhGKzsjBx4FiZ6cVwveXe9vM0Ym6tLWMI6kLdTkJJs4X3RNMcTHMGYTIdzkfdzmKgw1i/9x6DTnj1Cmcigfyq327LPmboZ5YN+RZls6PikSf04CqNyT+z39u/0lNgGlT2fmIV7BXFchQenFEz+elFruwMnQbbBwUwpiDT90t/SD86KZrv6bFD9dyCgXkKYDP3w=')
+  return zimInstance.login(loginForm, '04AAAAAGNj+LQAEGNrZjZ1YmUwcXRleTd5d3gAoC3tuGUmnMBEoVtpXRnCtjMm+2OP/mQFCnsUZifPnlHtp84z5kRak2s02ld7dE1KA3yV/OA2cYLbAVbjyIGX5+TiLwEAFL21Vj6Zqq6qNGDkIYmxKeVwaQMa+Q710bjvmyrck6gS5Ttj8buMlUCX1/Pc4v+SrlfSdzN1EzZJUwF+whzsBBOiG+sxLxEPIzpdgG51HQfHg+0DtFcj2ysC5Sw=')
     .then(res => {
       queryUsersInfo([loginForm.userID], true);
       dispatch({
