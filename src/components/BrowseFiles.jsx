@@ -11,7 +11,6 @@ const BrowseFilesComponent = ({onVideoSelect, video}) => {
     let result = await launchImageLibrary({
       mediaType: 'video',
     });
-    console.log(result);
     if (!result.didCancel) {
       onVideoSelect(result.assets[0]);
     }

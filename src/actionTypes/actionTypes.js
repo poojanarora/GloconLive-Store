@@ -9,6 +9,7 @@ export const profileActionTypes = {
 };
 
 export const shopVideoActionTypes = {
+  SET_SHOP_VIDEO_TITLE: 'SET_SHOP_VIDEO_TITLE',
   SET_SHOP_VIDEO: 'SET_SHOP_VIDEO',
 };
 
@@ -30,5 +31,5 @@ export const chatActionTypes = {
   SET_CHAT: 'SET_CHAT',
   SET_ZIM_LOGIN: 'SET_ZIM_LOGIN',
   SET_ZIM_USER_MAP: 'SET_ZIM_USER_MAP',
-  SET_ZIM_USER: 'SET_ZIM_USER'
-}
+  SET_ZIM_USER: 'SET_ZIM_USER',
+};
