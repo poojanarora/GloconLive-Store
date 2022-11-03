@@ -51,7 +51,6 @@ const ViewProfileComponent = ({
   changePassword,
   navigation,
 }) => {
-  const [fetchProfile, setFetchProfile] = useState(false);
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
     useState(false);
   const [editProfileFormErrors, setEditProfileFormErrors] = useState(
@@ -74,7 +73,7 @@ const ViewProfileComponent = ({
     return () => {
       console.log('Profile component unmounted');
     };
-  }, [fetchProfile]);
+  }, []);
 
   //Function to show change password modal
   const showUpdatePasswordModal = () => {
@@ -139,7 +138,7 @@ const ViewProfileComponent = ({
 
   //Function to handel profile refresh
   const onRefresh = () => {
-    setFetchProfile(!fetchProfile);
+    fetchProfileInfo(auth.email);
   };
 
   //Function to handel company name

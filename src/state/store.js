@@ -6,6 +6,8 @@ import profile from '../reducers/profile';
 import shopVideoPreview from '../reducers/shopVideoPreview';
 import location from '../reducers/location';
 import department from '../reducers/department';
+import chat from '../reducers/chat';
+
 
 const reducer = combineReducers({
   app,
@@ -13,6 +15,7 @@ const reducer = combineReducers({
   shopVideoPreview,
   location,
   department,
+  chat,
 });
 
 const store = configureStore({
