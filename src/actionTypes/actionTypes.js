@@ -24,6 +24,12 @@ export const departmentActionTypes = {
   UPDATE_DEPARTMENT: 'UPDATE_DEPARTMENT',
 };
 
+
+export const deviceActionTypes = {
+  STORE_DEVICE: 'STORE_DEVICE',
+  APPEND_DEVICE: 'APPEND_DEVICE',
+  UPDATE_DEVICE: 'UPDATE_DEVICE'
+}
 export const chatActionTypes = {
   INIT_ZIM_INSTANCE: 'INIT_ZIM_INSTANCE',
   CLEAR_CHAT: 'CLEAR_CHAT',
