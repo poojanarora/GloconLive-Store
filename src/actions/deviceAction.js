@@ -1,7 +1,7 @@
-import { deviceActionTypes } from "../actionTypes/actionTypes";
-import { setLoading } from "./appAction";
+import {deviceActionTypes} from '../actionTypes/actionTypes';
+import {setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
-import axiosPrivate from "../config/privateApi";
+import axiosPrivate from '../config/privateApi';
 
 export const fetchDevices = locationId => async dispatch => {
   try {
@@ -12,7 +12,6 @@ export const fetchDevices = locationId => async dispatch => {
 
     if (response.data.success === true) {
       const data = response.data?.data;
-
       dispatch(storeDevices(data));
       dispatch(setLoading(false));
     } else {
@@ -34,7 +33,7 @@ export const addDevice = formValues => async dispatch => {
     let resp = await axiosPrivate.post('/store/add-device', formValues);
     if (resp.data.success === true) {
       const data = resp.data?.data;
-      dispatch(appendDevices(data));
+      //dispatch(appendDevices(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', resp.data?.message, 'Ok');
     } else {
@@ -54,13 +53,10 @@ export const addDevice = formValues => async dispatch => {
 export const updateDevice = formValues => async dispatch => {
   try {
     dispatch(setLoading(true));
-    let response = await axiosPrivate.post(
-      '/store/update-device',
-      formValues,
-    );
+    let response = await axiosPrivate.post('/store/update-device', formValues);
     if (response.data.success === true) {
       const data = response.data?.data;
-      dispatch(modifyDevices(data));
+      //dispatch(modifyDevices(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
     } else {
@@ -73,7 +69,6 @@ export const updateDevice = formValues => async dispatch => {
     showAlertPopup('Opps', error?.message, 'Cancel');
   }
 };
-
 
 /**
  * Function to store devices.
