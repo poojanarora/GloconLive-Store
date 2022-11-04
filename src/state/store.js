@@ -6,6 +6,7 @@ import profile from '../reducers/profile';
 import shopVideoPreview from '../reducers/shopVideoPreview';
 import location from '../reducers/location';
 import department from '../reducers/department';
+import device from '../reducers/device';
 import chat from '../reducers/chat';
 
 
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   shopVideoPreview,
   location,
   department,
+  device,
   chat,
 });
 

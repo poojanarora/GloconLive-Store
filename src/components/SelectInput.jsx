@@ -50,7 +50,7 @@ const SelectInput = props => {
         <View style={styles.inputLeftSectionWrapper}>
           <View style={styles.inputWrapper}>
             <Text style={styles.selectLabel}>
-              {selectedOption.value ? selectedOption.value : props.selectLabel}
+              {selectedOption.name ? selectedOption.name : props.selectLabel}
             </Text>
           </View>
         </View>
@@ -84,7 +84,7 @@ const SelectInput = props => {
                         selectedOption.id === item.id &&
                           styles.selectedOptionLabel,
                       ]}>
-                      {item.value}
+                      {item.name}
                     </Text>
                   </TouchableOpacity>
                 );

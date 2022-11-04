@@ -21,6 +21,7 @@ export const initialState = {
   },
   location: [],
   department: [],
+  device: [],
   login: {
     loginErrors: {
       email: '',

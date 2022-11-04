@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -9,14 +9,21 @@ import {
   RefreshControl,
 } from 'react-native';
 import styles from './deviceListingStyles';
-import {images} from '../../constant';
+import { images } from '../../constant';
 import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import SelectInput from '../../components/SelectInput';
-import axiosPrivate from '../../config/privateApi';
+// import axiosPrivate from '../../config/privateApi';
 import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC';
+import {
+  fetchDevices,
+  addDevice,
+  updateDevice
+} from '../../actions/deviceAction';
 
+import { connect } from 'react-redux';
+import department from '../../reducers/department';
 const OverlaySpinner = OverlaySpinnerHOC(View);
 const initialFormValues = {
   id: '',
@@ -29,79 +36,53 @@ const initialFormErrors = {
   deviceId: '',
   deviceName: '',
 };
-const DeviceListing = ({locationId}) => {
-  const device = [
-    {id: 1, title: 'iPad 1', sub_title: 'Suits'},
-    {id: 2, title: 'iPad 2', sub_title: 'Suits'},
-    {id: 3, title: 'iPad 3', sub_title: 'Shoes'},
-    {id: 4, title: 'iPad 4', sub_title: 'Shoes'},
-    {id: 5, title: 'iPhone Pro', sub_title: 'Hardware'},
-    {id: 6, title: 'iphone 13', sub_title: 'Mobile'},
-    {id: 7, title: 'iPhone 12', sub_title: 'Mobile'},
-    {id: 8, title: 'iPhone 11', sub_title: 'Mobile'},
-    {id: 9, title: 'iphone 13', sub_title: 'Mobile'},
-    {id: 10, title: 'iPhone 12', sub_title: 'Mobile'},
-    {id: 11, title: 'iPhone 11', sub_title: 'Mobile'},
-  ];
-  const FETCH_DEPARTMENTS_URL = '/store/get-departments';
-  const FETCH_DEVICES_URL = '/store/get-location-devices';
-  const ADD_DEVICE_URL = '/store/add-device';
-  const UPDATE_DEVICE_URL = '/store/update-device';
-  const [isLoading, setIsLoading] = useState(false);
-  const [fetchDevice, setFetchDevice] = useState(false);
-  const [devices, setDevices] = useState([]);
-  const [departments, setDepartments] = useState([]);
+
+const deviceListingComponent = ({
+  locationId,
+  fetchDevices,
+  isLoading,
+  addDevice,
+  updateDevice,
+  departments,
+  devices,
+}) => {
+
+  const [fetchData, setFetchData] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [addDeviceModalVisible, setAddDeviceModalVisible] = useState(false);
   const [action, setAction] = useState('Add');
 
+
   useEffect(() => {
     console.log('Device component mounted');
 
     //Function to fetch devices
-    const fetchDevices = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axiosPrivate.post(FETCH_DEVICES_URL, {
-          location_id: locationId,
-        });
-        setDevices(response.data?.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    };
+    // const fetchDevices = async () => {
+    //   try {
+    //     setIsLoading(true);
+    //     const response = await axiosPrivate.post(FETCH_DEVICES_URL, {
+    //       location_id: locationId,
+    //     });
+    //     setDevices(response.data?.data);
+    //     setIsLoading(false);
+    //   } catch (error) {
+    //     console.log(error);
+    //     setIsLoading(false);
+    //   }
+    // };
 
-    //Function to fetch all departments
-    const fetchDepartments = async () => {
-      try {
-        const response = await axiosPrivate.post(FETCH_DEPARTMENTS_URL, {
-          location_id: locationId,
-        });
-        let departmentArr = [];
-        response.data.data.forEach((element, key) => {
-          departmentArr.push({id: element.id, value: element.name});
-        });
-        setDepartments(departmentArr);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    fetchDevices(locationId)
 
-    //Calling functions
-    fetchDevices();
-    fetchDepartments();
 
     return () => {
       console.log('Device component unmounted');
     };
-  }, [fetchDevice]);
+  }, [fetchData]);
 
   //Function to handel device refresh
   const onRefresh = () => {
-    setFetchDevice(!fetchDevice);
+    setFetchData(!fetchData);
   };
 
   //Function to show add device modal
@@ -118,20 +99,20 @@ const DeviceListing = ({locationId}) => {
 
   //Function to handel device name
   const handelDeviceName = e => {
-    setFormValues({...formValues, deviceName: e});
-    setFormErrors({...formErrors, deviceName: ''});
+    setFormValues({ ...formValues, deviceName: e });
+    setFormErrors({ ...formErrors, deviceName: '' });
   };
 
   //Function to handel department
   const handelDepartment = selectedDepartment => {
-    setFormValues({...formValues, department: selectedDepartment});
-    setFormErrors({...formErrors, department: ''});
+    setFormValues({ ...formValues, department: selectedDepartment });
+    setFormErrors({ ...formErrors, department: '' });
   };
 
   //Function to handel device id
   const handelDeviceId = e => {
-    setFormValues({...formValues, deviceId: e});
-    setFormErrors({...formErrors, deviceId: ''});
+    setFormValues({ ...formValues, deviceId: e });
+    setFormErrors({ ...formErrors, deviceId: '' });
   };
 
   //Function to validate add devvice form
@@ -169,75 +150,50 @@ const DeviceListing = ({locationId}) => {
 
   //Function to handle add and update device
   const handelSubmit = async () => {
-    try {
-      let validateResponse = validate(formValues);
-      if (Object.keys(validateResponse).length > 0) {
-        setFormErrors(validateResponse);
+
+    let validateResponse = validate(formValues);
+    if (Object.keys(validateResponse).length > 0) {
+      setFormErrors(validateResponse);
+    } else {
+      // setIsLoading(true);
+      let payload = {
+        department_id: formValues.department?.id,
+        device_id: formValues.deviceId,
+        name: formValues.deviceName,
+        status: '1',
+      };
+      if (action === 'Add') {
+        await addDevice(payload);
       } else {
-        setIsLoading(true);
-        let url = ADD_DEVICE_URL;
-        let payload = {
-          department_id: formValues.department?.id,
-          device_id: formValues.deviceId,
-          name: formValues.deviceName,
-          status: '1',
-        };
-        if (action === 'Update') {
-          payload.id = formValues.id;
-          url = UPDATE_DEVICE_URL;
-        }
-        const response = await axiosPrivate.post(url, payload);
-        console.log(response.data);
-        if (response.data.success === true) {
-          if (action === 'Add') {
-            setDevices(current => [...current, response.data?.data]);
-          } else {
-            setDevices(current => {
-              const newState = current.map(obj => {
-                //if id equals to updated loaction id then update
-                if (obj.id === formValues.id) {
-                  return response.data?.data;
-                }
-                //otherwise return object as is
-                return obj;
-              });
-              return newState;
-            });
-          }
-          setIsLoading(false);
-          hideModal();
-          showAlertPopup('Success', response.data?.message, 'Ok');
-        } else {
-          setIsLoading(false);
-          showAlertPopup('Opps', response.data?.message, 'Cancel');
-        }
+        payload.device_id = formValues.deviceId;
+        await updateDevice(payload);
       }
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
+      hideModal();
     }
-  };
+  }
+
 
   //Function to render device listing
-  const renderDevicetListing = () => {
-    return devices.map((item, key) => {
-      return (
-        <TouchableOpacity
-          key={key}
-          style={[styles.listItemWrapper, styles.shadow]}>
+  const renderDeviceListing = () => {
+
+    if (devices) {
+      return devices.map((item, key) => {
+        return (
           <TouchableOpacity
-            style={styles.editIconWrapper}
-            onPress={() => handelEditDevice(item)}>
-            <Image style={styles.editIconStyle} source={images.edit} />
+            key={item.id}
+            style={[styles.listItemWrapper, styles.shadow]}>
+            <TouchableOpacity
+              style={styles.editIconWrapper}
+              onPress={() => handelEditDevice(item)}>
+              <Image style={styles.editIconStyle} source={images.edit} />
+            </TouchableOpacity>
+            <Image style={styles.listItemImage} source={images.ipad} />
+            <Text style={[styles.listItemTitle]}>{item.name}</Text>
+            {/* <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text> */}
           </TouchableOpacity>
-          <Image style={styles.listItemImage} source={images.ipad} />
-          <Text style={[styles.listItemTitle]}>{item.device_name}</Text>
-          <Text style={[styles.listItemSubTitle]}>
-            {item.get_store_department?.department_name}
-          </Text>
-        </TouchableOpacity>
-      );
-    });
+        );
+      });
+    }
   };
 
   //Function to render add device modal
@@ -289,12 +245,12 @@ const DeviceListing = ({locationId}) => {
         {renderAddDeviceModal()}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{ flexGrow: 1 }}
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
           }>
           <View style={styles.listSectionWrapper}>
-            {renderDevicetListing()}
+            {renderDeviceListing()}
           </View>
         </ScrollView>
         <View style={styles.buttonSectionWrapper}>
@@ -304,5 +260,28 @@ const DeviceListing = ({locationId}) => {
     </View>
   );
 };
+
+const mapStateToProps = state => {
+  return {
+    isLoading: state.app.isLoading,
+    devices: state.device,
+    departments: state.department,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchDevices: locationId => dispatch(fetchDevices(locationId)),
+    addDevice: (payload) => dispatch(addDevice(payload)),
+    updateDevice: (payload) => dispatch(updateDevice(payload)),
+
+  };
+};
+
+const DeviceListing = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(deviceListingComponent);
+
 
 export default DeviceListing;
