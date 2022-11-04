@@ -28,6 +28,7 @@ export const initialState = {
     },
   },
   shopVideoPreview: {
+    shopVideoTitle: '',
     shopVideo: null,
   },
   chat: {

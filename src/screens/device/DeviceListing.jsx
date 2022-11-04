@@ -44,7 +44,7 @@ const DeviceListing = ({locationId}) => {
     {id: 11, title: 'iPhone 11', sub_title: 'Mobile'},
   ];
   const FETCH_DEPARTMENTS_URL = '/store/get-departments';
-  const FETCH_DEVICES_URL = '/store/get-device';
+  const FETCH_DEVICES_URL = '/store/get-location-devices';
   const ADD_DEVICE_URL = '/store/add-device';
   const UPDATE_DEVICE_URL = '/store/update-device';
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +64,7 @@ const DeviceListing = ({locationId}) => {
       try {
         setIsLoading(true);
         const response = await axiosPrivate.post(FETCH_DEVICES_URL, {
-          department_id: 45,
+          location_id: locationId,
         });
         setDevices(response.data?.data);
         setIsLoading(false);
@@ -223,7 +223,7 @@ const DeviceListing = ({locationId}) => {
     return devices.map((item, key) => {
       return (
         <TouchableOpacity
-          key={item.id}
+          key={key}
           style={[styles.listItemWrapper, styles.shadow]}>
           <TouchableOpacity
             style={styles.editIconWrapper}
@@ -231,8 +231,10 @@ const DeviceListing = ({locationId}) => {
             <Image style={styles.editIconStyle} source={images.edit} />
           </TouchableOpacity>
           <Image style={styles.listItemImage} source={images.ipad} />
-          <Text style={[styles.listItemTitle]}>{item.name}</Text>
-          {/* <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text> */}
+          <Text style={[styles.listItemTitle]}>{item.device_name}</Text>
+          <Text style={[styles.listItemSubTitle]}>
+            {item.get_store_department?.department_name}
+          </Text>
         </TouchableOpacity>
       );
     });
