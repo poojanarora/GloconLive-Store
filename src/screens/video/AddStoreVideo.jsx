@@ -35,12 +35,9 @@ const AddStoreVideoComponent = ({
     handelVideoTitle(e);
   };
 
-  const onUpload = () => {
-    const formdata = new FormData();
-    formdata.append('store_id', profile.id);
-    formdata.append('video_title', videoTitle);
-    formdata.append('video', video);
-    handelVideoUpload(formdata);
+  const onUpload = async () => {
+    await handelVideoUpload(profile.id, videoTitle, video);
+    onCancel();
   };
 
   return (
@@ -87,7 +84,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     handelVideoTitle: videoTitle => dispatch(handelVideoTitle(videoTitle)),
-    handelVideoUpload: payload => dispatch(handelVideoUpload(payload)),
+    handelVideoUpload: (storeId, videoTitle, video) =>
+      dispatch(handelVideoUpload(storeId, videoTitle, video)),
   };
 };
 
