@@ -37,6 +37,7 @@ const SelectInput = props => {
 
   //Function to handel option click
   const handelOptionClick = item => {
+    console.log(item);
     toggleOptionDropdown();
     props.onSelect(item);
   };
@@ -50,7 +51,9 @@ const SelectInput = props => {
         <View style={styles.inputLeftSectionWrapper}>
           <View style={styles.inputWrapper}>
             <Text style={styles.selectLabel}>
-              {selectedOption.name ? selectedOption.name : props.selectLabel}
+              {selectedOption.departmentName
+                ? selectedOption.departmentName
+                : props.selectLabel}
             </Text>
           </View>
         </View>

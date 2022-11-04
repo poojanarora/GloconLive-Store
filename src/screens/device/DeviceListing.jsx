@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
-  SafeAreaView,
   View,
   Text,
   TouchableOpacity,
@@ -9,22 +8,19 @@ import {
   RefreshControl,
 } from 'react-native';
 import styles from './deviceListingStyles';
-import { images } from '../../constant';
+import {connect} from 'react-redux';
+import {images} from '../../constant';
 import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import SelectInput from '../../components/SelectInput';
-// import axiosPrivate from '../../config/privateApi';
-import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC';
+import Spinner from '../../components/Spinner';
 import {
   fetchDevices,
   addDevice,
-  updateDevice
+  updateDevice,
 } from '../../actions/deviceAction';
 
-import { connect } from 'react-redux';
-import department from '../../reducers/department';
-const OverlaySpinner = OverlaySpinnerHOC(View);
 const initialFormValues = {
   id: '',
   department: {},
@@ -46,34 +42,16 @@ const deviceListingComponent = ({
   departments,
   devices,
 }) => {
-
   const [fetchData, setFetchData] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [addDeviceModalVisible, setAddDeviceModalVisible] = useState(false);
   const [action, setAction] = useState('Add');
 
-
   useEffect(() => {
     console.log('Device component mounted');
 
-    //Function to fetch devices
-    // const fetchDevices = async () => {
-    //   try {
-    //     setIsLoading(true);
-    //     const response = await axiosPrivate.post(FETCH_DEVICES_URL, {
-    //       location_id: locationId,
-    //     });
-    //     setDevices(response.data?.data);
-    //     setIsLoading(false);
-    //   } catch (error) {
-    //     console.log(error);
-    //     setIsLoading(false);
-    //   }
-    // };
-
-    fetchDevices(locationId)
-
+    fetchDevices(locationId);
 
     return () => {
       console.log('Device component unmounted');
@@ -99,20 +77,26 @@ const deviceListingComponent = ({
 
   //Function to handel device name
   const handelDeviceName = e => {
-    setFormValues({ ...formValues, deviceName: e });
-    setFormErrors({ ...formErrors, deviceName: '' });
+    setFormValues({...formValues, deviceName: e});
+    setFormErrors({...formErrors, deviceName: ''});
   };
 
   //Function to handel department
   const handelDepartment = selectedDepartment => {
-    setFormValues({ ...formValues, department: selectedDepartment });
-    setFormErrors({ ...formErrors, department: '' });
+    setFormValues({
+      ...formValues,
+      department: {
+        id: selectedDepartment.id,
+        departmentName: selectedDepartment.name,
+      },
+    });
+    setFormErrors({...formErrors, department: ''});
   };
 
   //Function to handel device id
   const handelDeviceId = e => {
-    setFormValues({ ...formValues, deviceId: e });
-    setFormErrors({ ...formErrors, deviceId: '' });
+    setFormValues({...formValues, deviceId: e});
+    setFormErrors({...formErrors, deviceId: ''});
   };
 
   //Function to validate add devvice form
@@ -138,11 +122,16 @@ const deviceListingComponent = ({
 
   //Function to handel edit device
   const handelEditDevice = item => {
+    console.log(item);
     setFormValues({
       ...formValues,
       id: item.id,
       deviceId: item.device_id,
-      deviceName: item.name,
+      deviceName: item.device_name,
+      department: {
+        id: item.get_store_department.id,
+        departmentName: item.get_store_department.department_name,
+      },
     });
     setAction('Update');
     showModal();
@@ -150,12 +139,10 @@ const deviceListingComponent = ({
 
   //Function to handle add and update device
   const handelSubmit = async () => {
-
     let validateResponse = validate(formValues);
     if (Object.keys(validateResponse).length > 0) {
       setFormErrors(validateResponse);
     } else {
-      // setIsLoading(true);
       let payload = {
         department_id: formValues.department?.id,
         device_id: formValues.deviceId,
@@ -165,22 +152,21 @@ const deviceListingComponent = ({
       if (action === 'Add') {
         await addDevice(payload);
       } else {
-        payload.device_id = formValues.deviceId;
+        payload.id = formValues.id;
         await updateDevice(payload);
       }
+      await fetchDevices(locationId);
       hideModal();
     }
-  }
-
+  };
 
   //Function to render device listing
   const renderDeviceListing = () => {
-
     if (devices) {
       return devices.map((item, key) => {
         return (
           <TouchableOpacity
-            key={item.id}
+            key={key}
             style={[styles.listItemWrapper, styles.shadow]}>
             <TouchableOpacity
               style={styles.editIconWrapper}
@@ -188,8 +174,10 @@ const deviceListingComponent = ({
               <Image style={styles.editIconStyle} source={images.edit} />
             </TouchableOpacity>
             <Image style={styles.listItemImage} source={images.ipad} />
-            <Text style={[styles.listItemTitle]}>{item.name}</Text>
-            {/* <Text style={[styles.listItemSubTitle]}>{item.sub_title}</Text> */}
+            <Text style={[styles.listItemTitle]}>{item.device_name}</Text>
+            <Text style={[styles.listItemSubTitle]}>
+              {item?.get_store_department?.department_name}
+            </Text>
           </TouchableOpacity>
         );
       });
@@ -241,22 +229,19 @@ const deviceListingComponent = ({
 
   return (
     <View style={styles.body}>
-      <OverlaySpinner isLoading={isLoading} style={styles.body}>
-        {renderAddDeviceModal()}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}
-          refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
-          }>
-          <View style={styles.listSectionWrapper}>
-            {renderDeviceListing()}
-          </View>
-        </ScrollView>
-        <View style={styles.buttonSectionWrapper}>
-          <ButtonComp btnText="Add Devices" action={handelAddDevice} />
-        </View>
-      </OverlaySpinner>
+      <Spinner />
+      {renderAddDeviceModal()}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{flexGrow: 1}}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        }>
+        <View style={styles.listSectionWrapper}>{renderDeviceListing()}</View>
+      </ScrollView>
+      <View style={styles.buttonSectionWrapper}>
+        <ButtonComp btnText="Add Devices" action={handelAddDevice} />
+      </View>
     </View>
   );
 };
@@ -272,9 +257,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchDevices: locationId => dispatch(fetchDevices(locationId)),
-    addDevice: (payload) => dispatch(addDevice(payload)),
-    updateDevice: (payload) => dispatch(updateDevice(payload)),
-
+    addDevice: payload => dispatch(addDevice(payload)),
+    updateDevice: payload => dispatch(updateDevice(payload)),
   };
 };
 
@@ -282,6 +266,5 @@ const DeviceListing = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(deviceListingComponent);
-
 
 export default DeviceListing;
