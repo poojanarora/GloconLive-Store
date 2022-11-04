@@ -58,6 +58,19 @@ const deviceListingComponent = ({
     console.log('Device component mounted');
 
     //Function to fetch devices
+    // const fetchDevices = async () => {
+    //   try {
+    //     setIsLoading(true);
+    //     const response = await axiosPrivate.post(FETCH_DEVICES_URL, {
+    //       location_id: locationId,
+    //     });
+    //     setDevices(response.data?.data);
+    //     setIsLoading(false);
+    //   } catch (error) {
+    //     console.log(error);
+    //     setIsLoading(false);
+    //   }
+    // };
 
     fetchDevices(locationId)
 

@@ -8,6 +8,11 @@ const shopVideoPreview = (state = initialState.shopVideoPreview, action) => {
         ...state,
         shopVideo: action.payload,
       };
+    case shopVideoActionTypes.SET_SHOP_VIDEO_TITLE:
+      return {
+        ...state,
+        shopVideoTitle: action.payload,
+      };
     default:
       return state;
   }

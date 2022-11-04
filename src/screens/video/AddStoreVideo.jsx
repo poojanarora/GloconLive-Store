@@ -6,13 +6,24 @@ import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import PopupContent from '../../components/PopupContent';
 import {COLORS, images} from '../../constant';
 import showAlertPopup from '../../components/AlertComp';
+import {
+  handelVideoTitle,
+  handelVideoUpload,
+} from '../../actions/shopVideoAction';
 
-const AddStoreVideoComponent = ({navigation, video}) => {
+const AddStoreVideoComponent = ({
+  navigation,
+  handelVideoTitle,
+  handelVideoUpload,
+  videoTitle,
+  video,
+  profile,
+}) => {
   const onShowPreview = () => {
     if (video && video.uri) {
       navigation.navigate('ShopVideoPreview');
     } else {
-      showAlertPopup('Error', 'Please select a video for preview.', 'ok')
+      showAlertPopup('Error', 'Please select a video for preview.', 'ok');
     }
   };
 
@@ -20,22 +31,37 @@ const AddStoreVideoComponent = ({navigation, video}) => {
     navigation.navigate('ViewProfile');
   };
 
+  const handelVideoTitleChange = e => {
+    handelVideoTitle(e);
+  };
+
+  const onUpload = () => {
+    const formdata = new FormData();
+    formdata.append('store_id', profile.id);
+    formdata.append('video_title', videoTitle);
+    formdata.append('video', video);
+    handelVideoUpload(formdata);
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
       <PopupContent
         closeAction={onShowPreview}
         cancelAction={onCancel}
+        submitAction={onUpload}
         title="Add Store Video"
         subTitle="Add store video and title for same video"
         primaryButtonText="Upload"
         dangerButtonText="Preview Video">
         <IconInputWithoutLabel
           placeholder="Video Title Here"
+          value={videoTitle}
           name="videoTitle"
           showIcon={false}
           icon={images.tick}
           error={false}
           errorMessage="Please enter video title."
+          onChangeText={handelVideoTitleChange}
         />
         <BrowseFiles />
       </PopupContent>
@@ -52,10 +78,22 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
+    videoTitle: state.shopVideoPreview.shopVideoTitle,
     video: state.shopVideoPreview.shopVideo,
+    profile: state.profile,
   };
 };
 
-const AddStoreVideo = connect(mapStateToProps, null)(AddStoreVideoComponent);
+const mapDispatchToProps = dispatch => {
+  return {
+    handelVideoTitle: videoTitle => dispatch(handelVideoTitle(videoTitle)),
+    handelVideoUpload: payload => dispatch(handelVideoUpload(payload)),
+  };
+};
+
+const AddStoreVideo = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AddStoreVideoComponent);
 
 export default AddStoreVideo;
