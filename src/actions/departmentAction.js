@@ -9,7 +9,7 @@ import axiosPrivate from '../config/privateApi';
 export const fetchDepartments = locationId => async dispatch => {
   try {
     dispatch(setLoading(true));
-    let response = await axiosPrivate.post('/store/get-departments', {
+    let response = await axiosPrivate.post('/shopper/get-departments', {
       location_id: locationId,
     });
     if (response.data.success === true) {

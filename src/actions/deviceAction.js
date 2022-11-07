@@ -32,8 +32,10 @@ export const addDevice = formValues => async dispatch => {
     dispatch(setLoading(true));
     let resp = await axiosPrivate.post('/store/add-device', formValues);
     if (resp.data.success === true) {
+      console.log('In add device success');
       const data = resp.data?.data;
-      //dispatch(appendDevices(data));
+      console.log(data);
+      dispatch(appendDevices(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', resp.data?.message, 'Ok');
     } else {
@@ -56,7 +58,7 @@ export const updateDevice = formValues => async dispatch => {
     let response = await axiosPrivate.post('/store/update-device', formValues);
     if (response.data.success === true) {
       const data = response.data?.data;
-      //dispatch(modifyDevices(data));
+      dispatch(modifyDevices(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
     } else {

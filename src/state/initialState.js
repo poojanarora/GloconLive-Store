@@ -18,6 +18,7 @@ export const initialState = {
     subscriptionId: '',
     subscriptionStartDate: '',
     titlePosition: '',
+    profilePic: '',
   },
   location: [],
   department: [],

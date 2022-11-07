@@ -5,35 +5,42 @@ import {appConfig} from '../config/config';
 ZIM.create(appConfig);
 const zimInstance = ZIM.getInstance();
 
-export const initializeZim = () => (dispatch) => {
+export const initializeZim = () => dispatch => {
   dispatch(initEvent(zimInstance));
 };
 
 const queryUsersInfo =
   (ids, isSelf = false) =>
-  (dispatch) => {
-    zimInstance.queryUsersInfo(ids, {isQueryFromServer: true}).then(({userList}) => {
-      if (isSelf) {
-        dispatch({
-          type: chatActionTypes.SET_ZIM_USER,
-          payload: {user: userList[0]},
-        });
-      } else {
-        dispatch({
-          type: chatActionTypes.SET_ZIM_USER_MAP,
-          payload: {userList},
-        });
-      }
-    });
+  dispatch => {
+    zimInstance
+      .queryUsersInfo(ids, {isQueryFromServer: true})
+      .then(({userList}) => {
+        if (isSelf) {
+          dispatch({
+            type: chatActionTypes.SET_ZIM_USER,
+            payload: {user: userList[0]},
+          });
+        } else {
+          dispatch({
+            type: chatActionTypes.SET_ZIM_USER_MAP,
+            payload: {userList},
+          });
+        }
+      });
   };
 
 const errorHandle = error => {
   console.log('errorHandle', error);
-  return Promise.reject();
+  //return Promise.reject();
+  return error;
 };
 
 export const zimLogin = loginForm => async dispatch => {
-  return zimInstance.login(loginForm, '04AAAAAGNj+LQAEGNrZjZ1YmUwcXRleTd5d3gAoC3tuGUmnMBEoVtpXRnCtjMm+2OP/mQFCnsUZifPnlHtp84z5kRak2s02ld7dE1KA3yV/OA2cYLbAVbjyIGX5+TiLwEAFL21Vj6Zqq6qNGDkIYmxKeVwaQMa+Q710bjvmyrck6gS5Ttj8buMlUCX1/Pc4v+SrlfSdzN1EzZJUwF+whzsBBOiG+sxLxEPIzpdgG51HQfHg+0DtFcj2ysC5Sw=')
+  return zimInstance
+    .login(
+      loginForm,
+      '04AAAAAGNj+LQAEGNrZjZ1YmUwcXRleTd5d3gAoC3tuGUmnMBEoVtpXRnCtjMm+2OP/mQFCnsUZifPnlHtp84z5kRak2s02ld7dE1KA3yV/OA2cYLbAVbjyIGX5+TiLwEAFL21Vj6Zqq6qNGDkIYmxKeVwaQMa+Q710bjvmyrck6gS5Ttj8buMlUCX1/Pc4v+SrlfSdzN1EzZJUwF+whzsBBOiG+sxLxEPIzpdgG51HQfHg+0DtFcj2ysC5Sw=',
+    )
     .then(res => {
       queryUsersInfo([loginForm.userID], true);
       dispatch({
@@ -49,7 +56,7 @@ export const logoutZimChat = () => {
   zimInstance.logout();
 };
 
-const initEvent = zim => (dispatch) => {
+const initEvent = zim => dispatch => {
   zim.on('error', function (zim, errorInfo) {
     console.log('error', errorInfo.code, errorInfo.message);
   });
@@ -121,7 +128,7 @@ const setMessage = (id, messages) => dispatch => {
   });
 };
 
-export const queryHistoryMessage = conID => async (dispatch) => {
+export const queryHistoryMessage = conID => async dispatch => {
   return zimInstance
     .queryHistoryMessage(conID, 0, {count: 1000, reverse: true})
     .then(res => {
@@ -136,7 +143,7 @@ export const queryHistoryMessage = conID => async (dispatch) => {
     .catch(errorHandle);
 };
 
-export const sendChatMessage = (conID, message) => async (dispatch) => {
+export const sendChatMessage = (conID, message) => async dispatch => {
   return zimInstance
     .sendMessage(
       {message, type: 1},

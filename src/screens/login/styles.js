@@ -28,7 +28,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoImage: {
-    resizeMode: 'contain',
+    //resizeMode: 'contain',
+    height: moderateScale(65),
+    width: moderateScale(280),
   },
   formSectionWrapper: {
     marginVertical: moderateVerticalScale(5),

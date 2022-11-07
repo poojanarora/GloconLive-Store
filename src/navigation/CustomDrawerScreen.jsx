@@ -65,16 +65,16 @@ const CustomDrawerScreen = props => {
                 onPress={handelMenuIconClick}>
                 <Image
                   style={{
-                    width: moderateScale(22),
-                    height: moderateScale(22),
+                    width: moderateScale(20),
+                    height: moderateScale(20),
                     resizeMode: 'contain',
                   }}
-                  source={images.close}
+                  source={images.close_white}
                 />
               </TouchableOpacity>
             </View>
 
-            <Image style={styles.logoImage} source={images.logo_white} />
+            <Image style={styles.logoImage} source={images.logo_color} />
           </View>
           <View style={styles.drawerListWrapper}>
             {menus.map((value, key) => {
@@ -127,17 +127,20 @@ const styles = StyleSheet.create({
   drawerHeaderWrapper: {
     height: moderateScale(125),
     //justifyContent: 'center',
-    paddingLeft: moderateScale(20),
-    //backgroundColor: 'yellow'
+    //paddingLeft: moderateScale(20),
+    //backgroundColor: 'yellow',
   },
   drawerIconWrapper: {
     height: moderateScale(55),
-    //backgroundColor: 'orange',
+    backgroundColor: COLORS.primary,
     justifyContent: 'center',
+    paddingLeft: moderateScale(20),
   },
   logoImage: {
-    resizeMode: 'contain',
-    width: moderateScale(160),
+    // resizeMode: 'contain',
+    height: moderateScale(65),
+    width: moderateScale(150),
+    marginLeft: moderateScale(20),
   },
   menuIconWrapper: {
     height: moderateScale(32),

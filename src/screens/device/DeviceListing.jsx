@@ -122,7 +122,6 @@ const deviceListingComponent = ({
 
   //Function to handel edit device
   const handelEditDevice = item => {
-    console.log(item);
     setFormValues({
       ...formValues,
       id: item.id,
