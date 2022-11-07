@@ -18,11 +18,7 @@ import {COLORS} from '../constant';
 const IconInput = props => {
   return (
     <>
-      <View
-        style={[
-          styles.inputSectionWrapper,
-          props.error.length > 0 && styles.error,
-        ]}>
+      <View style={[styles.inputSectionWrapper, props.error && styles.error]}>
         <View style={styles.inputLeftSectionWrapper}>
           <View style={styles.inputWrapper}>
             <Text style={styles.inputLabel}>{props.label}</Text>
@@ -43,7 +39,7 @@ const IconInput = props => {
           <Image style={styles.iconImage} source={props.icon} />
         </TouchableOpacity>
       </View>
-      {props.error.length > 0 && (
+      {props.error && (
         <View style={styles.errorMessageWrapper}>
           <Text style={styles.errorMessage}>{props.error}</Text>
         </View>
