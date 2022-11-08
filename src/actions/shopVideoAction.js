@@ -1,5 +1,6 @@
 import {shopVideoActionTypes} from '../actionTypes/actionTypes';
 import {setLoading} from './appAction';
+import {storeProfile} from './profileActions';
 import axiosPrivate from '../config/privateApi';
 
 export const handleVideoSelection = video => {
@@ -23,9 +24,20 @@ export const handelVideoUpload =
       const formdata = new FormData();
       formdata.append('store_id', storeId);
       formdata.append('video_title', videoTitle);
-      formdata.append('video', video);
+      formdata.append('video', {
+        uri: video.uri,
+        type: video.type,
+        name: video.fileName,
+      });
       const response = await axiosPrivate.post('/store/upload-video', formdata);
       if (response.data.success === true) {
+        console.log(response.data);
+        const data = response.data?.data;
+        const profileObj = {
+          videoTitle: data.video_title,
+          video: data.video_url,
+        };
+        dispatch(storeProfile(profileObj));
         dispatch(setLoading(false));
         showAlertPopup('Success', response.data?.message, 'Ok');
       } else {

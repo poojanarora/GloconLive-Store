@@ -27,6 +27,8 @@ export const fetchProfileInfo = email => async dispatch => {
         subscriptionStartDate: data.subscription_start_date,
         titlePosition: data.title_position,
         profilePic: data.profile_image,
+        videoTitle: data.video_title,
+        video: data.video_url,
       };
       dispatch(storeProfile(profileObj));
       dispatch(setLoading(false));
