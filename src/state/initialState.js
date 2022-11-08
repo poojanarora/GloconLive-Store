@@ -19,6 +19,8 @@ export const initialState = {
     subscriptionStartDate: '',
     titlePosition: '',
     profilePic: '',
+    videoTitle: '',
+    video: '',
   },
   location: [],
   department: [],
