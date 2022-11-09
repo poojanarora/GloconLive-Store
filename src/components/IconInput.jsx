@@ -33,6 +33,8 @@ const IconInput = props => {
               secureTextEntry={props.isSecure}
               value={props.value}
               onChangeText={props.onChangeText}
+              autoCapitalize='none'
+              autoCorrect={false}
             />
           </View>
         </View>
