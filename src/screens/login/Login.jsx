@@ -111,7 +111,7 @@ const LoginComponent = ({navigation, isLoading, onLogin}) => {
       <View style={styles.body}>
         <View style={styles.mainSectionWrapper}>
           <View style={styles.headerSectionWrapper}>
-            <Image style={styles.logoImage} source={images.logo_white} />
+            <Image style={styles.logoImage} source={images.logo_color} />
           </View>
           <View style={styles.formSectionWrapper}>
             <IconInput

@@ -18,8 +18,14 @@ export const initialState = {
     subscriptionId: '',
     subscriptionStartDate: '',
     titlePosition: '',
+    profilePic: '',
+    videoTitle: '',
+    video: '',
   },
-  location: [],
+  location: {
+    storeLocations: [],
+  },
+  //location: [],
   department: [],
   device: [],
   login: {

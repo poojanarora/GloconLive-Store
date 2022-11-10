@@ -2,7 +2,7 @@ import {profileActionTypes} from '../actionTypes/actionTypes';
 import {setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
-import { zimLogin } from './chatActions';
+import {zimLogin} from './chatActions';
 
 /**
  * Function to fetch profile information.
@@ -26,10 +26,13 @@ export const fetchProfileInfo = email => async dispatch => {
         subscriptionId: data.subscription_id,
         subscriptionStartDate: data.subscription_start_date,
         titlePosition: data.title_position,
+        profilePic: data.profile_image,
+        videoTitle: data.video_title,
+        video: data.video_url,
       };
       dispatch(storeProfile(profileObj));
       dispatch(setLoading(false));
-      const loginForm = {userID: data.id.toString(), userName: data.name}
+      const loginForm = {userID: data.id.toString(), userName: data.name};
       dispatch(zimLogin(loginForm));
     } else {
       dispatch(setLoading(false));
@@ -74,4 +77,38 @@ export const storeProfile = profile => {
     type: profileActionTypes.STORE_PROFILE,
     payload: profile,
   };
+};
+
+/**
+ * Function to update profile information.
+ */
+export const updateProfileInformation = formValues => async dispatch => {
+  try {
+    dispatch(setLoading(true));
+    const formdata = new FormData();
+    formdata.append('store_id', formValues.store_id);
+    formdata.append('company_name', formValues.company_name);
+    formdata.append('email', formValues.email);
+    formdata.append('profile_image', {
+      uri: formValues.profile_image.uri,
+      type: formValues.profile_image.type,
+      name: formValues.profile_image.fileName,
+    });
+    let response = await axiosPrivate.post(
+      '/store/update-store-profile',
+      formdata,
+    );
+    if (response.data.success === true) {
+      dispatch(setLoading(false));
+      showAlertPopup('Success', response.data?.message, 'Ok');
+    } else {
+      dispatch(setLoading(false));
+      showAlertPopup('Opps', response.data?.message, 'Cancel');
+    }
+  } catch (error) {
+    dispatch(setLoading(false));
+    console.log('In profile update catch block');
+    console.log(error);
+    showAlertPopup('Opps', error?.message, 'Cancel');
+  }
 };

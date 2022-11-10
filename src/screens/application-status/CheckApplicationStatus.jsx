@@ -34,6 +34,10 @@ const CheckApplicationStatus = ({navigation}) => {
       ...formValues,
       email: e,
     });
+    setFormErrors({
+      ...formErrors,
+      email: '',
+    });
   };
 
   //Function to validate data
@@ -96,7 +100,7 @@ const CheckApplicationStatus = ({navigation}) => {
         <View style={styles.body}>
           <View style={styles.mainSectionWrapper}>
             <View style={styles.headerSectionWrapper}>
-              <Image style={styles.logoImage} source={images.logo_white} />
+              <Image style={styles.logoImage} source={images.logo_color} />
             </View>
             <View style={styles.formSectionWrapper}>
               <IconInput

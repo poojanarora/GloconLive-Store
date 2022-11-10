@@ -17,10 +17,12 @@ import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import {connect} from 'react-redux';
 import Spinner from '../../components/Spinner.jsx';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {
   fetchProfileInfo,
   storeProfile,
   changePassword,
+  updateProfileInformation,
 } from '../../actions/profileActions';
 import {setLoading} from '../../actions/appAction';
 import ImagePickerModel from '../../components/ImagePickerModel';
@@ -48,7 +50,8 @@ const ViewProfileComponent = ({
   profile,
   setLoading,
   fetchProfileInfo,
-  updateProfileInfo,
+  editProfileInfo,
+  updateProfileInformation,
   changePassword,
   navigation,
 }) => {
@@ -65,6 +68,8 @@ const ViewProfileComponent = ({
   );
   const [showChangeProfilePicModel, setShowChangeProfilePicModel] =
     useState(false);
+
+  const [choosenImage, setChoosenImage] = useState({});
 
   useEffect(() => {
     console.log('Profile component mounted');
@@ -144,14 +149,62 @@ const ViewProfileComponent = ({
     fetchProfileInfo(auth.email);
   };
 
+  //Function to launch gallery to select image
+  const pickImage = async () => {
+    let result = await launchImageLibrary({
+      mediaType: 'image',
+    });
+    if (!result.didCancel) {
+      setChoosenImage(result.assets[0]);
+      editProfileInfo({profilePic: result.assets[0].uri});
+    }
+  };
+
   //Function to handel company name
   const handelCompanyName = e => {
-    updateProfileInfo({companyName: e});
+    editProfileInfo({companyName: e});
   };
 
   //Function to handel email
   const handelEmailId = e => {
-    updateProfileInfo({email: e});
+    editProfileInfo({email: e});
+  };
+
+  //Function to validate change password form
+  const validateEditProfileForm = values => {
+    let errors = {};
+    if (!values.companyName) {
+      errors.companyName = 'Please enter company name.';
+    }
+    if (!values.email) {
+      errors.email = 'Please enter email.';
+    } else {
+      const emailRegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+      const emailValidCheck = emailRegExp.test(values.email);
+      if (emailValidCheck === false) {
+        errors.email = 'Please enter a valid email address.';
+      }
+    }
+    return errors;
+  };
+
+  //Function to update profile information
+  const handelEditProfileChanges = async () => {
+    try {
+      let validateResponse = validateEditProfileForm(profile);
+      if (Object.keys(validateResponse).length > 0) {
+        setEditProfileFormErrors(validateResponse);
+      } else {
+        updateProfileInformation({
+          store_id: profile.id,
+          profile_image: choosenImage,
+          company_name: profile.companyName,
+          email: profile.email,
+        });
+      }
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   //Function to handel old password
@@ -225,26 +278,32 @@ const ViewProfileComponent = ({
   };
 
   const renderImagePickerModel = () => {
-    <ImagePickerModel
-      show={showChangeProfilePicModel}
-      onImageSelection={image => {
-        console.log('onImageSelection', image);
-      }}
-      onClose={() => setShowChangeProfilePicModel(false)}
-    />;
+    return (
+      <ImagePickerModel
+        show={showChangeProfilePicModel}
+        onImageSelection={image => {
+          editProfileInfo({profilePic: image.uri});
+          setShowChangeProfilePicModel(false)
+          setChoosenImage(image);
+        }}
+        onClose={() => setShowChangeProfilePicModel(false)}
+      />
+    );
   };
 
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
       <Spinner />
       {renderUpdatePasswordModal()}
-      {renderImagePickerModel()}
+      {/* {renderImagePickerModel()} */}
       <View style={styles.topSectionWrapper}>
         <View style={styles.profilePictureWrapper}>
-          <Image style={styles.profileImage} source={images.user1} />
+          <Image style={styles.profileImage} source={{
+                uri: profile.profilePic,
+              }}/>
           <TouchableOpacity
             style={styles.cameraButton}
-            onPress={onProfilePicChange}>
+            onPress={pickImage}>
             <Image style={styles.cameraImage} source={images.camera} />
           </TouchableOpacity>
         </View>
@@ -301,6 +360,7 @@ const ViewProfileComponent = ({
 
               <ButtonComp
                 btnText="SAVE"
+                action={handelEditProfileChanges}
                 btnStyle={{
                   width: moderateScale(100),
                 }}
@@ -328,7 +388,9 @@ const mapDispatchToProps = dispatch => {
   return {
     setLoading: loading => dispatch(setLoading(loading)),
     fetchProfileInfo: email => dispatch(fetchProfileInfo(email)),
-    updateProfileInfo: obj => dispatch(storeProfile(obj)),
+    editProfileInfo: obj => dispatch(storeProfile(obj)),
+    updateProfileInformation: payload =>
+      dispatch(updateProfileInformation(payload)),
     changePassword: payload => dispatch(changePassword(payload)),
   };
 };
