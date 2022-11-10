@@ -25,6 +25,7 @@ import {
   updateProfileInformation,
 } from '../../actions/profileActions';
 import {setLoading} from '../../actions/appAction';
+import ImagePickerModel from '../../components/ImagePickerModel';
 
 const initialEditProfileErrors = {
   companyName: '',
@@ -65,6 +66,9 @@ const ViewProfileComponent = ({
   const [changePasswordFormErrors, setChangePasswordFormErrors] = useState(
     initialChangePasswordErrors,
   );
+  const [showChangeProfilePicModel, setShowChangeProfilePicModel] =
+    useState(false);
+
   const [choosenImage, setChoosenImage] = useState({});
 
   useEffect(() => {
@@ -269,21 +273,37 @@ const ViewProfileComponent = ({
     }
   };
 
+  const onProfilePicChange = () => {
+    setShowChangeProfilePicModel(!showChangeProfilePicModel);
+  };
+
+  const renderImagePickerModel = () => {
+    return (
+      <ImagePickerModel
+        show={showChangeProfilePicModel}
+        onImageSelection={image => {
+          editProfileInfo({profilePic: image.uri});
+          setShowChangeProfilePicModel(false)
+          setChoosenImage(image);
+        }}
+        onClose={() => setShowChangeProfilePicModel(false)}
+      />
+    );
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
       <Spinner />
       {renderUpdatePasswordModal()}
+      {/* {renderImagePickerModel()} */}
       <View style={styles.topSectionWrapper}>
         <View style={styles.profilePictureWrapper}>
-          {profile.profilePic && (
-            <Image
-              style={styles.profileImage}
-              source={{
+          <Image style={styles.profileImage} source={{
                 uri: profile.profilePic,
-              }}
-            />
-          )}
-          <TouchableOpacity style={styles.cameraButton} onPress={pickImage}>
+              }}/>
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={pickImage}>
             <Image style={styles.cameraImage} source={images.camera} />
           </TouchableOpacity>
         </View>

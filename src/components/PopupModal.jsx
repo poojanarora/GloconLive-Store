@@ -22,6 +22,7 @@ const PopupModal = ({
         dangerButtonText={dangerButtonText}
         primaryButtonText={primaryButtonText}
         submitAction={submitAction}
+        showFooter={true}
       />
     </Modal>
   );

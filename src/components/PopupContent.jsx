@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {
   scale,
   moderateScale,
@@ -26,33 +20,37 @@ const PopupContent = props => {
           </TouchableOpacity>
           <View style={styles.modalHeaderWrapper}>
             <Text style={styles.modalTitle}>{props.title}</Text>
-            <Text style={styles.modalSubTitle}>{props.subTitle}</Text>
+            {props.subTitle && (
+              <Text style={styles.modalSubTitle}>{props.subTitle}</Text>
+            )}
           </View>
           <View style={styles.modalBodyWrapper}>{props.children}</View>
-          <View style={styles.modalFooterWrapper}>
-            <ButtonComp
-              btnStyle={{
-                width: moderateScale(100),
-                backgroundColor: COLORS.dangerButtonColor,
-                shadowColor: COLORS.dangerButtonColor,
-              }}
-              btnTextStyle={{
-                fontSize: scale(14),
-              }}
-              btnText={props.dangerButtonText}
-              action={props.closeAction}
-            />
-            <ButtonComp
-              btnStyle={{
-                width: moderateScale(100),
-              }}
-              btnTextStyle={{
-                fontSize: scale(14),
-              }}
-              btnText={props.primaryButtonText}
-              action={props.submitAction}
-            />
-          </View>
+          {props.showFooter && (
+            <View style={styles.modalFooterWrapper}>
+              <ButtonComp
+                btnStyle={{
+                  width: moderateScale(100),
+                  backgroundColor: COLORS.dangerButtonColor,
+                  shadowColor: COLORS.dangerButtonColor,
+                }}
+                btnTextStyle={{
+                  fontSize: scale(14),
+                }}
+                btnText={props.dangerButtonText}
+                action={props.closeAction}
+              />
+              <ButtonComp
+                btnStyle={{
+                  width: moderateScale(100),
+                }}
+                btnTextStyle={{
+                  fontSize: scale(14),
+                }}
+                btnText={props.primaryButtonText}
+                action={props.submitAction}
+              />
+            </View>
+          )}
         </View>
       </View>
     </View>
