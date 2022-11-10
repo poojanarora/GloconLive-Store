@@ -22,7 +22,10 @@ export const initialState = {
     videoTitle: '',
     video: '',
   },
-  location: [],
+  location: {
+    storeLocations: [],
+  },
+  //location: [],
   department: [],
   device: [],
   login: {

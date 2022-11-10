@@ -236,7 +236,7 @@ const mapStateToProps = state => {
   return {
     isLoading: state.app.isLoading,
     profile: state.profile,
-    locations: state.location,
+    locations: state.location.storeLocations,
   };
 };
 
