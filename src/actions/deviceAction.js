@@ -5,6 +5,7 @@ import axiosPrivate from '../config/privateApi';
 
 export const fetchDevices = locationId => async dispatch => {
   try {
+    console.log('In fetch device action');
     dispatch(setLoading(true));
     let response = await axiosPrivate.post('/store/get-location-devices', {
       location_id: locationId,
@@ -16,12 +17,12 @@ export const fetchDevices = locationId => async dispatch => {
       dispatch(setLoading(false));
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Oopps', response.data?.message, 'Cancel');
+      showAlertPopup('OOops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch Device catch block');
-    showAlertPopup('Oopps', error?.message, 'Cancel');
+    showAlertPopup('OOops', error?.message, 'Cancel');
   }
 };
 /**
@@ -40,12 +41,12 @@ export const addDevice = formValues => async dispatch => {
       showAlertPopup('Success', resp.data?.message, 'Ok');
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Opps', resp.data?.message, 'Cancel');
+      showAlertPopup('Oops', resp.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add device catch block');
-    showAlertPopup('Opps', error?.message, 'Cancel');
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };
 
@@ -63,12 +64,12 @@ export const updateDevice = formValues => async dispatch => {
       showAlertPopup('Success', response.data?.message, 'Ok');
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Opps', response.data?.message, 'Cancel');
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In update device catch block');
-    showAlertPopup('Opps', error?.message, 'Cancel');
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };
 

@@ -4,16 +4,26 @@ import {initialState} from '../state/initialState';
 const department = (state = initialState.department, action) => {
   switch (action.type) {
     case departmentActionTypes.STORE_DEPARTMENT:
-      return action.payload;
+      return {
+        ...state,
+        storeDepartments: action.payload,
+      };
     case departmentActionTypes.APPEND_DEPARTMENT:
-      return [...state, action.payload];
-    case departmentActionTypes.UPDATE_DEPARTMENT:
-      const index = state.findIndex(
+      return {
+        ...state,
+        storeDepartments: [...state.storeDepartments, action.payload],
+      };
+    case departmentActionTypes.UPDATE_DEPARTMENT: {
+      const index = state.storeDepartments.findIndex(
         department => department.id === action.payload.id,
       );
-      const newArray = [...state];
+      const newArray = [...state.storeDepartments];
       newArray[index] = action.payload;
-      return newArray;
+      return {
+        ...state,
+        storeLocations: newArray,
+      };
+    }
     default:
       return state;
   }

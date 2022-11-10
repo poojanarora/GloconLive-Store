@@ -5,6 +5,8 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
+import {CommonActions} from '@react-navigation/native';
+import {StackActions, NavigationActions} from '@react-navigation/native';
 import {COLORS, images} from '../constant';
 import {useDispatch} from 'react-redux';
 import {handleLogout} from '../actions/authActions';
@@ -35,7 +37,13 @@ const CustomDrawerScreen = props => {
   //Function to handel menu click
   const handelMenuClick = menu => {
     setSelectedMenu(menu.id);
-    props.navigation.navigate(menu.navigatTo);
+    if (menu.navigatTo === 'Locations') {
+      props.navigation.navigate('Locations', {
+        screen: 'LocationListing',
+      });
+    } else {
+      props.navigation.navigate(menu.navigatTo);
+    }
   };
 
   //Function to handel logout

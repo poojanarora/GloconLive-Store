@@ -199,7 +199,7 @@ const DepartmentListingComponent = ({
 const mapStateToProps = state => {
   return {
     isLoading: state.app.isLoading,
-    departments: state.department,
+    departments: state.department.storeDepartments,
   };
 };
 

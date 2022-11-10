@@ -42,12 +42,12 @@ export const handelVideoUpload =
         showAlertPopup('Success', response.data?.message, 'Ok');
       } else {
         dispatch(setLoading(false));
-        showAlertPopup('Opps', response.data?.message, 'Cancel');
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
       }
     } catch (error) {
       console.log('In upload video catch block');
       console.log(error);
       dispatch(setLoading(false));
-      showAlertPopup('Opps', error?.message, 'Cancel');
+      showAlertPopup('Oops', error?.message, 'Cancel');
     }
   };

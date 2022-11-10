@@ -15,6 +15,7 @@ export const fetchProfileInfo = email => async dispatch => {
     });
     if (response.data.success === true) {
       const data = response.data?.data;
+      console.log(data);
       const profileObj = {
         id: data.id,
         companyName: data.company_name,
@@ -36,12 +37,12 @@ export const fetchProfileInfo = email => async dispatch => {
       dispatch(zimLogin(loginForm));
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Opps', response.data?.message, 'Cancel');
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In catch block');
-    showAlertPopup('Opps', error?.message, 'Cancel');
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };
 
@@ -60,12 +61,12 @@ export const changePassword = formValues => async dispatch => {
       showAlertPopup('Success', response.data?.message, 'Ok');
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Opps', response.data?.message, 'Cancel');
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     console.log('In catch block');
     dispatch(setLoading(false));
-    showAlertPopup('Opps', error?.message, 'Cancel');
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };
 
@@ -89,11 +90,13 @@ export const updateProfileInformation = formValues => async dispatch => {
     formdata.append('store_id', formValues.store_id);
     formdata.append('company_name', formValues.company_name);
     formdata.append('email', formValues.email);
-    formdata.append('profile_image', {
-      uri: formValues.profile_image.uri,
-      type: formValues.profile_image.type,
-      name: formValues.profile_image.fileName,
-    });
+    if (Object.keys(formValues.profile_image).length > 0) {
+      formdata.append('profile_image', {
+        uri: formValues.profile_image.uri,
+        type: formValues.profile_image.type,
+        name: formValues.profile_image.fileName,
+      });
+    }
     let response = await axiosPrivate.post(
       '/store/update-store-profile',
       formdata,
@@ -103,12 +106,12 @@ export const updateProfileInformation = formValues => async dispatch => {
       showAlertPopup('Success', response.data?.message, 'Ok');
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Opps', response.data?.message, 'Cancel');
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In profile update catch block');
     console.log(error);
-    showAlertPopup('Opps', error?.message, 'Cancel');
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };

@@ -154,7 +154,7 @@ const deviceListingComponent = ({
         payload.id = formValues.id;
         await updateDevice(payload);
       }
-      await fetchDevices(locationId);
+      //await fetchDevices(locationId);
       hideModal();
     }
   };
@@ -248,8 +248,8 @@ const deviceListingComponent = ({
 const mapStateToProps = state => {
   return {
     isLoading: state.app.isLoading,
-    devices: state.device,
-    departments: state.department,
+    devices: state.device.storeDevices,
+    departments: state.department.storeDepartments,
   };
 };
 
