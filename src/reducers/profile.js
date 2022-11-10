@@ -5,6 +5,7 @@ const profile = (state = initialState.profile, action) => {
   switch (action.type) {
     case profileActionTypes.STORE_PROFILE:
       return {
+        ...state,
         ...action.payload,
       };
     default:

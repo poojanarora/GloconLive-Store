@@ -48,6 +48,7 @@ const AddStoreVideoComponent = ({
         submitAction={onUpload}
         title="Add Store Video"
         subTitle="Add store video and title for same video"
+        showFooter={true}
         primaryButtonText="Upload"
         dangerButtonText="Preview Video">
         <IconInputWithoutLabel

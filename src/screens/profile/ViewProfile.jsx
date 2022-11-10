@@ -23,6 +23,7 @@ import {
   changePassword,
 } from '../../actions/profileActions';
 import {setLoading} from '../../actions/appAction';
+import ImagePickerModel from '../../components/ImagePickerModel';
 
 const initialEditProfileErrors = {
   companyName: '',
@@ -62,6 +63,8 @@ const ViewProfileComponent = ({
   const [changePasswordFormErrors, setChangePasswordFormErrors] = useState(
     initialChangePasswordErrors,
   );
+  const [showChangeProfilePicModel, setShowChangeProfilePicModel] =
+    useState(false);
 
   useEffect(() => {
     console.log('Profile component mounted');
@@ -217,14 +220,31 @@ const ViewProfileComponent = ({
     }
   };
 
+  const onProfilePicChange = () => {
+    setShowChangeProfilePicModel(!showChangeProfilePicModel);
+  };
+
+  const renderImagePickerModel = () => {
+    <ImagePickerModel
+      show={showChangeProfilePicModel}
+      onImageSelection={image => {
+        console.log('onImageSelection', image);
+      }}
+      onClose={() => setShowChangeProfilePicModel(false)}
+    />;
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
       <Spinner />
       {renderUpdatePasswordModal()}
+      {renderImagePickerModel()}
       <View style={styles.topSectionWrapper}>
         <View style={styles.profilePictureWrapper}>
           <Image style={styles.profileImage} source={images.user1} />
-          <TouchableOpacity style={styles.cameraButton}>
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={onProfilePicChange}>
             <Image style={styles.cameraImage} source={images.camera} />
           </TouchableOpacity>
         </View>
