@@ -18,12 +18,12 @@ export const fetchDepartments = locationId => async dispatch => {
       dispatch(setLoading(false));
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Opps', response.data?.message, 'Cancel');
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch departments catch block');
-    showAlertPopup('Opps', error?.message, 'Cancel');
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };
 
@@ -41,12 +41,12 @@ export const addDepartment = formValues => async dispatch => {
       showAlertPopup('Success', response.data?.message, 'Ok');
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Opps', response.data?.message, 'Cancel');
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add department catch block');
-    showAlertPopup('Opps', error?.message, 'Cancel');
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };
 
@@ -67,12 +67,12 @@ export const updateDeparment = formValues => async dispatch => {
       showAlertPopup('Success', response.data?.message, 'Ok');
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Opps', response.data?.message, 'Cancel');
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In update deparment catch block');
-    showAlertPopup('Opps', error?.message, 'Cancel');
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };
 

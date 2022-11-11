@@ -4,7 +4,6 @@ import {initialState} from '../state/initialState';
 const location = (state = initialState.location, action) => {
   switch (action.type) {
     case locationActionTypes.STORE_LOCATION:
-      //return action.payload;
       return {
         ...state,
         storeLocations: action.payload,
@@ -14,7 +13,6 @@ const location = (state = initialState.location, action) => {
         ...state,
         storeLocations: [...state.storeLocations, action.payload],
       };
-    //return [...state, action.payload];
     case locationActionTypes.UPDATE_LOCATION: {
       const index = state.storeLocations.findIndex(
         location => location.id === action.payload.id,
@@ -26,7 +24,6 @@ const location = (state = initialState.location, action) => {
         storeLocations: newArray,
       };
     }
-    //return newArray;
     default:
       return state;
   }

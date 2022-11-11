@@ -25,9 +25,12 @@ export const initialState = {
   location: {
     storeLocations: [],
   },
-  //location: [],
-  department: [],
-  device: [],
+  department: {
+    storeDepartments: [],
+  },
+  device: {
+    storeDevices: [],
+  },
   login: {
     loginErrors: {
       email: '',
