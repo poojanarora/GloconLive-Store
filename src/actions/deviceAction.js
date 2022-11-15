@@ -22,7 +22,7 @@ export const fetchDevices = locationId => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch Device catch block');
-    showAlertPopup('OOops', error?.message, 'Cancel');
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };
 /**

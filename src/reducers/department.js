@@ -21,7 +21,7 @@ const department = (state = initialState.department, action) => {
       newArray[index] = action.payload;
       return {
         ...state,
-        storeLocations: newArray,
+        storeDepartments: newArray,
       };
     }
     default:

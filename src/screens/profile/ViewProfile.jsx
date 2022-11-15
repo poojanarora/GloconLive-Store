@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import {scale, moderateScale} from 'react-native-size-matters';
 import styles from './viewProfileStyles';
@@ -42,6 +43,7 @@ const initialChangePasswordErrors = {
   oldPassword: '',
   newPassword: '',
   confirmPassword: '',
+  matchPassword:'',
 };
 
 const ViewProfileComponent = ({
@@ -249,11 +251,15 @@ const ViewProfileComponent = ({
     if (!values.confirmPassword) {
       errors.confirmPassword = 'Please confirm password.';
     }
+    if (values.newPassword != values.confirmPassword) {
+      errors.matchPassword=alert("Confirm password should be match with new password")
+      
+    }
     return errors;
   };
 
   //Funcion to update password
-  const handelChangePassword = async () => {
+  const handelChangePassword = async (e) => {
     try {
       let validateResponse = validateChangePasswordForm(
         changePasswordFormValues,
@@ -266,6 +272,7 @@ const ViewProfileComponent = ({
           old_password: changePasswordFormValues.oldPassword,
           new_password: changePasswordFormValues.newPassword,
         });
+        setChangePasswordFormValues(initialChangePasswordFormValues)
         hideUpdatePasswordModal();
       }
     } catch (error) {
