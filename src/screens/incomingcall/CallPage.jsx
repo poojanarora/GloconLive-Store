@@ -9,33 +9,27 @@ import ZegoUIKit from '@zegocloud/zego-uikit-rn';
 import BackIcon from '../../components/BackIcon';
 import {moderateScale} from 'react-native-size-matters';
 import CallMenuBar from './CallMenuBar';
-import { appConfig } from '../../config/config';
+import {appConfig} from '../../config/config';
 
 const CallPageComponent = props => {
   const {route, profile, navigation} = props;
   const {params} = route;
-  const {userID, userName} = params;
-  const {id, name} = profile;
-  const [isJoin, setIsJoin] = useState(false);
+  const {callId, shopperName, departmentCallerId} = params;
+  const {name} = profile;
   const [isMicOn, setMicOn] = useState(true);
   const [isCameraOn, setCameraOn] = useState(true);
   const [frontCamera, setFrontCamera] = useState(true);
-
-  // useEffect(() => {
-  //   ZegoUIKit.onUserJoin('', user => {
-  //     console.log('onUserJoin', user);
-  //     setIsJoin(true);
-  //   });
-  // }, []);
 
   const onEndCall = () => {
     navigation.navigate('IncomingCallListing');
   };
 
   const onCameraToggle = () => {
-    ZegoUIKit.turnCameraOn(id.toString(), !isCameraOn).then(() => {
-      setCameraOn(!isCameraOn);
-    });
+    ZegoUIKit.turnCameraOn(departmentCallerId.toString(), !isCameraOn).then(
+      () => {
+        setCameraOn(!isCameraOn);
+      },
+    );
   };
 
   const onUseFrontFacingCamera = () => {
@@ -45,16 +39,18 @@ const CallPageComponent = props => {
   };
 
   const onMicToggle = () => {
-    ZegoUIKit.turnMicrophoneOn(id.toString(), !isMicOn).then(() => {
-      setMicOn(!isMicOn);
-    });
+    ZegoUIKit.turnMicrophoneOn(departmentCallerId.toString(), !isMicOn).then(
+      () => {
+        setMicOn(!isMicOn);
+      },
+    );
   };
 
   const onMorePress = () => {
     navigation.navigate('InCallChat', {
-      profileId: id,
-      userID,
-      userName,
+      departmentCallerId,
+      callId,
+      shopperName,
     });
   };
 
@@ -67,9 +63,9 @@ const CallPageComponent = props => {
       <ZegoUIKitPrebuiltCall
         appID={appConfig.appID}
         appSign={appConfig.appSign}
-        userID={id.toString()}
+        userID={departmentCallerId.toString()}
         userName={name}
-        callID={userID.toString()}
+        callID={callId}
         config={{
           onOnlySelfInRoom: () => {
             console.log('onOnlySelfInRoom', 'onOnlySelfInRoom');

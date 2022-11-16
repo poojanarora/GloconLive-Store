@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect }  from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,34 +7,27 @@ import {
   Image,
   FlatList,
 } from 'react-native';
+import {connect} from 'react-redux';
 import styles from './incomingCallListingStyles';
 import {images} from '../../constant';
+import { getIncomingCallQueue } from '../../actions/callActions';
 
-const IncomingCallListing = ({navigation}) => {
-  const incoming_calls = [
-    {id: '1', name: 'Sohel Patel', call_started_at: '10:00 am'},
-    {id: '2', name: 'Ahefaz Shaikh', call_started_at: '10:00 am'},
-    {id: '3', name: 'Rakesh Sarkar', call_started_at: '10:00 am'},
-    {id: '4', name: 'Haider Khan', call_started_at: '10:00 am'},
-    {id: '5', name: 'Sailesh Singh', call_started_at: '10:00 am'},
-    {id: '6', name: 'Rakesh Sarkar', call_started_at: '10:00 am'},
-    {id: '7', name: 'Haider Khan', call_started_at: '10:00 am'},
-    {id: '8', name: 'Sailesh Singh', call_started_at: '10:00 am'},
-    {id: '9', name: 'Sailesh Singh', call_started_at: '10:00 am'},
-    {id: '10', name: 'Rakesh Sarkar', call_started_at: '10:00 am'},
-    {id: '11', name: 'Haider Khan', call_started_at: '10:00 am'},
-    {id: '12', name: 'Raj Singh', call_started_at: '10:00 am'},
-  ];
+const IncomingCalls = ({navigation, fetchIncomingCallQueue, callQueue}) => {
+
+  useEffect(()=>{
+    fetchIncomingCallQueue()
+  }, [])
 
   const renderItem = ({item}) => {
     return <Item item={item} />;
   };
 
   const onJoinCall = item => {
-    const {id, name } = item;
+    const {callId, departmentCallerId, shopperName} = item;
     navigation.navigate('CallPage', {
-      userID: id,
-      userName: name,
+      callId,
+      shopperName,
+      departmentCallerId,
     });
   };
 
@@ -42,9 +35,9 @@ const IncomingCallListing = ({navigation}) => {
     return (
       <View style={styles.listItemWrapper}>
         <View style={styles.listItemLeftSectionWrapper}>
-          <Text style={styles.listItemTitle}>{item.name}</Text>
+          <Text style={styles.listItemTitle}>{item.shopperName}</Text>
           <Text style={styles.listItemSubTitle}>
-            Call Started at {item.call_started_at}
+            Call Started at {item.callStartTime}
           </Text>
         </View>
         <View style={styles.listItemRightectionWrapper}>
@@ -64,10 +57,10 @@ const IncomingCallListing = ({navigation}) => {
   const renderIncomingCallListing = () => {
     return (
       <FlatList
-        data={incoming_calls}
+        data={callQueue}
         //onRefresh={() => fetchRecipients()}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.callId}
         showsVerticalScrollIndicator={false}
         //refreshing={isRecipientListingLoading}
         // ItemSeparatorComponent={(props) => {
@@ -88,5 +81,22 @@ const IncomingCallListing = ({navigation}) => {
     </SafeAreaView>
   );
 };
+
+const mapStateToProps = state => {
+  return {
+    callQueue: state.call.callQueue,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue())
+  };
+};
+
+const IncomingCallListing = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(IncomingCalls);
 
 export default IncomingCallListing;

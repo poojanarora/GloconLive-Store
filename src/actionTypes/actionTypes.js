@@ -39,3 +39,7 @@ export const chatActionTypes = {
   SET_ZIM_USER_MAP: 'SET_ZIM_USER_MAP',
   SET_ZIM_USER: 'SET_ZIM_USER',
 };
+
+export const callActionTypes = {
+  SET_INCOMING_CALL_QUEUE: 'SET_INCOMING_CALL_QUEUE',
+}

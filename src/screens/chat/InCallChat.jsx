@@ -11,10 +11,10 @@ const InCallChatComponent = ({
   navigation,
 }) => {
   const {params} = route;
-  const {userID, profileId, userName} = params;
+  const {callId, shopperName, departmentCallerId} = params;
   // const [messages, setMessages] = useState([chatMap[id] || []]);
-  const user = {id: profileId.toString()};
-  const conId = userID.toString() + profileId.toString();
+  const user = {id: departmentCallerId.toString()};
+  const conId = callId;
   const messages = chatMap[conId] || [];
 
   // const addMessage = message => {
@@ -23,7 +23,7 @@ const InCallChatComponent = ({
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: userName,
+      title: shopperName,
     });
   }, []);
 

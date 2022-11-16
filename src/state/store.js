@@ -8,6 +8,7 @@ import location from '../reducers/location';
 import department from '../reducers/department';
 import device from '../reducers/device';
 import chat from '../reducers/chat';
+import call from '../reducers/call'
 
 
 const reducer = combineReducers({
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   department,
   device,
   chat,
+  call,
 });
 
 const store = configureStore({
