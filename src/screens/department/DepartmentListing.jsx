@@ -120,7 +120,9 @@ const DepartmentListingComponent = ({
       } else {
         payload.id = formValues.departmentId;
         await updateDeparment(payload);
+        // setFetchData(!fetchData);
       }
+      
       hideModal();
     }
   };

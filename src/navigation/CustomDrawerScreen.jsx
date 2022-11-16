@@ -106,7 +106,7 @@ const CustomDrawerScreen = props => {
             style={styles.drawerListItem}
             onPress={handelLogout}>
             <Image style={styles.iconImage} source={images.logout} />
-            <Text style={styles.listLabel}>Log Out</Text>
+            <Text style={styles.listLabel}>Sign Out</Text>
           </TouchableOpacity>
         </View>
       </View>
