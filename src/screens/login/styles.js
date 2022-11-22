@@ -54,6 +54,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  signInAsDeviceWrapper: {
+    marginTop: moderateVerticalScale(10),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default styles;

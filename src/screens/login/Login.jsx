@@ -145,6 +145,16 @@ const LoginComponent = ({navigation, isLoading, onLogin}) => {
                 </Text>
               </Text>
             </View>
+            <View style={styles.signInAsDeviceWrapper}>
+              <Text style={styles.signUpLabel}>
+                Are you a salesman?{' '}
+                <Text
+                  style={styles.labelPrimary}
+                  onPress={() => navigation.navigate('DeviceLogin')}>
+                  Link this Device
+                </Text>
+              </Text>
+            </View>
             <View style={styles.buttonSectionWrapper}>
               <ButtonComp btnText="Sign In" action={onSubmit} />
             </View>
