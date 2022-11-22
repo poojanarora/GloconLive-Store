@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,26 +7,26 @@ import {
   Image,
   ScrollView,
   RefreshControl,
-  Alert,
 } from 'react-native';
-import {scale, moderateScale} from 'react-native-size-matters';
+import { scale, moderateScale } from 'react-native-size-matters';
 import styles from './viewProfileStyles';
-import {COLORS, images} from '../../constant';
+import { COLORS, images } from '../../constant';
 import IconInput from '../../components/IconInput';
 import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Spinner from '../../components/Spinner.jsx';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import {
   fetchProfileInfo,
   storeProfile,
   changePassword,
   updateProfileInformation,
 } from '../../actions/profileActions';
-import {setLoading} from '../../actions/appAction';
+import { setLoading } from '../../actions/appAction';
 import ImagePickerModel from '../../components/ImagePickerModel';
+import showAlertPopup from '../../components/AlertComp';
 
 const initialEditProfileErrors = {
   companyName: '',
@@ -43,7 +43,7 @@ const initialChangePasswordErrors = {
   oldPassword: '',
   newPassword: '',
   confirmPassword: '',
-  matchPassword:'',
+  matchPassword: '',
 };
 
 const ViewProfileComponent = ({
@@ -154,22 +154,25 @@ const ViewProfileComponent = ({
   //Function to launch gallery to select image
   const pickImage = async () => {
     let result = await launchImageLibrary({
-      mediaType: 'image',
+      mediaType: 'photo',
     });
-    if (!result.didCancel) {
+    if (result.assets[0].fileSize > 1000000) {
+      showAlertPopup('Oops', "Picture size should be less than 1 MB", 'Cancel');
+    }
+    else if (!result.didCancel) {
       setChoosenImage(result.assets[0]);
-      editProfileInfo({profilePic: result.assets[0].uri});
+      editProfileInfo({ profilePic: result.assets[0].uri });
     }
   };
 
   //Function to handel company name
   const handelCompanyName = e => {
-    editProfileInfo({companyName: e});
+    editProfileInfo({ companyName: e });
   };
 
   //Function to handel email
   const handelEmailId = e => {
-    editProfileInfo({email: e});
+    editProfileInfo({ email: e });
   };
 
   //Function to validate change password form
@@ -215,7 +218,7 @@ const ViewProfileComponent = ({
       ...changePasswordFormValues,
       oldPassword: e.replace(/\s/g, ''),
     });
-    setChangePasswordFormErrors({...changePasswordFormErrors, oldPassword: ''});
+    setChangePasswordFormErrors({ ...changePasswordFormErrors, oldPassword: '' });
   };
 
   //Function to handel new password
@@ -224,7 +227,7 @@ const ViewProfileComponent = ({
       ...changePasswordFormValues,
       newPassword: e.replace(/\s/g, ''),
     });
-    setChangePasswordFormErrors({...changePasswordFormErrors, newPassword: ''});
+    setChangePasswordFormErrors({ ...changePasswordFormErrors, newPassword: '' });
   };
 
   //Function to handel confirm password
@@ -252,8 +255,8 @@ const ViewProfileComponent = ({
       errors.confirmPassword = 'Please confirm password.';
     }
     if (values.newPassword != values.confirmPassword) {
-      errors.matchPassword=alert("Confirm password should be match with new password")
-      
+      errors.matchPassword = alert("Confirm password should be match with new password")
+
     }
     return errors;
   };
@@ -289,7 +292,7 @@ const ViewProfileComponent = ({
       <ImagePickerModel
         show={showChangeProfilePicModel}
         onImageSelection={image => {
-          editProfileInfo({profilePic: image.uri});
+          editProfileInfo({ profilePic: image.uri });
           setShowChangeProfilePicModel(false)
           setChoosenImage(image);
         }}
@@ -306,8 +309,8 @@ const ViewProfileComponent = ({
       <View style={styles.topSectionWrapper}>
         <View style={styles.profilePictureWrapper}>
           <Image style={styles.profileImage} source={{
-                uri: profile.profilePic,
-              }}/>
+            uri: profile.profilePic !== "" ? profile.profilePic : undefined
+          }} />
           <TouchableOpacity
             style={styles.cameraButton}
             onPress={pickImage}>
@@ -317,7 +320,7 @@ const ViewProfileComponent = ({
       </View>
       <View style={styles.bottomSectionWrapper}>
         <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
