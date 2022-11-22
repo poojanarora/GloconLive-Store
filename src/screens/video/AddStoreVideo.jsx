@@ -1,10 +1,10 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
-import {connect} from 'react-redux';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { connect } from 'react-redux';
 import BrowseFiles from '../../components/BrowseFiles';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import PopupContent from '../../components/PopupContent';
-import {COLORS, images} from '../../constant';
+import { COLORS, images } from '../../constant';
 import showAlertPopup from '../../components/AlertComp';
 import {
   handelVideoTitle,
@@ -49,7 +49,7 @@ const AddStoreVideoComponent = ({
         title="Add Store Video"
         subTitle="Add store video and title for same video"
         showFooter={true}
-        primaryButtonText="Upload"
+        primaryButtonText="Upload Video"
         dangerButtonText="Preview Video">
         <IconInputWithoutLabel
           placeholder="Video Title Here"

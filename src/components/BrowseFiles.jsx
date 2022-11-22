@@ -1,17 +1,21 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {StyleSheet, TouchableOpacity, Text} from 'react-native';
-import {moderateScale, scale} from 'react-native-size-matters';
-import {handleVideoSelection} from '../actions/shopVideoAction';
-import {COLORS} from '../constant';
+import { connect } from 'react-redux';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { StyleSheet, TouchableOpacity, Text, Image } from 'react-native';
+import { moderateScale, scale } from 'react-native-size-matters';
+import { handleVideoSelection } from '../actions/shopVideoAction';
+import { COLORS } from '../constant';
+import showAlertPopup from './AlertComp';
 
-const BrowseFilesComponent = ({onVideoSelect, video}) => {
+const BrowseFilesComponent = ({ onVideoSelect, video }) => {
   const pickVideo = async () => {
     let result = await launchImageLibrary({
       mediaType: 'video',
     });
-    if (!result.didCancel) {
+    if (result.assets[0].fileSize > 3000000) {
+      showAlertPopup('Oops', "Picture size should be less than 3 MB", 'Cancel');
+    }
+    else if (!result.didCancel) {
       onVideoSelect(result.assets[0]);
     }
   };
@@ -27,7 +31,8 @@ const BrowseFilesComponent = ({onVideoSelect, video}) => {
           <Text style={styles.browseFiles}>Browse Files</Text>
         </>
       ) : (
-        <Text style={styles.textStyle}>{video.fileName}</Text>
+        <Image source={{ uri: video.uri }} style={styles.imgStyle} />
+        //<Text style={styles.textStyle}>{video.uri}</Text> 
       )}
     </TouchableOpacity>
   );
@@ -57,6 +62,12 @@ const styles = StyleSheet.create({
     color: COLORS.primaryTextColor,
     fontSize: scale(12),
     fontWeight: '500',
+
+  },
+  imgStyle: {
+    height: moderateScale(124),
+    width: moderateScale(100)
+
   },
   browseFiles: {
     fontWeight: '500',
