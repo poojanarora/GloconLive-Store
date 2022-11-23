@@ -26,6 +26,7 @@ const mute = require('../../assets/images/mute.png');
 const more = require('../../assets/images/more.png');
 const video_camera = require('../../assets/images/video-camera.png');
 const hang_up = require('../../assets/images/phone-call.png');
+const gallary = require('../../assets/images/gallary.png')
 
 export default {
   splash_screen,
@@ -56,4 +57,5 @@ export default {
   hang_up,
   logo_color,
   close_white,
+  gallary
 };
