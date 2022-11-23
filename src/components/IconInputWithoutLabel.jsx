@@ -21,6 +21,7 @@ const IconInputWithoutLabel = props => {
               placeholderTextColor={COLORS.black}
               value={props.value}
               onChangeText={props.onChangeText}
+              editable={!props.noneditable}
             />
           </View>
         </View>

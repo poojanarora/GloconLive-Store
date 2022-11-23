@@ -28,7 +28,7 @@ export const fetchDevices = locationId => async dispatch => {
 /**
  * Function to add device.
  */
-export const addDevice = formValues => async dispatch => {
+export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
   try {
     dispatch(setLoading(true));
     let resp = await axiosPrivate.post('/store/add-device', formValues);
@@ -36,8 +36,9 @@ export const addDevice = formValues => async dispatch => {
       console.log('In add device success');
       const data = resp.data?.data;
       console.log(data);
-      dispatch(appendDevices(data));
+      // dispatch(appendDevices(data));
       dispatch(setLoading(false));
+      // onDeviceAdded();
       showAlertPopup('Success', resp.data?.message, 'Ok');
     } else {
       dispatch(setLoading(false));

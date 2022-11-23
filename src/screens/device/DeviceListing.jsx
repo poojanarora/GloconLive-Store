@@ -7,6 +7,7 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 import styles from './deviceListingStyles';
 import {connect} from 'react-redux';
 import {images} from '../../constant';
@@ -105,12 +106,12 @@ const deviceListingComponent = ({
     if (Object.keys(values.department).length === 0) {
       errors.department = 'Please select department.';
     }
-    if (!values.deviceId) {
-      errors.deviceId = 'Please enter device id.';
-    }
-    if (!values.deviceName) {
-      errors.deviceName = 'Please enter device name.';
-    }
+    // if (!values.deviceId) {
+    //   errors.deviceId = 'Please enter device id.';
+    // }
+    // if (!values.deviceName) {
+    //   errors.deviceName = 'Please enter device name.';
+    // }
     return errors;
   };
 
@@ -149,7 +150,7 @@ const deviceListingComponent = ({
         status: '1',
       };
       if (action === 'Add') {
-        await addDevice(payload);
+        await fetchDevices(locationId);
       } else {
         payload.id = formValues.id;
         await updateDevice(payload);
@@ -196,32 +197,42 @@ const deviceListingComponent = ({
         }
         primaryButtonText={action}
         dangerButtonText="Cancel">
-        <SelectInput
-          selectLabel="Select Department"
-          name="department"
-          data={departments}
-          error={formErrors.department}
-          value={formValues.department}
-          onSelect={handelDepartment}
-        />
-        <IconInputWithoutLabel
-          placeholder="New Device Id"
-          name="deviceId"
-          showIcon={true}
-          icon={images.tick}
-          error={formErrors.deviceId}
-          value={formValues.deviceId}
-          onChangeText={handelDeviceId}
-        />
-        <IconInputWithoutLabel
-          placeholder="New Device name"
-          name="deviceName"
-          showIcon={true}
-          icon={images.tick}
-          error={formErrors.deviceName}
-          value={formValues.deviceName}
-          onChangeText={handelDeviceName}
-        />
+        <View style={{zIndex: 1}}>
+          <SelectInput
+            selectLabel="Select Department"
+            name="department"
+            data={departments}
+            error={formErrors.department}
+            value={formValues.department}
+            onSelect={handelDepartment}
+          />
+        </View>
+        {action === 'Add' ? (
+          <View style={{alignSelf: 'center', marginTop: 40}}>
+            <QRCode value={formValues.department.id} size={180} />
+          </View>
+        ) : (
+          <>
+            <IconInputWithoutLabel
+              placeholder="New Device Id"
+              name="deviceId"
+              showIcon={true}
+              icon={images.tick}
+              error={formErrors.deviceId}
+              value={formValues.deviceId}
+              noneditable={true}
+            />
+            <IconInputWithoutLabel
+              placeholder="New Device name"
+              name="deviceName"
+              showIcon={true}
+              icon={images.tick}
+              error={formErrors.deviceName}
+              value={formValues.deviceName}
+              noneditable={true}
+            />
+          </>
+        )}
       </PopupModal>
     );
   };
