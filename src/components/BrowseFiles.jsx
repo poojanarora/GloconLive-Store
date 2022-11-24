@@ -9,14 +9,20 @@ import showAlertPopup from './AlertComp';
 
 const BrowseFilesComponent = ({ onVideoSelect, video }) => {
   const pickVideo = async () => {
-    let result = await launchImageLibrary({
-      mediaType: 'video',
-    });
-    if (result.assets[0].fileSize > 3000000) {
-      showAlertPopup('Oops', "Picture size should be less than 3 MB", 'Cancel');
-    }
-    else if (!result.didCancel) {
-      onVideoSelect(result.assets[0]);
+    try {
+
+
+      let result = await launchImageLibrary({
+        mediaType: 'video',
+      });
+      if (result.assets[0].fileSize > 3000000) {
+        showAlertPopup('Oops', "Video file size should be less than 3 MB", 'Cancel');
+      }
+      else if (!result.didCancel) {
+        onVideoSelect(result.assets[0]);
+      }
+    } catch (e) {
+      console.log("User Cancelled browse file")
     }
   };
 
