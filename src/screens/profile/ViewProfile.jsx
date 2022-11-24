@@ -59,6 +59,8 @@ const ViewProfileComponent = ({
 }) => {
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
     useState(false);
+  const [imagePickerVisible, setImagePickerVisible] =
+    useState(false);
   const [editProfileFormErrors, setEditProfileFormErrors] = useState(
     initialEditProfileErrors,
   );
@@ -88,6 +90,10 @@ const ViewProfileComponent = ({
   //Function to show change password modal
   const showUpdatePasswordModal = () => {
     setUpdatePasswordModalVisible(true);
+  };
+  //Function to show image picker modal
+  const showImagePickerModal = () => {
+    setImagePickerVisible(true);
   };
 
   //Function to hide change password modal
@@ -152,18 +158,19 @@ const ViewProfileComponent = ({
   };
 
   //Function to launch gallery to select image
-  const pickImage = async () => {
-    let result = await launchImageLibrary({
-      mediaType: 'photo',
-    });
-    if (result.assets[0].fileSize > 1000000) {
-      showAlertPopup('Oops', "Picture size should be less than 1 MB", 'Cancel');
-    }
-    else if (!result.didCancel) {
-      setChoosenImage(result.assets[0]);
-      editProfileInfo({ profilePic: result.assets[0].uri });
-    }
-  };
+  // const pickImage = async () => {
+  //   let result = await launchImageLibrary({
+  //     mediaType: 'photo',
+  //   });
+  //   if (result.assets[0].fileSize > 1000000) {
+  //     showAlertPopup('Oops', "Picture size should be less than 1 MB", 'Cancel');
+  //   }
+  //   else if (!result.didCancel) {
+  //     setChoosenImage(result.assets[0]);
+  //     editProfileInfo({ profilePic: result.assets[0].uri });
+  //   }
+
+  // };
 
   //Function to handel company name
   const handelCompanyName = e => {
@@ -255,7 +262,7 @@ const ViewProfileComponent = ({
       errors.confirmPassword = 'Please confirm password.';
     }
     if (values.newPassword != values.confirmPassword) {
-      errors.matchPassword = alert("Confirm password should be match with new password")
+      errors.matchPassword = showAlertPopup('Oops', "Confirm password should be match with new password", 'Cancel');
 
     }
     return errors;
@@ -290,13 +297,13 @@ const ViewProfileComponent = ({
   const renderImagePickerModel = () => {
     return (
       <ImagePickerModel
-        show={showChangeProfilePicModel}
+        show={imagePickerVisible}
         onImageSelection={image => {
           editProfileInfo({ profilePic: image.uri });
-          setShowChangeProfilePicModel(false)
+          setImagePickerVisible(false)
           setChoosenImage(image);
         }}
-        onClose={() => setShowChangeProfilePicModel(false)}
+        onClose={() => setImagePickerVisible(false)}
       />
     );
   };
@@ -305,7 +312,7 @@ const ViewProfileComponent = ({
     <SafeAreaView style={styles.safeAreaViewStyle}>
       <Spinner />
       {renderUpdatePasswordModal()}
-      {/* {renderImagePickerModel()} */}
+      {renderImagePickerModel()}
       <View style={styles.topSectionWrapper}>
         <View style={styles.profilePictureWrapper}>
           <Image style={styles.profileImage} source={{
@@ -313,7 +320,7 @@ const ViewProfileComponent = ({
           }} />
           <TouchableOpacity
             style={styles.cameraButton}
-            onPress={pickImage}>
+            onPress={showImagePickerModal}>
             <Image style={styles.cameraImage} source={images.camera} />
           </TouchableOpacity>
         </View>
