@@ -1,8 +1,8 @@
-import {profileActionTypes} from '../actionTypes/actionTypes';
-import {setLoading} from './appAction';
+import { profileActionTypes } from '../actionTypes/actionTypes';
+import { setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
-import {zimLogin} from './chatActions';
+import { zimLogin } from './chatActions';
 
 /**
  * Function to fetch profile information.
@@ -15,7 +15,6 @@ export const fetchProfileInfo = email => async dispatch => {
     });
     if (response.data.success === true) {
       const data = response.data?.data;
-      console.log(data);
       const profileObj = {
         id: data.id,
         companyName: data.company_name,
@@ -33,7 +32,7 @@ export const fetchProfileInfo = email => async dispatch => {
       };
       dispatch(storeProfile(profileObj));
       dispatch(setLoading(false));
-      const loginForm = {userID: data.id.toString(), userName: data.name};
+      const loginForm = { userID: data.id.toString(), userName: data.name };
       dispatch(zimLogin(loginForm));
     } else {
       dispatch(setLoading(false));
@@ -111,7 +110,6 @@ export const updateProfileInformation = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In profile update catch block');
-    console.log(error);
     showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };

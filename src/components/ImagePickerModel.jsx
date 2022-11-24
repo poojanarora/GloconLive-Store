@@ -1,16 +1,19 @@
 import React from 'react';
-import {Modal, StyleSheet, View, TouchableOpacity, Image} from 'react-native';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import {moderateScale} from 'react-native-size-matters';
-import {COLORS, images} from '../constant';
+import { Modal, StyleSheet, View, TouchableOpacity, Image, Text } from 'react-native';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { moderateScale } from 'react-native-size-matters';
+import { COLORS, images } from '../constant';
 import PopupContent from './PopupContent';
 
-const ImagePickerModel = ({show, onImageSelection, onClose}) => {
+const ImagePickerModel = ({ show, onImageSelection, onClose }) => {
   const onFileSelection = async () => {
     let result = await launchImageLibrary({
       mediaType: 'photo',
     });
-    if (!result.didCancel) {
+    if (result.assets[0].fileSize > 1000000) {
+      showAlertPopup('Oops', "Picture size should be less than 1 MB", 'Cancel');
+    }
+    else if (!result.didCancel) {
       onImageSelection(result.assets[0]);
     }
   };
@@ -37,14 +40,16 @@ const ImagePickerModel = ({show, onImageSelection, onClose}) => {
               style={styles.image}
               source={images.camera}
             />
+            <Text style={styles.text}>Camera</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={onFileSelection}
             style={styles.imageButton}>
             <Image
               style={styles.image}
-              source={images.menu}
+              source={images.gallary}
             />
+            <Text style={styles.text}>Gallery</Text>
           </TouchableOpacity>
         </View>
       </PopupContent>
@@ -60,12 +65,16 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   imageButton: {
-    width: moderateScale(60),
-    height: moderateScale(60),
+    width: moderateScale(65),
+    height: moderateScale(70),
     backgroundColor: COLORS.secondaryColor,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: moderateScale(10),
+  },
+  text: {
+    fontWeight: 'bold',
+    color: 'white'
   },
   image: {
     width: moderateScale(40),
