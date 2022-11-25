@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  RefreshControl,
 } from 'react-native';
 import {connect} from 'react-redux';
 import styles from './incomingCallListingStyles';
@@ -17,7 +18,9 @@ const IncomingCalls = ({
   fetchIncomingCallQueue,
   callQueue,
   route,
+  isLoading,
 }) => {
+  const [fetchData, setFetchData] = useState(false);
   useEffect(() => {
     const {params} = route;
     if (params) {
@@ -27,7 +30,12 @@ const IncomingCalls = ({
       }
     }
     fetchIncomingCallQueue();
-  }, []);
+  }, [fetchData]);
+
+  //Function to handel location refresh
+  const onRefresh = () => {
+    setFetchData(!fetchData);
+  };
 
   const renderItem = ({item}) => {
     return <Item item={item} />;
@@ -73,6 +81,9 @@ const IncomingCalls = ({
         renderItem={renderItem}
         keyExtractor={item => item.callId}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        }
         //refreshing={isRecipientListingLoading}
         // ItemSeparatorComponent={(props) => {
         //     return (
@@ -96,6 +107,7 @@ const IncomingCalls = ({
 const mapStateToProps = state => {
   return {
     callQueue: state.call.callQueue,
+    isLoading: state.app.isLoading,
   };
 };
 
