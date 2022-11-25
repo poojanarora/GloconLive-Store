@@ -3,4 +3,9 @@ export const LOGIN_CONST = {
   PASSWORD: 'PASSWORD',
 };
 
+export const LOGIN_MODES = {
+  STORE: 'STORE',
+  DEVICE: 'DEVICE',
+}
+
 export const LOCATION_CONST = {};

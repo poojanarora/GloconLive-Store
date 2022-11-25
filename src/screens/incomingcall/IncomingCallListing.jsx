@@ -12,22 +12,19 @@ import {connect} from 'react-redux';
 import styles from './incomingCallListingStyles';
 import {images} from '../../constant';
 import {getIncomingCallQueue} from '../../actions/callActions';
+import {LOGIN_MODES} from '../../utils/appConstants';
 
 const IncomingCalls = ({
   navigation,
   fetchIncomingCallQueue,
   callQueue,
-  route,
+  loginMode,
   isLoading,
 }) => {
   const [fetchData, setFetchData] = useState(false);
   useEffect(() => {
-    const {params} = route;
-    if (params) {
-      const {isDevice} = params;
-      if (isDevice) {
-        navigation.setOptions({headerLeft: () => {}});
-      }
+    if (loginMode === LOGIN_MODES.DEVICE) {
+      navigation.setOptions({headerLeft: () => {}});
     }
     fetchIncomingCallQueue();
   }, [fetchData]);
@@ -108,6 +105,7 @@ const mapStateToProps = state => {
   return {
     callQueue: state.call.callQueue,
     isLoading: state.app.isLoading,
+    loginMode: state.app.loginMode,
   };
 };
 

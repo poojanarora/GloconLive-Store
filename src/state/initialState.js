@@ -1,3 +1,5 @@
+import { LOGIN_MODES } from "../utils/appConstants";
+
 export const initialState = {
   app: {
     isLoading: false,
@@ -6,6 +8,7 @@ export const initialState = {
       email: '',
       isLoggedIn: false,
     },
+    loginMode: LOGIN_MODES.STORE,
   },
   profile: {
     id: '',

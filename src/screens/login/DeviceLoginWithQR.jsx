@@ -27,9 +27,7 @@ const LinkDevice = ({navigation, addDevice}) => {
   };
 
   const onDeviceAdded = () => {
-    navigation.navigate('IncomingCallListing', {
-      isDevice: true
-    });
+    navigation.replace('IncomingCallStackScreen');
   }
 
   const onSuccess = e => {

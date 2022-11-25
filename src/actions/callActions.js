@@ -2,14 +2,21 @@ import { setLoading } from "./appAction";
 import showAlertPopup from '../components/AlertComp';
 import { callActionTypes } from "../actionTypes/actionTypes";
 import axiosPrivate from "../config/privateApi";
+import { LOGIN_MODES } from "../utils/appConstants";
 
 export const getIncomingCallQueue = () => async (dispatch, getState) => {
     try {
-      const storeId = getState().profile.id;
+      const {profile , app, device} = getState();
+      let payload = {
+        store_id: profile.id,
+      }
+      if (app.loginMode === LOGIN_MODES.DEVICE) {
+        payload = {
+          department_id: device.deviceData.department_id
+        }
+      }
       dispatch(setLoading(true));
-      let response = await axiosPrivate.post('/store/get-incomming-call-details', {
-        store_id: storeId,
-      });
+      let response = await axiosPrivate.post('/store/get-incomming-call-details', payload);
       if (response.data.success === true) {
         const data = response.data?.data;
         const formattedData = getFormattedCallQueue(data);

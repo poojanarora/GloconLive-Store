@@ -1,8 +1,9 @@
 import { deviceActionTypes } from '../actionTypes/actionTypes';
-import { setAuth, setLoading } from './appAction';
+import { setAuth, setLoading, setLoginMode } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { localStorageSetItem } from '../hooks/useAsyncStorage';
+import { LOGIN_MODES } from '../utils/appConstants';
 
 export const fetchDevices = locationId => async dispatch => {
   try {
@@ -47,6 +48,7 @@ export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
       };
       localStorageSetItem(obj);
       dispatch(setAuth(obj));
+      dispatch(setLoginMode(LOGIN_MODES.DEVICE));
       dispatch(setLoading(false));
       onDeviceAdded();
       //showAlertPopup('Success', resp.data?.message, 'Ok');

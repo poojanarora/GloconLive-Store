@@ -18,7 +18,6 @@ import SelectInput from '../../components/SelectInput';
 import Spinner from '../../components/Spinner';
 import {
   fetchDevices,
-  addDevice,
   updateDevice,
 } from '../../actions/deviceAction';
 
@@ -38,7 +37,6 @@ const deviceListingComponent = ({
   locationId,
   fetchDevices,
   isLoading,
-  addDevice,
   updateDevice,
   departments,
   devices,
@@ -267,7 +265,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchDevices: locationId => dispatch(fetchDevices(locationId)),
-    addDevice: payload => dispatch(addDevice(payload)),
     updateDevice: payload => dispatch(updateDevice(payload)),
   };
 };
