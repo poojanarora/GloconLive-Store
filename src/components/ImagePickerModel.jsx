@@ -6,17 +6,23 @@ import { COLORS, images } from '../constant';
 import PopupContent from './PopupContent';
 
 const ImagePickerModel = ({ show, onImageSelection, onClose }) => {
+
   const onFileSelection = async () => {
-    let result = await launchImageLibrary({
-      mediaType: 'photo',
-    });
-    if (result.assets[0].fileSize > 1000000) {
-      showAlertPopup('Oops', "Picture size should be less than 1 MB", 'Cancel');
+    try {
+      let result = await launchImageLibrary({
+        mediaType: 'photo',
+      });
+      if (result.assets[0].fileSize > 1000000) {
+        showAlertPopup('Oops', "Picture size should be less than 1 MB", 'Cancel');
+      }
+      else if (!result.didCancel) {
+        onImageSelection(result.assets[0]);
+      }
+    } catch (e) {
+      console.log('User cancelled image picker')
+
     }
-    else if (!result.didCancel) {
-      onImageSelection(result.assets[0]);
-    }
-  };
+  }
   const onCameraSelection = async () => {
     let result = await launchCamera({
       durationLimit: 10000,

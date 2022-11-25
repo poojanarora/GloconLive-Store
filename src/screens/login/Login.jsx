@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import {SafeAreaView, View, Text, Image} from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, Image } from 'react-native';
 import styles from './styles.js';
-import {images} from '../../constant';
+import { images } from '../../constant';
 import IconInput from '../../components/IconInput.jsx';
 import ButtonComp from '../../components/ButtonComp.jsx';
 import Spinner from '../../components/Spinner.jsx';
-import {connect} from 'react-redux';
-import {handleLogin} from '../../actions/authActions.js';
+import { connect } from 'react-redux';
+import { handleLogin } from '../../actions/authActions.js';
 
 const initialFormValues = {
   email: '',
@@ -17,7 +17,7 @@ const initialErrors = {
   password: '',
 };
 
-const LoginComponent = ({navigation, isLoading, onLogin}) => {
+const LoginComponent = ({ navigation, isLoading, onLogin }) => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialErrors);
   const [isHidden, setIsHidden] = useState(true);
@@ -130,7 +130,7 @@ const LoginComponent = ({navigation, isLoading, onLogin}) => {
               placeholder="********"
               name="password"
               value={formValues.password}
-              icon={isHidden ? images.password_hidden_eye : images.eye}
+              icon={isHidden ? images.eye : images.password_hidden_eye}
               isSecure={isHidden}
               error={formErrors.password}
               onChangeText={handelPassword}

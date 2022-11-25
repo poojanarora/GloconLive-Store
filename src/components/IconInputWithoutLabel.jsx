@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, Text, TextInput, Image} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TextInput, Image } from 'react-native';
 import {
   scale,
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import {COLORS} from '../constant';
+import { COLORS } from '../constant';
 
 const IconInputWithoutLabel = props => {
   return (
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   input: {
     paddingVertical: moderateVerticalScale(20),
     fontSize: scale(12),
-    fontWeight: '500',
+    fontWeight: '400',
     color: COLORS.black,
     //backgroundColor: 'orange',
   },

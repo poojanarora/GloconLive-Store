@@ -1,5 +1,5 @@
-import {deviceActionTypes} from '../actionTypes/actionTypes';
-import {setAuth, setLoading} from './appAction';
+import { deviceActionTypes } from '../actionTypes/actionTypes';
+import { setAuth, setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { localStorageSetItem } from '../hooks/useAsyncStorage';
@@ -18,7 +18,7 @@ export const fetchDevices = locationId => async dispatch => {
       dispatch(setLoading(false));
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('OOops', response.data?.message, 'Cancel');
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));
