@@ -5,6 +5,7 @@ import {images} from '../../constant';
 import {localStorageGetItem} from '../../hooks/useAsyncStorage';
 import {connect} from 'react-redux';
 import {setAuth} from '../../actions/appAction';
+import { LOGIN_MODES } from '../../utils/appConstants';
 
 const SplashComponent = ({navigation, setAuth}) => {
   useEffect(() => {
@@ -26,7 +27,11 @@ const SplashComponent = ({navigation, setAuth}) => {
     const data = await localStorageGetItem();
     if (data) {
       await setAuth(data);
-      navigation.replace('PrivateStackScreen');
+      if(data.loginMode === LOGIN_MODES.DEVICE) {
+        navigation.replace('IncomingCallStackScreen');
+      } else {
+        navigation.replace('PrivateStackScreen');
+      }
     } else {
       navigation.replace('PublicStackScreen');
     }

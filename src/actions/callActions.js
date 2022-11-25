@@ -6,13 +6,13 @@ import { LOGIN_MODES } from "../utils/appConstants";
 
 export const getIncomingCallQueue = () => async (dispatch, getState) => {
     try {
-      const {profile , app, device} = getState();
+      const {profile , app} = getState();
       let payload = {
         store_id: profile.id,
       }
-      if (app.loginMode === LOGIN_MODES.DEVICE) {
+      if (app.auth.loginMode === LOGIN_MODES.DEVICE) {
         payload = {
-          department_id: device.deviceData.department_id
+          department_id: app.auth.departmentId
         }
       }
       dispatch(setLoading(true));

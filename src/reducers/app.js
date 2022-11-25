@@ -21,11 +21,6 @@ const app = (state = initialState.app, action) => {
           ...action.payload,
         },
       };
-    case actionTypes.SET_LOGIN_MODE:
-      return {
-        ...state,
-        loginMode: action.payload,
-      }
     default:
       return state;
   }

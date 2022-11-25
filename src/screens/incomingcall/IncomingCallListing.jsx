@@ -20,6 +20,7 @@ const IncomingCalls = ({
   callQueue,
   loginMode,
   isLoading,
+  departmentId,
 }) => {
   const [fetchData, setFetchData] = useState(false);
   useEffect(() => {
@@ -27,7 +28,7 @@ const IncomingCalls = ({
       navigation.setOptions({headerLeft: () => {}});
     }
     fetchIncomingCallQueue();
-  }, [fetchData]);
+  }, [fetchData, departmentId, callQueue.length]);
 
   //Function to handel location refresh
   const onRefresh = () => {
@@ -105,7 +106,8 @@ const mapStateToProps = state => {
   return {
     callQueue: state.call.callQueue,
     isLoading: state.app.isLoading,
-    loginMode: state.app.loginMode,
+    loginMode: state.app.auth.loginMode,
+    departmentId: state.app.auth.departmentId,
   };
 };
 

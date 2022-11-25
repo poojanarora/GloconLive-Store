@@ -1,5 +1,5 @@
 import { deviceActionTypes } from '../actionTypes/actionTypes';
-import { setAuth, setLoading, setLoginMode } from './appAction';
+import { setAuth, setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { localStorageSetItem } from '../hooks/useAsyncStorage';
@@ -38,17 +38,18 @@ export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
     console.log(data);
     if (data?.success === true) {
       console.log('In add device success');
-      const deviceData = data?.store_device_data;
+      const deviceData = data?.data.store_device_data;
       // dispatch(appendDevices(data));
       dispatch(setDeviceData(deviceData))
       let obj = {
         accessToken: data?.api_token,
         email: formValues.device_id,
         isLoggedIn: true,
+        loginMode: LOGIN_MODES.DEVICE,
+        departmentId: deviceData.department_id,
       };
       localStorageSetItem(obj);
       dispatch(setAuth(obj));
-      dispatch(setLoginMode(LOGIN_MODES.DEVICE));
       dispatch(setLoading(false));
       onDeviceAdded();
       //showAlertPopup('Success', resp.data?.message, 'Ok');

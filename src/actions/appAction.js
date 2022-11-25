@@ -20,10 +20,3 @@ export const updateAuth = value => {
     payload: value,
   };
 };
-
-export const setLoginMode = mode => {
-  return {
-    type: actionTypes.SET_LOGIN_MODE,
-    payload: mode,
-  };
-}

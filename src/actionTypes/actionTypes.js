@@ -2,7 +2,6 @@ export const actionTypes = {
   IS_LOADING: 'IS_LOADING',
   SET_AUTH: 'SET_AUTH',
   UPDATE_AUTH: 'UPDATE_AUTH',
-  SET_LOGIN_MODE: 'SET_LOGIN_MODE',
 };
 
 export const profileActionTypes = {

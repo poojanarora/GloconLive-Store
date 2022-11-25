@@ -16,14 +16,11 @@ import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import SelectInput from '../../components/SelectInput';
 import Spinner from '../../components/Spinner';
-import {
-  fetchDevices,
-  updateDevice,
-} from '../../actions/deviceAction';
+import {fetchDevices, updateDevice} from '../../actions/deviceAction';
 
 const initialFormValues = {
   id: '',
-  department: {},
+  department: {id: ''},
   deviceId: '',
   deviceName: '',
 };
@@ -151,6 +148,7 @@ const deviceListingComponent = ({
         await fetchDevices(locationId);
       } else {
         payload.id = formValues.id;
+        console.warn(payload);
         await updateDevice(payload);
       }
       //await fetchDevices(locationId);
@@ -207,7 +205,9 @@ const deviceListingComponent = ({
         </View>
         {action === 'Add' ? (
           <View style={{alignSelf: 'center', marginTop: 40}}>
-            <QRCode value={formValues.department.id} size={180} />
+            {formValues.department.id && (
+              <QRCode value={formValues.department.id} size={180} />
+            )}
           </View>
         ) : (
           <>

@@ -7,8 +7,9 @@ export const initialState = {
       accessToken: '',
       email: '',
       isLoggedIn: false,
+      loginMode: '',
+      departmentId: '',
     },
-    loginMode: LOGIN_MODES.STORE,
   },
   profile: {
     id: '',

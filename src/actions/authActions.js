@@ -6,6 +6,7 @@ import {
 import showAlertPopup from '../components/AlertComp';
 import axiosPublic from '../config/publicApi';
 import { initializeZim, logoutZimChat } from './chatActions';
+import { LOGIN_MODES } from '../utils/appConstants';
 
 /**
  * Function to handle Login.
@@ -20,6 +21,7 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
         accessToken: response.data?.token,
         email,
         isLoggedIn: true,
+        loginMode: LOGIN_MODES.STORE,
       };
       localStorageSetItem(obj);
       dispatch(setAuth(obj));
