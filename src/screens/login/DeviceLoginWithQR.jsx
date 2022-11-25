@@ -27,7 +27,9 @@ const LinkDevice = ({navigation, addDevice}) => {
   };
 
   const onDeviceAdded = () => {
-    navigation.navigate('Login');
+    navigation.navigate('IncomingCallListing', {
+      isDevice: true
+    });
   }
 
   const onSuccess = e => {

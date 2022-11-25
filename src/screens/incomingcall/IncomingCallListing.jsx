@@ -1,4 +1,4 @@
-import React, { useEffect }  from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -10,13 +10,24 @@ import {
 import {connect} from 'react-redux';
 import styles from './incomingCallListingStyles';
 import {images} from '../../constant';
-import { getIncomingCallQueue } from '../../actions/callActions';
+import {getIncomingCallQueue} from '../../actions/callActions';
 
-const IncomingCalls = ({navigation, fetchIncomingCallQueue, callQueue}) => {
-
-  useEffect(()=>{
-    fetchIncomingCallQueue()
-  }, [])
+const IncomingCalls = ({
+  navigation,
+  fetchIncomingCallQueue,
+  callQueue,
+  route,
+}) => {
+  useEffect(() => {
+    const {params} = route;
+    if (params) {
+      const {isDevice} = params;
+      if (isDevice) {
+        navigation.setOptions({headerLeft: () => {}});
+      }
+    }
+    fetchIncomingCallQueue();
+  }, []);
 
   const renderItem = ({item}) => {
     return <Item item={item} />;
@@ -90,7 +101,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue())
+    fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue()),
   };
 };
 

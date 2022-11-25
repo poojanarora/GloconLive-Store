@@ -30,6 +30,7 @@ export const initialState = {
   },
   device: {
     storeDevices: [],
+    deviceData: {},
   },
   login: {
     loginErrors: {
