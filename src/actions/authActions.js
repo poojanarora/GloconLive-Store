@@ -1,17 +1,17 @@
-import {setLoading, setAuth} from './appAction';
+import { setLoading, setAuth } from './appAction';
 import {
   localStorageSetItem,
   localStorageRemoveItem,
 } from '../hooks/useAsyncStorage';
 import showAlertPopup from '../components/AlertComp';
 import axiosPublic from '../config/publicApi';
-import {initializeZim, logoutZimChat} from './chatActions';
+import { initializeZim, logoutZimChat } from './chatActions';
 
 /**
  * Function to handle Login.
  */
 export const handleLogin = (formValues, loginCallback) => async dispatch => {
-  const {email} = formValues;
+  const { email } = formValues;
   try {
     dispatch(setLoading(true));
     let response = await axiosPublic.post('/store/login', formValues);
@@ -28,7 +28,7 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
       dispatch(initializeZim());
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Opps', response.data?.message, 'Cancel');
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
     console.log('In catch block');
@@ -40,7 +40,7 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
         'Ok',
       );
     } else {
-      showAlertPopup('Opps', error?.message, 'Cancel');
+      showAlertPopup('Oops', error?.message, 'Cancel');
     }
   }
 };
