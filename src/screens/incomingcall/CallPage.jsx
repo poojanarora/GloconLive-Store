@@ -10,9 +10,10 @@ import BackIcon from '../../components/BackIcon';
 import {moderateScale} from 'react-native-size-matters';
 import CallMenuBar from './CallMenuBar';
 import {appConfig} from '../../config/config';
+import { getIncomingCallQueue } from '../../actions/callActions';
 
 const CallPageComponent = props => {
-  const {route, profile, navigation} = props;
+  const {route, profile, navigation, fetchIncomingCallQueue} = props;
   const {params} = route;
   const {callId, shopperName, departmentCallerId} = params;
   const {name} = profile;
@@ -21,6 +22,7 @@ const CallPageComponent = props => {
   const [frontCamera, setFrontCamera] = useState(true);
 
   const onEndCall = () => {
+    fetchIncomingCallQueue();
     navigation.navigate('IncomingCallListing');
   };
 
@@ -69,10 +71,10 @@ const CallPageComponent = props => {
         config={{
           onOnlySelfInRoom: () => {
             console.log('onOnlySelfInRoom', 'onOnlySelfInRoom');
-            navigation.navigate('IncomingCallListing');
+            onEndCall();
           },
           onHangUp: () => {
-            navigation.navigate('IncomingCallListing');
+            onEndCall();
           },
           roomUserUpdate: user => {
             console.log('roomUserUpdate', user);
@@ -131,6 +133,12 @@ const mapStateToProps = state => {
   };
 };
 
-const CallPage = connect(mapStateToProps, null)(CallPageComponent);
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue()),
+  };
+};
+
+const CallPage = connect(mapStateToProps, mapDispatchToProps)(CallPageComponent);
 
 export default CallPage;

@@ -8,4 +8,10 @@ export const LOGIN_MODES = {
   DEVICE: 'DEVICE',
 }
 
+export const CALL_STATUS = {
+  COMPLETED: '0',
+  WAITING: '1',
+  IN_PROGRESS: '2'
+} 
+
 export const LOCATION_CONST = {};
