@@ -29,7 +29,7 @@ const IconInput = props => {
               secureTextEntry={props.isSecure}
               value={props.value}
               onChangeText={props.onChangeText}
-              autoCapitalize='none'
+              autoCapitalize="none"
               autoCorrect={false}
             />
           </View>
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(5),
     marginTop: moderateVerticalScale(10),
     fontSize: scale(10),
+    color: COLORS.secondaryTextColor,
   },
   input: {
     paddingVertical: moderateVerticalScale(10),
