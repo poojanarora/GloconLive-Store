@@ -10,10 +10,11 @@ import BackIcon from '../../components/BackIcon';
 import {moderateScale} from 'react-native-size-matters';
 import CallMenuBar from './CallMenuBar';
 import {appConfig} from '../../config/config';
-import { getIncomingCallQueue } from '../../actions/callActions';
+import { getIncomingCallQueue, updateCallStatus } from '../../actions/callActions';
+import { CALL_STATUS } from '../../utils/appConstants';
 
 const CallPageComponent = props => {
-  const {route, profile, navigation, fetchIncomingCallQueue} = props;
+  const {route, profile, navigation, fetchIncomingCallQueue, updateCallStatus} = props;
   const {params} = route;
   const {callId, shopperName, departmentCallerId} = params;
   const {name} = profile;
@@ -22,9 +23,13 @@ const CallPageComponent = props => {
   const [frontCamera, setFrontCamera] = useState(true);
 
   const onEndCall = () => {
+    updateCallStatus(callId, CALL_STATUS.COMPLETED, onCallStatusUpdate);
+  };
+
+  const onCallStatusUpdate = () => {
     fetchIncomingCallQueue();
     navigation.navigate('IncomingCallListing');
-  };
+  }
 
   const onCameraToggle = () => {
     ZegoUIKit.turnCameraOn(departmentCallerId.toString(), !isCameraOn).then(
@@ -136,6 +141,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue()),
+    updateCallStatus: (callId, callStatus, onCallStatusUpdate) => dispatch(updateCallStatus(callId, callStatus, onCallStatusUpdate)),
   };
 };
 

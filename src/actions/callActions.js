@@ -55,10 +55,32 @@ const getFormattedCallQueue = data => {
         shopperCallerId: c.get_user_information?.shopper_caller_id,
         departmentCallerId: c.get_store_department?.department_caller_id,
         callId: c.call_id,
-        callStartTime: '10:00 am',
+        callStartTime: c.call_start_time,
       };
       callQueue.push(call);
     }
   });
   return callQueue;
+};
+
+export const updateCallStatus = (callId, status, onStatusUpdate) => async dispatch => {
+  try {
+    payload = {
+      call_id: callId,
+      call_status: status,
+    }
+    dispatch(setLoading(true));
+    let response = await axiosPrivate.post('/store/call-status-update', payload);
+    if (response.data.success === true) {
+      dispatch(setLoading(false));
+      onStatusUpdate(callId);
+    } else {
+      dispatch(setLoading(false));
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
+    }
+  } catch (error) {
+    dispatch(setLoading(false));
+    console.log('In update call status catch block');
+    showAlertPopup('Oops', error?.message, 'Cancel');
+  }
 };

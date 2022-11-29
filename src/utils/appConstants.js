@@ -9,9 +9,9 @@ export const LOGIN_MODES = {
 }
 
 export const CALL_STATUS = {
-  COMPLETED: '0',
-  WAITING: '1',
-  IN_PROGRESS: '2'
+  WAITING: '0',
+  IN_PROGRESS: '1',
+  COMPLETED: '2',
 } 
 
 export const LOCATION_CONST = {};
