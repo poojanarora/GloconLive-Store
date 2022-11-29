@@ -42,11 +42,12 @@ export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
       // dispatch(appendDevices(data));
       dispatch(setDeviceData(deviceData))
       let obj = {
-        accessToken: data?.api_token,
+        accessToken: data?.data.api_token,
         email: formValues.device_id,
         isLoggedIn: true,
         loginMode: LOGIN_MODES.DEVICE,
         departmentId: deviceData.department_id,
+        deviceName: deviceData.device_name,
       };
       localStorageSetItem(obj);
       dispatch(setAuth(obj));
@@ -55,7 +56,7 @@ export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
       //showAlertPopup('Success', resp.data?.message, 'Ok');
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Oops', data?.message, 'Cancel');
+      showAlertPopup('Oops', resp.data?.message, 'Cancel');
     }
   } catch (error) {
     dispatch(setLoading(false));

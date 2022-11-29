@@ -11,13 +11,17 @@ import {moderateScale} from 'react-native-size-matters';
 import CallMenuBar from './CallMenuBar';
 import {appConfig} from '../../config/config';
 import { getIncomingCallQueue, updateCallStatus } from '../../actions/callActions';
-import { CALL_STATUS } from '../../utils/appConstants';
+import { CALL_STATUS, LOGIN_MODES } from '../../utils/appConstants';
 
 const CallPageComponent = props => {
-  const {route, profile, navigation, fetchIncomingCallQueue, updateCallStatus} = props;
+  const {route, profile, navigation, fetchIncomingCallQueue, updateCallStatus, auth} = props;
   const {params} = route;
   const {callId, shopperName, departmentCallerId} = params;
-  const {name} = profile;
+  const { deviceName, loginMode } = auth;
+  let {name} = profile;
+  if (loginMode === LOGIN_MODES.DEVICE) {
+    name = deviceName;
+  }
   const [isMicOn, setMicOn] = useState(true);
   const [isCameraOn, setCameraOn] = useState(true);
   const [frontCamera, setFrontCamera] = useState(true);
@@ -135,6 +139,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     profile: state.profile,
+    auth: state.app.auth,
   };
 };
 

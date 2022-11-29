@@ -9,6 +9,7 @@ export const initialState = {
       isLoggedIn: false,
       loginMode: '',
       departmentId: '',
+      deviceName: '',
     },
   },
   profile: {
