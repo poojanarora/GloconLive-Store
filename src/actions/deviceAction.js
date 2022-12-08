@@ -53,7 +53,7 @@ export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
       dispatch(setAuth(obj));
       dispatch(setLoading(false));
       onDeviceAdded();
-      //showAlertPopup('Success', resp.data?.message, 'Ok');
+      showAlertPopup('Success', 'Device Added Successfully', 'Ok');
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', resp.data?.message, 'Cancel');

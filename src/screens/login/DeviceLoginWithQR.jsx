@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text} from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
 import { connect } from 'react-redux';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {getUniqueId, getDeviceName} from 'react-native-device-info';
@@ -78,7 +79,7 @@ const LinkDevice = ({navigation, addDevice}) => {
         </Text>
       }
       bottomContent={
-        <Text style={styles.centerText}>
+        <Text style={styles.bottomContent}>
           <Text style={styles.textBold}>
             Scan the QR Code to Link this Device
           </Text>{' '}
@@ -92,8 +93,15 @@ const LinkDevice = ({navigation, addDevice}) => {
 const styles = StyleSheet.create({
   centerText: {
     flex: 1,
-    fontSize: 18,
-    padding: 32,
+    fontSize: moderateScale(18),
+    padding: moderateScale(32),
+    marginBottom: moderateScale(4),
+    color: '#777',
+  },
+  bottomContent: {
+    fontSize: moderateScale(18),
+    marginTop: moderateScale(32),
+    padding: moderateScale(32),
     color: '#777',
   },
   textBold: {
@@ -101,11 +109,11 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   buttonText: {
-    fontSize: 21,
+    fontSize: moderateScale(21),
     color: 'rgb(0,122,255)',
   },
   buttonTouchable: {
-    padding: 16,
+    padding: moderateScale(16),
   },
 });
 

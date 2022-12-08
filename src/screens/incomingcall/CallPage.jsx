@@ -58,11 +58,11 @@ const CallPageComponent = props => {
   };
 
   const onMorePress = () => {
-    navigation.navigate('InCallChat', {
-      departmentCallerId,
-      callId,
-      shopperName,
-    });
+    // navigation.navigate('InCallChat', {
+    //   departmentCallerId,
+    //   callId,
+    //   shopperName,
+    // });
   };
 
   return (

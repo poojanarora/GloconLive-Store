@@ -27,7 +27,7 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
       dispatch(setAuth(obj));
       dispatch(setLoading(false));
       loginCallback(true);
-      dispatch(initializeZim());
+      // dispatch(initializeZim());
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -52,6 +52,6 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
  */
 export const handleLogout = obj => async dispatch => {
   await localStorageRemoveItem();
-  dispatch(logoutZimChat());
+  // dispatch(logoutZimChat());
   dispatch(setAuth(obj));
 };
