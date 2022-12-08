@@ -4,6 +4,7 @@ import {
   Login,
   CheckApplicationStatus,
   ApplicationStatus,
+  DeviceLoginWithQR,
 } from '../screens/index.js';
 import {COLORS} from '../constant/theme.js';
 import BackIcon from '../components/BackIcon.jsx';
@@ -26,6 +27,25 @@ const PublicStackScreen = ({navigation}) => {
         component={ApplicationStatus}
         options={{
           title: 'Application Status',
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: COLORS.primaryTextColor,
+          },
+          headerTintColor: COLORS.white,
+          headerTitleStyle: {
+            fontWeight: '600',
+          },
+          headerLeft: () => {
+            return <BackIcon navigate={navigation} />;
+          },
+        }}
+      />
+      <PublicStack.Screen
+        name="DeviceLogin"
+        component={DeviceLoginWithQR}
+        options={{
+          title: 'Link Device',
           headerShown: true,
           headerTitleAlign: 'center',
           headerStyle: {

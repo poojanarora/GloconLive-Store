@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Splash} from '../screens';
 import PublicStackScreen from './PublicStackScreen';
 import DrawerScreen from './DrawerScreen';
+import IncomingCallStackScreen from './IncomingCallStackScreen';
 
 const AppStackScreen = ({navigation}) => {
   const AppStack = createNativeStackNavigator();
@@ -14,6 +15,7 @@ const AppStackScreen = ({navigation}) => {
       initialRouteName="Splash">
       <AppStack.Screen name="Splash" component={Splash} />
       <AppStack.Screen name="PublicStackScreen" component={PublicStackScreen} />
+      <AppStack.Screen name="IncomingCallStackScreen" component={IncomingCallStackScreen} />
       <AppStack.Screen
         // options={({route}) => ({
         //     headerShown: true,

@@ -13,6 +13,7 @@ import ViewProfile from './profile/ViewProfile';
 
 import ShopVideoPreview from './video/ShopVideoPreview';
 import AddStoreVideo from './video/AddStoreVideo';
+import DeviceLoginWithQR from './login/DeviceLoginWithQR';
 
 export {
   Splash,
@@ -26,4 +27,5 @@ export {
   ViewProfile,
   ShopVideoPreview,
   AddStoreVideo,
+  DeviceLoginWithQR,
 };

@@ -1,7 +1,9 @@
 import { deviceActionTypes } from '../actionTypes/actionTypes';
-import { setLoading } from './appAction';
+import { setAuth, setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
+import { localStorageSetItem } from '../hooks/useAsyncStorage';
+import { LOGIN_MODES } from '../utils/appConstants';
 
 export const fetchDevices = locationId => async dispatch => {
   try {
@@ -28,17 +30,30 @@ export const fetchDevices = locationId => async dispatch => {
 /**
  * Function to add device.
  */
-export const addDevice = formValues => async dispatch => {
+export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
   try {
     dispatch(setLoading(true));
     let resp = await axiosPrivate.post('/store/add-device', formValues);
-    if (resp.data.success === true) {
+    const data = resp.data;
+    console.log(data);
+    if (data?.success === true) {
       console.log('In add device success');
-      const data = resp.data?.data;
-      console.log(data);
-      dispatch(appendDevices(data));
+      const deviceData = data?.data.store_device_data;
+      // dispatch(appendDevices(data));
+      dispatch(setDeviceData(deviceData))
+      let obj = {
+        accessToken: data?.data.api_token,
+        email: formValues.device_id,
+        isLoggedIn: true,
+        loginMode: LOGIN_MODES.DEVICE,
+        departmentId: deviceData.department_id,
+        deviceName: deviceData.device_name,
+      };
+      localStorageSetItem(obj);
+      dispatch(setAuth(obj));
       dispatch(setLoading(false));
-      showAlertPopup('Success', resp.data?.message, 'Ok');
+      onDeviceAdded();
+      showAlertPopup('Success', 'Device Added Successfully', 'Ok');
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', resp.data?.message, 'Cancel');
@@ -80,6 +95,16 @@ export const storeDevices = devices => {
   return {
     type: deviceActionTypes.STORE_DEVICE,
     payload: devices,
+  };
+};
+
+/**
+ * Function to set newly added devices.
+ */
+ export const setDeviceData = device => {
+  return {
+    type: deviceActionTypes.SET_DEVICE_DATA,
+    payload: device,
   };
 };
 

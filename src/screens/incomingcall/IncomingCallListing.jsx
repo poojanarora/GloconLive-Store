@@ -1,4 +1,4 @@
-import React, { useEffect }  from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -6,17 +6,34 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  RefreshControl,
 } from 'react-native';
 import {connect} from 'react-redux';
 import styles from './incomingCallListingStyles';
 import {images} from '../../constant';
-import { getIncomingCallQueue } from '../../actions/callActions';
+import {getIncomingCallQueue} from '../../actions/callActions';
+import {LOGIN_MODES} from '../../utils/appConstants';
 
-const IncomingCalls = ({navigation, fetchIncomingCallQueue, callQueue}) => {
+const IncomingCalls = ({
+  navigation,
+  fetchIncomingCallQueue,
+  callQueue,
+  loginMode,
+  isLoading,
+  departmentId,
+}) => {
+  const [fetchData, setFetchData] = useState(false);
+  useEffect(() => {
+    if (loginMode === LOGIN_MODES.DEVICE) {
+      navigation.setOptions({headerLeft: () => {}});
+    }
+    fetchIncomingCallQueue();
+  }, [fetchData, departmentId, callQueue.length]);
 
-  useEffect(()=>{
-    fetchIncomingCallQueue()
-  }, [])
+  //Function to handel location refresh
+  const onRefresh = () => {
+    setFetchData(!fetchData);
+  };
 
   const renderItem = ({item}) => {
     return <Item item={item} />;
@@ -62,6 +79,9 @@ const IncomingCalls = ({navigation, fetchIncomingCallQueue, callQueue}) => {
         renderItem={renderItem}
         keyExtractor={item => item.callId}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        }
         //refreshing={isRecipientListingLoading}
         // ItemSeparatorComponent={(props) => {
         //     return (
@@ -85,12 +105,15 @@ const IncomingCalls = ({navigation, fetchIncomingCallQueue, callQueue}) => {
 const mapStateToProps = state => {
   return {
     callQueue: state.call.callQueue,
+    isLoading: state.app.isLoading,
+    loginMode: state.app.auth.loginMode,
+    departmentId: state.app.auth.departmentId,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue())
+    fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue()),
   };
 };
 

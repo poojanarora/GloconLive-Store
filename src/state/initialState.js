@@ -1,3 +1,5 @@
+import { LOGIN_MODES } from "../utils/appConstants";
+
 export const initialState = {
   app: {
     isLoading: false,
@@ -5,6 +7,9 @@ export const initialState = {
       accessToken: '',
       email: '',
       isLoggedIn: false,
+      loginMode: '',
+      departmentId: '',
+      deviceName: '',
     },
   },
   profile: {
@@ -30,6 +35,7 @@ export const initialState = {
   },
   device: {
     storeDevices: [],
+    deviceData: {},
   },
   login: {
     loginErrors: {
@@ -55,24 +61,24 @@ export const initialState = {
   },
   call: {
     callQueue: [
-      {
-        storeId: '25',
-        shopperId: '1',
-        shopperName: 'Sohel Patel',
-        departmentId: '1',
-        departmentCallerId: 'd1',
-        callId: 'rn1234567',
-        callStartTime: '10:00 am',
-      },
-      {
-        storeId: '25',
-        shopperId: '2',
-        shopperName: 'Rakesh Sarkar',
-        departmentId: '2',
-        departmentCallerId: 'd2',
-        callId: 'rn0987654',
-        callStartTime: '11:00 am',
-      },
+      // {
+      //   storeId: '25',
+      //   shopperId: '1',
+      //   shopperName: 'Sohel Patel',
+      //   departmentId: '1',
+      //   departmentCallerId: 'd1',
+      //   callId: 'rn1234567',
+      //   callStartTime: '10:00 am',
+      // },
+      // {
+      //   storeId: '25',
+      //   shopperId: '2',
+      //   shopperName: 'Rakesh Sarkar',
+      //   departmentId: '2',
+      //   departmentCallerId: 'd2',
+      //   callId: 'rn0987654',
+      //   callStartTime: '11:00 am',
+      // },
     ],
   },
 };

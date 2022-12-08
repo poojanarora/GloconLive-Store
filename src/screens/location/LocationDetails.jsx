@@ -50,7 +50,7 @@ const LocationDetails = ({route, navigation}) => {
       {selectedOption === 'departments' ? (
         <DepartmentListing locationId={locationId} />
       ) : (
-        <DeviceListing locationId={locationId} />
+        <DeviceListing locationId={locationId} navigation={navigation} />
       )}
     </SafeAreaView>
   );

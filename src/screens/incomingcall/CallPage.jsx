@@ -10,19 +10,30 @@ import BackIcon from '../../components/BackIcon';
 import {moderateScale} from 'react-native-size-matters';
 import CallMenuBar from './CallMenuBar';
 import {appConfig} from '../../config/config';
+import { getIncomingCallQueue, updateCallStatus } from '../../actions/callActions';
+import { CALL_STATUS, LOGIN_MODES } from '../../utils/appConstants';
 
 const CallPageComponent = props => {
-  const {route, profile, navigation} = props;
+  const {route, profile, navigation, fetchIncomingCallQueue, updateCallStatus, auth} = props;
   const {params} = route;
   const {callId, shopperName, departmentCallerId} = params;
-  const {name} = profile;
+  const { deviceName, loginMode } = auth;
+  let {name} = profile;
+  if (loginMode === LOGIN_MODES.DEVICE) {
+    name = deviceName;
+  }
   const [isMicOn, setMicOn] = useState(true);
   const [isCameraOn, setCameraOn] = useState(true);
   const [frontCamera, setFrontCamera] = useState(true);
 
   const onEndCall = () => {
-    navigation.navigate('IncomingCallListing');
+    updateCallStatus(callId, CALL_STATUS.COMPLETED, onCallStatusUpdate);
   };
+
+  const onCallStatusUpdate = () => {
+    fetchIncomingCallQueue();
+    navigation.navigate('IncomingCallListing');
+  }
 
   const onCameraToggle = () => {
     ZegoUIKit.turnCameraOn(departmentCallerId.toString(), !isCameraOn).then(
@@ -47,11 +58,11 @@ const CallPageComponent = props => {
   };
 
   const onMorePress = () => {
-    navigation.navigate('InCallChat', {
-      departmentCallerId,
-      callId,
-      shopperName,
-    });
+    // navigation.navigate('InCallChat', {
+    //   departmentCallerId,
+    //   callId,
+    //   shopperName,
+    // });
   };
 
   return (
@@ -69,10 +80,10 @@ const CallPageComponent = props => {
         config={{
           onOnlySelfInRoom: () => {
             console.log('onOnlySelfInRoom', 'onOnlySelfInRoom');
-            navigation.navigate('IncomingCallListing');
+            onEndCall();
           },
           onHangUp: () => {
-            navigation.navigate('IncomingCallListing');
+            onEndCall();
           },
           roomUserUpdate: user => {
             console.log('roomUserUpdate', user);
@@ -128,9 +139,17 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     profile: state.profile,
+    auth: state.app.auth,
   };
 };
 
-const CallPage = connect(mapStateToProps, null)(CallPageComponent);
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue()),
+    updateCallStatus: (callId, callStatus, onCallStatusUpdate) => dispatch(updateCallStatus(callId, callStatus, onCallStatusUpdate)),
+  };
+};
+
+const CallPage = connect(mapStateToProps, mapDispatchToProps)(CallPageComponent);
 
 export default CallPage;

@@ -7,6 +7,7 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 import styles from './deviceListingStyles';
 import {connect} from 'react-redux';
 import {images} from '../../constant';
@@ -15,15 +16,11 @@ import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import SelectInput from '../../components/SelectInput';
 import Spinner from '../../components/Spinner';
-import {
-  fetchDevices,
-  addDevice,
-  updateDevice,
-} from '../../actions/deviceAction';
+import {fetchDevices, updateDevice} from '../../actions/deviceAction';
 
 const initialFormValues = {
   id: '',
-  department: {},
+  department: {id: ''},
   deviceId: '',
   deviceName: '',
 };
@@ -37,7 +34,6 @@ const deviceListingComponent = ({
   locationId,
   fetchDevices,
   isLoading,
-  addDevice,
   updateDevice,
   departments,
   devices,
@@ -105,12 +101,12 @@ const deviceListingComponent = ({
     if (Object.keys(values.department).length === 0) {
       errors.department = 'Please select department.';
     }
-    if (!values.deviceId) {
-      errors.deviceId = 'Please enter device id.';
-    }
-    if (!values.deviceName) {
-      errors.deviceName = 'Please enter device name.';
-    }
+    // if (!values.deviceId) {
+    //   errors.deviceId = 'Please enter device id.';
+    // }
+    // if (!values.deviceName) {
+    //   errors.deviceName = 'Please enter device name.';
+    // }
     return errors;
   };
 
@@ -149,9 +145,10 @@ const deviceListingComponent = ({
         status: '1',
       };
       if (action === 'Add') {
-        await addDevice(payload);
+        await fetchDevices(locationId);
       } else {
         payload.id = formValues.id;
+        console.warn(payload);
         await updateDevice(payload);
       }
       //await fetchDevices(locationId);
@@ -196,32 +193,44 @@ const deviceListingComponent = ({
         }
         primaryButtonText={action}
         dangerButtonText="Cancel">
-        <SelectInput
-          selectLabel="Select Department"
-          name="department"
-          data={departments}
-          error={formErrors.department}
-          value={formValues.department}
-          onSelect={handelDepartment}
-        />
-        <IconInputWithoutLabel
-          placeholder="New Device Id"
-          name="deviceId"
-          showIcon={true}
-          icon={images.tick}
-          error={formErrors.deviceId}
-          value={formValues.deviceId}
-          onChangeText={handelDeviceId}
-        />
-        <IconInputWithoutLabel
-          placeholder="New Device name"
-          name="deviceName"
-          showIcon={true}
-          icon={images.tick}
-          error={formErrors.deviceName}
-          value={formValues.deviceName}
-          onChangeText={handelDeviceName}
-        />
+        <View style={{zIndex: 1}}>
+          <SelectInput
+            selectLabel="Select Department"
+            name="department"
+            data={departments}
+            error={formErrors.department}
+            value={formValues.department}
+            onSelect={handelDepartment}
+          />
+        </View>
+        {action === 'Add' ? (
+          <View style={{alignSelf: 'center', marginTop: 40}}>
+            {formValues.department.id && (
+              <QRCode value={formValues.department.id} size={180} />
+            )}
+          </View>
+        ) : (
+          <>
+            <IconInputWithoutLabel
+              placeholder="New Device Id"
+              name="deviceId"
+              showIcon={true}
+              icon={images.tick}
+              error={formErrors.deviceId}
+              value={formValues.deviceId}
+              noneditable={true}
+            />
+            <IconInputWithoutLabel
+              placeholder="New Device name"
+              name="deviceName"
+              showIcon={true}
+              icon={images.tick}
+              error={formErrors.deviceName}
+              value={formValues.deviceName}
+              noneditable={true}
+            />
+          </>
+        )}
       </PopupModal>
     );
   };
@@ -256,7 +265,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchDevices: locationId => dispatch(fetchDevices(locationId)),
-    addDevice: payload => dispatch(addDevice(payload)),
     updateDevice: payload => dispatch(updateDevice(payload)),
   };
 };

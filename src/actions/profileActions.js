@@ -32,8 +32,8 @@ export const fetchProfileInfo = email => async dispatch => {
       };
       dispatch(storeProfile(profileObj));
       dispatch(setLoading(false));
-      const loginForm = { userID: data.id.toString(), userName: data.name };
-      dispatch(zimLogin(loginForm));
+      // const loginForm = { userID: data.id.toString(), userName: data.name };
+      // dispatch(zimLogin(loginForm));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');

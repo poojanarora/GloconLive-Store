@@ -24,6 +24,12 @@ const device = (state = initialState.device, action) => {
         storeDevices: newArray,
       };
     }
+    case deviceActionTypes.SET_DEVICE_DATA: {
+      return {
+        ...state,
+        deviceData: action.payload,
+      }
+    }
     default:
       return state;
   }
