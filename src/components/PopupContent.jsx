@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     //backgroundColor: 'red'
+    zIndex: 1000
   },
   modalCloseImage: {
     width: moderateScale(30),

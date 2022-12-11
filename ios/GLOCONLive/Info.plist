@@ -30,7 +30,7 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Need camera access for uploading images</string>
+	<string>Need camera access for capturing, uploading images and video calling</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Need location access for updating nearby friends</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
