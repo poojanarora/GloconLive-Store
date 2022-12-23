@@ -21,6 +21,21 @@ const PublicStackScreen = ({navigation}) => {
       <PublicStack.Screen
         name="CheckApplicationStatus"
         component={CheckApplicationStatus}
+        options={{
+          title: 'Application Status',
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: COLORS.primaryTextColor,
+          },
+          headerTintColor: COLORS.white,
+          headerTitleStyle: {
+            fontWeight: '600',
+          },
+          headerLeft: () => {
+            return <BackIcon navigate={navigation} />;
+          },
+        }}
       />
       <PublicStack.Screen
         name="ApplicationStatus"
