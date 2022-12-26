@@ -27,8 +27,14 @@ const IncomingCalls = ({
     if (loginMode === LOGIN_MODES.DEVICE) {
       navigation.setOptions({headerLeft: () => {}});
     }
-    fetchIncomingCallQueue();
+    fetchIncomingCallQueue(onApiSuccess);
   }, [fetchData, departmentId, callQueue.length]);
+
+  const onApiSuccess = (isTrialPeriodEnd) => {
+    if (isTrialPeriodEnd) {
+      navigation.replace('SubscriptionScreenStack');
+    }
+  }
 
   //Function to handel location refresh
   const onRefresh = () => {
@@ -113,7 +119,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue()),
+    fetchIncomingCallQueue: (onApiSuccess) => dispatch(getIncomingCallQueue(onApiSuccess)),
   };
 };
 

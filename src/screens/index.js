@@ -14,6 +14,7 @@ import ViewProfile from './profile/ViewProfile';
 import ShopVideoPreview from './video/ShopVideoPreview';
 import AddStoreVideo from './video/AddStoreVideo';
 import DeviceLoginWithQR from './login/DeviceLoginWithQR';
+import SubscriptionScreen from './subscription/SubscriptionScreen';
 
 export {
   Splash,
@@ -28,4 +29,5 @@ export {
   ShopVideoPreview,
   AddStoreVideo,
   DeviceLoginWithQR,
+  SubscriptionScreen,
 };

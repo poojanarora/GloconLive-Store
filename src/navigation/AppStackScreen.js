@@ -4,6 +4,7 @@ import {Splash} from '../screens';
 import PublicStackScreen from './PublicStackScreen';
 import DrawerScreen from './DrawerScreen';
 import IncomingCallStackScreen from './IncomingCallStackScreen';
+import SubscriptionScreenStack from './SubscriptionScreenStack';
 
 const AppStackScreen = ({navigation}) => {
   const AppStack = createNativeStackNavigator();
@@ -37,6 +38,7 @@ const AppStackScreen = ({navigation}) => {
         name="PrivateStackScreen"
         component={DrawerScreen}
       />
+      <AppStack.Screen name="SubscriptionScreenStack" component={SubscriptionScreenStack} />
     </AppStack.Navigator>
   );
 };
