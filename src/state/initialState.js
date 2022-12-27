@@ -1,4 +1,4 @@
-import { LOGIN_MODES } from "../utils/appConstants";
+import {LOGIN_MODES} from '../utils/appConstants';
 
 export const initialState = {
   app: {

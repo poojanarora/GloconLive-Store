@@ -1,10 +1,10 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 import {
   scale,
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import { COLORS } from '../../../constant';
+import {COLORS} from '../../../constant';
 
 const styles = StyleSheet.create({
   safeAreaViewStyle: {
@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
   },
   buttonSectionWrapper: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    //justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginVertical: moderateVerticalScale(10),
     //backgroundColor: 'yellow'

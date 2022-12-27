@@ -1,8 +1,8 @@
-import { profileActionTypes } from '../actionTypes/actionTypes';
-import { setLoading } from './appAction';
+import {profileActionTypes} from '../actionTypes/actionTypes';
+import {setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
-import { zimLogin } from './chatActions';
+import {zimLogin} from './chatActions';
 
 /**
  * Function to fetch profile information.
@@ -59,12 +59,12 @@ export const fetchConceirgeShopperProfileInfo = email => async dispatch => {
       const profileObj = {
         id: data?.conceirge_shopper?.id,
         email: data?.conceirge_shopper.email,
-        firstName: data?.conceirge_shopper_information.first_name,
-        lastName: data?.conceirge_shopper_information.last_name,
-        name: data?.conceirge_shopper_information.first_name + " " + data?.conceirge_shopper_information.last_name,
         phone: data?.conceirge_shopper.phone,
         status: data?.conceirge_shopper.status,
+        firstName: data?.conceirge_shopper_information.first_name,
+        lastName: data?.conceirge_shopper_information.last_name,
         profilePic: data?.conceirge_shopper_information.profile_image,
+        shopperCalledId: data?.conceirge_shopper_information.shopper_caller_id,
       };
       dispatch(storeProfile(profileObj));
       dispatch(setLoading(false));
@@ -89,6 +89,30 @@ export const changePassword = formValues => async dispatch => {
     dispatch(setLoading(true));
     const response = await axiosPrivate.post(
       '/store/update-password',
+      formValues,
+    );
+    if (response.data.success === true) {
+      dispatch(setLoading(false));
+      showAlertPopup('Success', response.data?.message, 'Ok');
+    } else {
+      dispatch(setLoading(false));
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
+    }
+  } catch (error) {
+    console.log('In catch block');
+    dispatch(setLoading(false));
+    showAlertPopup('Oops', error?.message, 'Cancel');
+  }
+};
+
+/**
+ * Function to change conceirge shopper password.
+ */
+export const changeConceirgeShopperPassword = formValues => async dispatch => {
+  try {
+    dispatch(setLoading(true));
+    const response = await axiosPrivate.post(
+      'conceirge-shopper/update-password',
       formValues,
     );
     if (response.data.success === true) {
@@ -150,39 +174,40 @@ export const updateProfileInformation = formValues => async dispatch => {
   }
 };
 
-
 /**
  * Function to update conceirge shopper profile information.
  */
-export const updateConceirgeShopperProfileInformation = formValues => async dispatch => {
-  try {
-    dispatch(setLoading(true));
-    const formdata = new FormData();
-    formdata.append('conceirge_shopper_id', formValues.id);
-    formdata.append('first_name', formValues.firstName);
-    formdata.append('last_name', formValues.lastName);
-    formdata.append('email', formValues.email);
-    if (Object.keys(formValues.profile_image).length > 0) {
-      formdata.append('profile_image', {
-        uri: formValues.profile_image.uri,
-        type: formValues.profile_image.type,
-        name: formValues.profile_image.fileName,
-      });
-    }
-    let response = await axiosPrivate.post(
-      '/conceirge-shopper/update-profile',
-      formdata,
-    );
-    if (response.data.success === true) {
+export const updateConceirgeShopperProfileInformation =
+  formValues => async dispatch => {
+    try {
+      dispatch(setLoading(true));
+      const formdata = new FormData();
+      formdata.append('conceirge_shopper_id', formValues.conceirge_shopper_id);
+      formdata.append('first_name', formValues.first_name);
+      formdata.append('last_name', formValues.last_name);
+      formdata.append('email', formValues.email);
+      formdata.append('phone', formValues.phone);
+      if (Object.keys(formValues.profile_image).length > 0) {
+        formdata.append('profile_image', {
+          uri: formValues.profile_image.uri,
+          type: formValues.profile_image.type,
+          name: formValues.profile_image.fileName,
+        });
+      }
+      let response = await axiosPrivate.post(
+        '/conceirge-shopper/update-profile',
+        formdata,
+      );
+      if (response.data.success === true) {
+        dispatch(setLoading(false));
+        showAlertPopup('Success', response.data?.message, 'Ok');
+      } else {
+        dispatch(setLoading(false));
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
+      }
+    } catch (error) {
       dispatch(setLoading(false));
-      showAlertPopup('Success', response.data?.message, 'Ok');
-    } else {
-      dispatch(setLoading(false));
-      showAlertPopup('Oops', response.data?.message, 'Cancel');
+      console.log('In profile update catch block');
+      showAlertPopup('Oops', error?.message, 'Cancel');
     }
-  } catch (error) {
-    dispatch(setLoading(false));
-    console.log('In profile update catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
-  }
-};
+  };

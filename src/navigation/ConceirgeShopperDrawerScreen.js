@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Dimensions } from 'react-native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {Dimensions} from 'react-native';
 import CustomDrawerScreen from './CustomDrawerScreen';
+import ConceirgeCustomDrawerScreen from './ConceirgeCustomDrawerScreen';
 import IncomingCallStackScreen from './IncomingCallStackScreen';
 import ConceirgeProfileStackScreen from './ConceirgeProfileStackScreen';
 
@@ -11,10 +12,10 @@ const ConceirgeShopperDrawerScreen = () => {
   const Drawer = createDrawerNavigator();
   return (
     <Drawer.Navigator
-      drawerContent={props => <CustomDrawerScreen {...props} />}
+      drawerContent={props => <ConceirgeCustomDrawerScreen {...props} />}
       screenOptions={{
         headerShown: false, //This will hide header from all the screens
-        drawerStyle: { width: drawerWidth },
+        drawerStyle: {width: drawerWidth},
         //drawerPosition: 'left',
         //drawerType: 'front',
         // headerTitleAlign: "center",
@@ -29,14 +30,6 @@ const ConceirgeShopperDrawerScreen = () => {
       initialRouteName="Profile">
       <Drawer.Screen name="IncomingCall" component={IncomingCallStackScreen} />
       <Drawer.Screen name="Profile" component={ConceirgeProfileStackScreen} />
-      {/*<Drawer.Screen 
-                name="Notifications" 
-                component={Notification}
-                options={{ 
-                    //headerShown: false, // This will hide header from scpecific component
-                    title: 'My notification',
-                }}
-            /> */}
     </Drawer.Navigator>
   );
 };
