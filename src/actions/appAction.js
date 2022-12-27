@@ -20,3 +20,10 @@ export const updateAuth = value => {
     payload: value,
   };
 };
+
+export const initializeEmitter = value => {
+  return {
+    type: actionTypes.INIT_EMITTER,
+    payload: value,
+  }
+}

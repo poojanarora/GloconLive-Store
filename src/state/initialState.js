@@ -2,6 +2,7 @@ import { LOGIN_MODES } from "../utils/appConstants";
 
 export const initialState = {
   app: {
+    emitter: null,
     isLoading: false,
     auth: {
       accessToken: '',

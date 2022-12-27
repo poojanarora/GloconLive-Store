@@ -14,4 +14,8 @@ export const CALL_STATUS = {
   COMPLETED: '2',
 } 
 
+export const SUBSCRIPTION_EVENTS = {
+  SUBSCRIPTION_END: 'SUBSCRIPTION_END',
+}
+
 export const LOCATION_CONST = {};

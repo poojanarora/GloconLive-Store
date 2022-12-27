@@ -2,9 +2,9 @@ import {setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import {callActionTypes} from '../actionTypes/actionTypes';
 import axiosPrivate from '../config/privateApi';
-import {CALL_STATUS, LOGIN_MODES} from '../utils/appConstants';
+import {CALL_STATUS, LOGIN_MODES, SUBSCRIPTION_EVENTS} from '../utils/appConstants';
 
-export const getIncomingCallQueue = (onApiSuccess) => async (dispatch, getState) => {
+export const getIncomingCallQueue = () => async (dispatch, getState) => {
   try {
     const {profile, app} = getState();
     let payload = {
@@ -25,7 +25,10 @@ export const getIncomingCallQueue = (onApiSuccess) => async (dispatch, getState)
       const formattedData = getFormattedCallQueue(data);
       dispatch(setIncomingCallQueue(formattedData));
       dispatch(setLoading(false));
-      onApiSuccess(response.data.isTrialPeriodEnd);
+      const eventEmitter = app.emitter;
+      if (response.data.isSubscriptionEnd && eventEmitter) {
+        eventEmitter.emit(SUBSCRIPTION_EVENTS.SUBSCRIPTION_END);
+      }
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');

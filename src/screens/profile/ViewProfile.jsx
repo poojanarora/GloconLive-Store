@@ -7,6 +7,8 @@ import {
   Image,
   ScrollView,
   RefreshControl,
+  NativeEventEmitter, 
+  DeviceEventEmitter
 } from 'react-native';
 import { scale, moderateScale } from 'react-native-size-matters';
 import styles from './viewProfileStyles';
@@ -24,9 +26,10 @@ import {
   changePassword,
   updateProfileInformation,
 } from '../../actions/profileActions';
-import { setLoading } from '../../actions/appAction';
+import { initializeEmitter, setLoading } from '../../actions/appAction';
 import ImagePickerModel from '../../components/ImagePickerModel';
 import showAlertPopup from '../../components/AlertComp';
+import { SUBSCRIPTION_EVENTS } from '../../utils/appConstants'
 
 const initialEditProfileErrors = {
   companyName: '',
@@ -56,6 +59,7 @@ const ViewProfileComponent = ({
   updateProfileInformation,
   changePassword,
   navigation,
+  initializeEmitter,
 }) => {
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
     useState(false);
@@ -78,12 +82,19 @@ const ViewProfileComponent = ({
   useEffect(() => {
     console.log('Profile component mounted');
 
+    initializeEmitter(new NativeEventEmitter())
+    
+    DeviceEventEmitter.addListener(SUBSCRIPTION_EVENTS.SUBSCRIPTION_END, () => {
+      navigation.replace('SubscriptionScreenStack');
+    })
+
     //Calling functions
     fetchProfileInfo(auth.email);
 
     //Cleanup function
     return () => {
       console.log('Profile component unmounted');
+      DeviceEventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.SUBSCRIPTION_END);
     };
   }, []);
 
@@ -409,6 +420,7 @@ const mapDispatchToProps = dispatch => {
     updateProfileInformation: payload =>
       dispatch(updateProfileInformation(payload)),
     changePassword: payload => dispatch(changePassword(payload)),
+    initializeEmitter: value => dispatch(initializeEmitter(value)),
   };
 };
 

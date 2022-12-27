@@ -31,15 +31,8 @@ const CallPageComponent = props => {
   };
 
   const onCallStatusUpdate = () => {
-    fetchIncomingCallQueue(onApiSuccess);
-  }
-
-  const onApiSuccess = (isTrialPeriodEnd) => {
-    if (isTrialPeriodEnd) {
-      navigation.replace('SubscriptionScreenStack');
-    } else {
-      navigation.navigate('IncomingCallListing');
-    }
+    fetchIncomingCallQueue();
+    navigation.navigate('IncomingCallListing');
   }
 
   const onCameraToggle = () => {
@@ -152,7 +145,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchIncomingCallQueue: (onApiSuccess) => dispatch(getIncomingCallQueue(onApiSuccess)),
+    fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue()),
     updateCallStatus: (callId, callStatus, onCallStatusUpdate) => dispatch(updateCallStatus(callId, callStatus, onCallStatusUpdate)),
   };
 };
