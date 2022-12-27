@@ -48,6 +48,45 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
 };
 
 /**
+ * Function to handle conceirge Login.
+ */
+export const handleConceirgeLogin = (formValues, loginCallback) => async dispatch => {
+  const { email } = formValues;
+  try {
+    dispatch(setLoading(true));
+    let response = await axiosPublic.post('/conceirge-shopper/login', formValues);
+    if (response.data.success === true) {
+      let obj = {
+        accessToken: response.data?.token,
+        email,
+        isLoggedIn: true,
+        loginMode: LOGIN_MODES.STORE,
+      };
+      localStorageSetItem(obj);
+      dispatch(setAuth(obj));
+      dispatch(setLoading(false));
+      loginCallback(true);
+      // dispatch(initializeZim());
+    } else {
+      dispatch(setLoading(false));
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
+    }
+  } catch (error) {
+    console.log('In catch block');
+    dispatch(setLoading(false));
+    if (error?.message === 'Network Error') {
+      showAlertPopup(
+        error?.message,
+        'Please check your internet connectivity.',
+        'Ok',
+      );
+    } else {
+      showAlertPopup('Oops', error?.message, 'Cancel');
+    }
+  }
+};
+
+/**
  * Function to handle Logout.
  */
 export const handleLogout = obj => async dispatch => {

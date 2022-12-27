@@ -1,11 +1,12 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Splash} from '../screens';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Splash } from '../screens';
 import PublicStackScreen from './PublicStackScreen';
 import DrawerScreen from './DrawerScreen';
 import IncomingCallStackScreen from './IncomingCallStackScreen';
+import ConceirgeShopperDrawerScreen from './ConceirgeShopperDrawerScreen';
 
-const AppStackScreen = ({navigation}) => {
+const AppStackScreen = ({ navigation }) => {
   const AppStack = createNativeStackNavigator();
   return (
     <AppStack.Navigator
@@ -36,7 +37,9 @@ const AppStackScreen = ({navigation}) => {
         // })}
         name="PrivateStackScreen"
         component={DrawerScreen}
+
       />
+      <AppStack.Screen name="ConceirgeShopperPrivateStackScreen" component={ConceirgeShopperDrawerScreen} />
     </AppStack.Navigator>
   );
 };

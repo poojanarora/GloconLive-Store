@@ -46,6 +46,42 @@ export const fetchProfileInfo = email => async dispatch => {
 };
 
 /**
+ * Function to fetch conceirge shopper profile information.
+ */
+export const fetchConceirgeShopperProfileInfo = email => async dispatch => {
+  try {
+    dispatch(setLoading(true));
+    let response = await axiosPrivate.post('/conceirge-shopper/get-profile', {
+      email: email,
+    });
+    if (response.data.success === true) {
+      const data = response.data?.data;
+      const profileObj = {
+        id: data?.conceirge_shopper?.id,
+        email: data?.conceirge_shopper.email,
+        firstName: data?.conceirge_shopper_information.first_name,
+        lastName: data?.conceirge_shopper_information.last_name,
+        name: data?.conceirge_shopper_information.first_name + " " + data?.conceirge_shopper_information.last_name,
+        phone: data?.conceirge_shopper.phone,
+        status: data?.conceirge_shopper.status,
+        profilePic: data?.conceirge_shopper_information.profile_image,
+      };
+      dispatch(storeProfile(profileObj));
+      dispatch(setLoading(false));
+      // const loginForm = { userID: data.id.toString(), userName: data.name };
+      // dispatch(zimLogin(loginForm));
+    } else {
+      dispatch(setLoading(false));
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
+    }
+  } catch (error) {
+    dispatch(setLoading(false));
+    console.log('In catch block');
+    showAlertPopup('Oops', error?.message, 'Cancel');
+  }
+};
+
+/**
  * Function to change password.
  */
 export const changePassword = formValues => async dispatch => {
@@ -98,6 +134,43 @@ export const updateProfileInformation = formValues => async dispatch => {
     }
     let response = await axiosPrivate.post(
       '/store/update-store-profile',
+      formdata,
+    );
+    if (response.data.success === true) {
+      dispatch(setLoading(false));
+      showAlertPopup('Success', response.data?.message, 'Ok');
+    } else {
+      dispatch(setLoading(false));
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
+    }
+  } catch (error) {
+    dispatch(setLoading(false));
+    console.log('In profile update catch block');
+    showAlertPopup('Oops', error?.message, 'Cancel');
+  }
+};
+
+
+/**
+ * Function to update conceirge shopper profile information.
+ */
+export const updateConceirgeShopperProfileInformation = formValues => async dispatch => {
+  try {
+    dispatch(setLoading(true));
+    const formdata = new FormData();
+    formdata.append('conceirge_shopper_id', formValues.id);
+    formdata.append('first_name', formValues.firstName);
+    formdata.append('last_name', formValues.lastName);
+    formdata.append('email', formValues.email);
+    if (Object.keys(formValues.profile_image).length > 0) {
+      formdata.append('profile_image', {
+        uri: formValues.profile_image.uri,
+        type: formValues.profile_image.type,
+        name: formValues.profile_image.fileName,
+      });
+    }
+    let response = await axiosPrivate.post(
+      '/conceirge-shopper/update-profile',
       formdata,
     );
     if (response.data.success === true) {

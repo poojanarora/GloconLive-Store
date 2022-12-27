@@ -14,6 +14,8 @@ import ViewProfile from './profile/ViewProfile';
 import ShopVideoPreview from './video/ShopVideoPreview';
 import AddStoreVideo from './video/AddStoreVideo';
 import DeviceLoginWithQR from './login/DeviceLoginWithQR';
+import ConceirgeShopperLogin from './login/ConceirgeShopperLogin';
+import ConceirgeProfile from './conceirge-shopper/conceirge-profile/ConceirgeProfile';
 
 export {
   Splash,
@@ -28,4 +30,6 @@ export {
   ShopVideoPreview,
   AddStoreVideo,
   DeviceLoginWithQR,
+  ConceirgeShopperLogin,
+  ConceirgeProfile
 };

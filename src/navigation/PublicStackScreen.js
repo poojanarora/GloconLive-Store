@@ -1,15 +1,16 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   Login,
   CheckApplicationStatus,
   ApplicationStatus,
   DeviceLoginWithQR,
+  ConceirgeShopperLogin,
 } from '../screens/index.js';
-import {COLORS} from '../constant/theme.js';
+import { COLORS } from '../constant/theme.js';
 import BackIcon from '../components/BackIcon.jsx';
 
-const PublicStackScreen = ({navigation}) => {
+const PublicStackScreen = ({ navigation }) => {
   const PublicStack = createNativeStackNavigator();
   return (
     <PublicStack.Navigator
@@ -61,6 +62,25 @@ const PublicStackScreen = ({navigation}) => {
         component={DeviceLoginWithQR}
         options={{
           title: 'Link Device',
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: COLORS.primaryTextColor,
+          },
+          headerTintColor: COLORS.white,
+          headerTitleStyle: {
+            fontWeight: '600',
+          },
+          headerLeft: () => {
+            return <BackIcon navigate={navigation} />;
+          },
+        }}
+      />
+      <PublicStack.Screen
+        name="conceirgeLogin"
+        component={ConceirgeShopperLogin}
+        options={{
+          title: 'Conceirge Shopper Login',
           headerShown: true,
           headerTitleAlign: 'center',
           headerStyle: {
