@@ -1,6 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SubscriptionScreen} from '../screens';
+import {Payment, SubscriptionScreen} from '../screens';
 const SubscriptionScreenStack = ({navigation}) => {
   const SubscriptionStack = createNativeStackNavigator();
   return (
@@ -12,6 +12,10 @@ const SubscriptionScreenStack = ({navigation}) => {
       <SubscriptionStack.Screen
         name="SubscriptionScreen"
         component={SubscriptionScreen}
+      />
+      <SubscriptionStack.Screen
+        name="Payment"
+        component={Payment}
       />
     </SubscriptionStack.Navigator>
   );

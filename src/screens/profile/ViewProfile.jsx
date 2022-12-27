@@ -7,9 +7,8 @@ import {
   Image,
   ScrollView,
   RefreshControl,
-  NativeEventEmitter, 
-  DeviceEventEmitter
 } from 'react-native';
+import EventEmitter from 'eventemitter3';
 import { scale, moderateScale } from 'react-native-size-matters';
 import styles from './viewProfileStyles';
 import { COLORS, images } from '../../constant';
@@ -81,10 +80,11 @@ const ViewProfileComponent = ({
 
   useEffect(() => {
     console.log('Profile component mounted');
-
-    initializeEmitter(new NativeEventEmitter())
     
-    DeviceEventEmitter.addListener(SUBSCRIPTION_EVENTS.SUBSCRIPTION_END, () => {
+    const eventEmitter = new EventEmitter();
+    initializeEmitter(eventEmitter)
+    
+    eventEmitter.on(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION, () => {
       navigation.replace('SubscriptionScreenStack');
     })
 
@@ -94,7 +94,7 @@ const ViewProfileComponent = ({
     //Cleanup function
     return () => {
       console.log('Profile component unmounted');
-      DeviceEventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.SUBSCRIPTION_END);
+      eventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION);
     };
   }, []);
 

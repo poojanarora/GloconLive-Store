@@ -1,9 +1,9 @@
 import { deviceActionTypes } from '../actionTypes/actionTypes';
-import { setAuth, setLoading } from './appAction';
+import { emitEvent, setAuth, setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { localStorageSetItem } from '../hooks/useAsyncStorage';
-import { LOGIN_MODES } from '../utils/appConstants';
+import { LOGIN_MODES, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 export const fetchDevices = locationId => async dispatch => {
   try {
@@ -61,7 +61,11 @@ export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add device catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    if (error.code === 300) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION))
+    } else {
+      showAlertPopup('Oops', error?.message, 'Cancel');
+    }
   }
 };
 

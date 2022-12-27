@@ -15,6 +15,7 @@ import ShopVideoPreview from './video/ShopVideoPreview';
 import AddStoreVideo from './video/AddStoreVideo';
 import DeviceLoginWithQR from './login/DeviceLoginWithQR';
 import SubscriptionScreen from './subscription/SubscriptionScreen';
+import Payment from './subscription/Payment';
 
 export {
   Splash,
@@ -30,4 +31,5 @@ export {
   AddStoreVideo,
   DeviceLoginWithQR,
   SubscriptionScreen,
+  Payment,
 };
