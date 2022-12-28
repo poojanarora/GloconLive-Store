@@ -23,6 +23,7 @@ import {
   storeProfile,
   changeConceirgeShopperPassword,
   updateConceirgeShopperProfileInformation,
+  updateConceirgeShopperProfilePicture,
 } from '../../../actions/profileActions';
 import {setLoading} from '../../../actions/appAction';
 import ImagePickerModel from '../../../components/ImagePickerModel';
@@ -53,6 +54,7 @@ const ConceirgeProfileComponent = ({
   setLoading,
   fetchConceirgeShopperProfileInfo,
   updateConceirgeShopperProfileInformation,
+  updateConceirgeShopperProfilePicture,
   editProfileInfo,
   changeConceirgeShopperPassword,
   navigation,
@@ -179,7 +181,6 @@ const ConceirgeProfileComponent = ({
       } else {
         updateConceirgeShopperProfileInformation({
           conceirge_shopper_id: profile.id,
-          profile_image: choosenImage,
           first_name: profile.firstName,
           last_name: profile.lastName,
           email: profile.email,
@@ -270,6 +271,17 @@ const ConceirgeProfileComponent = ({
     setShowChangeProfilePicModel(!showChangeProfilePicModel);
   };
 
+  const handelProfileImageSelection = selectedImage => {
+    console.log(selectedImage);
+    editProfileInfo({profilePic: selectedImage.uri});
+    setImagePickerVisible(false);
+    setChoosenImage(selectedImage);
+    updateConceirgeShopperProfilePicture({
+      conceirge_shopper_id: profile.id,
+      profile_image: selectedImage,
+    });
+  };
+
   //Function to render change password modal
   const renderUpdatePasswordModal = () => {
     return (
@@ -321,9 +333,10 @@ const ConceirgeProfileComponent = ({
       <ImagePickerModel
         show={imagePickerVisible}
         onImageSelection={image => {
-          editProfileInfo({profilePic: image.uri});
-          setImagePickerVisible(false);
-          setChoosenImage(image);
+          // editProfileInfo({profilePic: image.uri});
+          // setImagePickerVisible(false);
+          // setChoosenImage(image);
+          handelProfileImageSelection(image);
         }}
         onClose={() => setImagePickerVisible(false)}
       />
@@ -439,6 +452,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(updateConceirgeShopperProfileInformation(payload)),
     changeConceirgeShopperPassword: payload =>
       dispatch(changeConceirgeShopperPassword(payload)),
+    updateConceirgeShopperProfilePicture: payload =>
+      dispatch(updateConceirgeShopperProfilePicture(payload)),
   };
 };
 

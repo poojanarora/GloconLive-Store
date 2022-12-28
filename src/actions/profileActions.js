@@ -211,3 +211,34 @@ export const updateConceirgeShopperProfileInformation =
       showAlertPopup('Oops', error?.message, 'Cancel');
     }
   };
+
+export const updateConceirgeShopperProfilePicture =
+  formValues => async dispatch => {
+    try {
+      dispatch(setLoading(true));
+      const formdata = new FormData();
+      formdata.append('conceirge_shopper_id', formValues.conceirge_shopper_id);
+      if (Object.keys(formValues.profile_image).length > 0) {
+        formdata.append('profile_image', {
+          uri: formValues.profile_image.uri,
+          type: formValues.profile_image.type,
+          name: formValues.profile_image.fileName,
+        });
+      }
+      let response = await axiosPrivate.post(
+        'conceirge-shopper/upload-profile-image',
+        formdata,
+      );
+      if (response.data.success === true) {
+        dispatch(setLoading(false));
+        showAlertPopup('Success', response.data?.message, 'Ok');
+      } else {
+        dispatch(setLoading(false));
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
+      }
+    } catch (error) {
+      dispatch(setLoading(false));
+      console.log('In profile update catch block');
+      showAlertPopup('Oops', error?.message, 'Cancel');
+    }
+  };
