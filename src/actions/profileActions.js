@@ -1,8 +1,8 @@
-import {profileActionTypes} from '../actionTypes/actionTypes';
-import {setLoading} from './appAction';
+import { profileActionTypes } from '../actionTypes/actionTypes';
+import { setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
-import {zimLogin} from './chatActions';
+import { zimLogin } from './chatActions';
 
 /**
  * Function to fetch profile information.

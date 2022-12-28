@@ -6,6 +6,7 @@ import {
   ApplicationStatus,
   DeviceLoginWithQR,
   ConceirgeShopperLogin,
+  Subscription,
 } from '../screens/index.js';
 import { COLORS } from '../constant/theme.js';
 import BackIcon from '../components/BackIcon.jsx';
@@ -81,6 +82,25 @@ const PublicStackScreen = ({ navigation }) => {
         component={ConceirgeShopperLogin}
         options={{
           title: 'Conceirge Shopper Login',
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: COLORS.primaryTextColor,
+          },
+          headerTintColor: COLORS.white,
+          headerTitleStyle: {
+            fontWeight: '600',
+          },
+          headerLeft: () => {
+            return <BackIcon navigate={navigation} />;
+          },
+        }}
+      />
+      <PublicStack.Screen
+        name="subscription"
+        component={Subscription}
+        options={{
+          title: 'Subscription',
           headerShown: true,
           headerTitleAlign: 'center',
           headerStyle: {

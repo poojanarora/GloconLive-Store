@@ -165,6 +165,16 @@ const LoginComponent = ({ navigation, isLoading, onLogin }) => {
                 </Text>
               </Text>
             </View>
+            <View style={styles.signInAsDeviceWrapper}>
+              <Text style={styles.signUpLabel}>
+                Go to subscription Screen?{' '}
+                <Text
+                  style={styles.labelPrimary}
+                  onPress={() => navigation.navigate('subscription')}>
+                  Click here to subscribe
+                </Text>
+              </Text>
+            </View>
             <View style={styles.buttonSectionWrapper}>
               <ButtonComp btnText="Sign In" action={onSubmit} />
             </View>

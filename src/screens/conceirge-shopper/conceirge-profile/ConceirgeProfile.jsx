@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,16 +8,16 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
-import {scale, moderateScale} from 'react-native-size-matters';
+import { scale, moderateScale } from 'react-native-size-matters';
 import styles from './style';
-import {COLORS, images} from '../../../constant';
+import { COLORS, images } from '../../../constant';
 import IconInput from '../../../components/IconInput';
 import ButtonComp from '../../../components/ButtonComp';
 import PopupModal from '../../../components/PopupModal';
 import IconInputWithoutLabel from '../../../components/IconInputWithoutLabel';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Spinner from '../../../components/Spinner.jsx';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import {
   fetchConceirgeShopperProfileInfo,
   storeProfile,
@@ -25,7 +25,7 @@ import {
   updateConceirgeShopperProfileInformation,
   updateConceirgeShopperProfilePicture,
 } from '../../../actions/profileActions';
-import {setLoading} from '../../../actions/appAction';
+import { setLoading } from '../../../actions/appAction';
 import ImagePickerModel from '../../../components/ImagePickerModel';
 import showAlertPopup from '../../../components/AlertComp';
 
@@ -130,22 +130,22 @@ const ConceirgeProfileComponent = ({
 
   //Function to handel first name
   const handelFirstName = e => {
-    editProfileInfo({firstName: e});
+    editProfileInfo({ firstName: e });
   };
 
   //Function to handel last name
   const handelLastName = e => {
-    editProfileInfo({lastName: e});
+    editProfileInfo({ lastName: e });
   };
 
   //Function to handel email
   const handelEmailId = e => {
-    editProfileInfo({email: e});
+    editProfileInfo({ email: e });
   };
 
   //Function to handel phone number
   const handelPhoneNumber = e => {
-    editProfileInfo({phone: e});
+    editProfileInfo({ phone: e });
   };
 
   //Function to validate change password form
@@ -181,6 +181,7 @@ const ConceirgeProfileComponent = ({
       } else {
         updateConceirgeShopperProfileInformation({
           conceirge_shopper_id: profile.id,
+          profile_image: choosenImage,
           first_name: profile.firstName,
           last_name: profile.lastName,
           email: profile.email,
@@ -198,7 +199,7 @@ const ConceirgeProfileComponent = ({
       ...changePasswordFormValues,
       oldPassword: e.replace(/\s/g, ''),
     });
-    setChangePasswordFormErrors({...changePasswordFormErrors, oldPassword: ''});
+    setChangePasswordFormErrors({ ...changePasswordFormErrors, oldPassword: '' });
   };
 
   //Function to handel new password
@@ -207,7 +208,7 @@ const ConceirgeProfileComponent = ({
       ...changePasswordFormValues,
       newPassword: e.replace(/\s/g, ''),
     });
-    setChangePasswordFormErrors({...changePasswordFormErrors, newPassword: ''});
+    setChangePasswordFormErrors({ ...changePasswordFormErrors, newPassword: '' });
   };
 
   //Function to handel confirm password
@@ -272,8 +273,7 @@ const ConceirgeProfileComponent = ({
   };
 
   const handelProfileImageSelection = selectedImage => {
-    console.log(selectedImage);
-    editProfileInfo({profilePic: selectedImage.uri});
+    editProfileInfo({ profilePic: selectedImage.uri });
     setImagePickerVisible(false);
     setChoosenImage(selectedImage);
     updateConceirgeShopperProfilePicture({
@@ -365,7 +365,7 @@ const ConceirgeProfileComponent = ({
       </View>
       <View style={styles.bottomSectionWrapper}>
         <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
