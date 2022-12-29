@@ -105,3 +105,39 @@ export const modifyLocation = location => {
     payload: location,
   };
 };
+
+/**
+ * Function to add location.
+ */
+export const addLocationVideo = formValues => async dispatch => {
+  try {
+    console.log('In add loaction video action', formValues);
+    dispatch(setLoading(true));
+    const formdata = new FormData();
+    formdata.append('store_id', formValues.store_id);
+    formdata.append('location_id', formValues.location_id);
+    formdata.append('video_title', formValues.video_title);
+    formdata.append('video', {
+      uri: formValues.video.fileCopyUri
+        ? formValues.video.uri
+        : formValues.video.uri,
+      type: formValues.video.type,
+      name: formValues.video.name,
+    });
+    console.log('add loaction video form data ', formdata);
+    let response = await axiosPrivate.post('/store/upload-video', formdata);
+    console.log('add loaction video response ', response.data);
+    if (response.data.success === true) {
+      const data = response.data?.data;
+      dispatch(setLoading(false));
+      showAlertPopup('Success', response.data?.message, 'Ok');
+    } else {
+      dispatch(setLoading(false));
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
+    }
+  } catch (error) {
+    dispatch(setLoading(false));
+    console.log('In add location video catch block', error);
+    showAlertPopup('Oops', error?.message, 'Cancel');
+  }
+};

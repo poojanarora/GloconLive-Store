@@ -29,6 +29,36 @@ export const initialState = {
   },
   location: {
     storeLocations: [],
+    storeLocationVideos: [
+      {
+        id: 101,
+        name: 'Locaton One',
+        videoUrl:
+          'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        video: '',
+      },
+      {
+        id: 102,
+        name: 'Locaton Two',
+        videoUrl:
+          'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        video: '',
+      },
+      {
+        id: 103,
+        name: 'Locaton Three',
+        videoUrl:
+          'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        video: '',
+      },
+      {
+        id: 104,
+        name: 'Locaton Four',
+        videoUrl:
+          'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        video: '',
+      },
+    ],
   },
   department: {
     storeDepartments: [],
