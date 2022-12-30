@@ -9,11 +9,17 @@ import IncomingCallAdd from './incomingcall/IncomingCallAdd';
 import LocationListing from './location/LocationListing';
 import LocationDetails from './location/LocationDetails';
 
+import LocationVideoListing from './locationVideo/LocationVideoListing';
+import LocationVideoAdd from './locationVideo/LocationVideoAdd';
+
 import ViewProfile from './profile/ViewProfile';
 
 import ShopVideoPreview from './video/ShopVideoPreview';
 import AddStoreVideo from './video/AddStoreVideo';
 import DeviceLoginWithQR from './login/DeviceLoginWithQR';
+import ConceirgeShopperLogin from './login/ConceirgeShopperLogin';
+import ConceirgeProfile from './conceirge-shopper/conceirge-profile/ConceirgeProfile';
+import Subscription from './subscription/Subscription';
 
 export {
   Splash,
@@ -28,4 +34,9 @@ export {
   ShopVideoPreview,
   AddStoreVideo,
   DeviceLoginWithQR,
+  ConceirgeShopperLogin,
+  ConceirgeProfile,
+  Subscription,
+  LocationVideoListing,
+  LocationVideoAdd,
 };

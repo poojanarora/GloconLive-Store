@@ -26,13 +26,19 @@ const CustomDrawerScreen = props => {
     },
     {
       id: 3,
+      icon: images.pin_video,
+      title: 'Location Videos',
+      navigatTo: 'LocationVideo',
+    },
+    {
+      id: 4,
       icon: images.my_account,
       title: 'My Account',
       navigatTo: 'Profile',
     },
   ];
   const dispatch = useDispatch();
-  const [selectedMenu, setSelectedMenu] = useState(3);
+  const [selectedMenu, setSelectedMenu] = useState(4);
 
   //Function to handel menu click
   const handelMenuClick = menu => {
