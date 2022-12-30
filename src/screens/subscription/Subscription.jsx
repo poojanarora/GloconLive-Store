@@ -62,7 +62,7 @@ const Subscription = () => {
             {
               arr.map((item) => {
                 return (
-                  <TouchableOpacity style={[styles.inputSectionWrapper, id === item.id && styles.selectedInputSectionWrapper]} onPress={() => setColorSelect(item.id)}>
+                  <TouchableOpacity style={[styles.inputSectionWrapper, id === item.id && styles.selectedInputSectionWrapper]} onPress={() => setColorSelect(item.id)} key={item.id}>
                     <View style={styles.inputLeftSectionWrapper}>
                       <View
                         style={id === item.id ? styles.selectedInputImageSectionWrapper : styles.inputImageSectionWrapper}>

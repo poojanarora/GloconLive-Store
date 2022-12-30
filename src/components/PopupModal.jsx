@@ -1,5 +1,6 @@
 import React from 'react';
-import {Modal} from 'react-native';
+import { Modal, StyleSheet } from 'react-native';
+import { moderateVerticalScale } from 'react-native-size-matters';
 import PopupContent from './PopupContent';
 
 const PopupModal = ({
@@ -11,6 +12,7 @@ const PopupModal = ({
   dangerButtonText,
   primaryButtonText,
   submitAction,
+
 }) => {
   return (
     <Modal animationType="slide" transparent={false} visible={show}>
@@ -27,5 +29,4 @@ const PopupModal = ({
     </Modal>
   );
 };
-
 export default PopupModal;
