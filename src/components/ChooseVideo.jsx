@@ -12,7 +12,7 @@ const ChooseVideo = ({selectedVideo, onVideoSelection}) => {
     try {
       let result = await DocumentPicker.pick({
         type: types.video,
-        copyTo: 'documentDirectory',
+        copyTo: 'cachesDirectory',
       });
       if (result.length !== 0) {
         onVideoSelection(result[0]);
@@ -36,8 +36,14 @@ const ChooseVideo = ({selectedVideo, onVideoSelection}) => {
       // } else if (!result.didCancel) {
       //   onVideoSelection(result.assets[0]);
       // }
-    } catch (e) {
-      console.log('User Cancelled browser file');
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // If user canceled the document selection
+        console.log('User Cancelled browser file');
+      } else {
+        // For Unknown Error
+        console.log('Unknown Error ', JSON.stringify(err));
+      }
     }
   };
 
