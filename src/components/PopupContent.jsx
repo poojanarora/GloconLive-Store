@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import {
   scale,
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import {COLORS, images} from '../constant';
+import { COLORS, images } from '../constant';
 import ButtonComp from './ButtonComp';
 
 const PopupContent = props => {
@@ -24,36 +24,40 @@ const PopupContent = props => {
               <Text style={styles.modalSubTitle}>{props.subTitle}</Text>
             )}
           </View>
-          <View style={styles.modalBodyWrapper}>{props.children}</View>
-          {props.showFooter && (
-            <View style={styles.modalFooterWrapper}>
-              <ButtonComp
-                btnStyle={{
-                  width: moderateScale(100),
-                  backgroundColor: COLORS.dangerButtonColor,
-                  shadowColor: COLORS.dangerButtonColor,
-                }}
-                btnTextStyle={{
-                  fontSize: scale(14),
-                }}
-                btnText={props.dangerButtonText}
-                action={props.closeAction}
-              />
-              <ButtonComp
-                btnStyle={{
-                  width: moderateScale(100),
-                }}
-                btnTextStyle={{
-                  fontSize: scale(14),
-                }}
-                btnText={props.primaryButtonText}
-                action={props.submitAction}
-              />
-            </View>
-          )}
+          <ScrollView>
+            <View style={styles.modalBodyWrapper}>{props.children}</View>
+            {props.showFooter && (
+              <View style={styles.modalFooterWrapper}>
+                <ButtonComp
+                  btnStyle={{
+                    width: moderateScale(100),
+                    backgroundColor: COLORS.dangerButtonColor,
+                    shadowColor: COLORS.dangerButtonColor,
+                  }}
+                  btnTextStyle={{
+                    fontSize: scale(14),
+                  }}
+                  btnText={props.dangerButtonText}
+                  action={props.closeAction}
+                />
+                <ButtonComp
+                  btnStyle={{
+                    width: moderateScale(100),
+                  }}
+                  btnTextStyle={{
+                    fontSize: scale(14),
+                  }}
+                  btnText={props.primaryButtonText}
+                  action={props.submitAction}
+                />
+              </View>
+
+            )}
+          </ScrollView>
         </View>
+
       </View>
-    </View>
+    </View >
   );
 };
 

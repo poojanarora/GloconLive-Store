@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, Image } from 'react-native';
+import { SafeAreaView, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import styles from './styles.js';
 import { images } from '../../constant';
 import IconInput from '../../components/IconInput.jsx';
@@ -7,6 +7,8 @@ import ButtonComp from '../../components/ButtonComp.jsx';
 import Spinner from '../../components/Spinner.jsx';
 import { connect } from 'react-redux';
 import { handleLogin } from '../../actions/authActions.js';
+import PopupModal from '../../components/PopupModal.jsx';
+import TermsAndConditions from '../terms-and-condition/TermsAndConditions.jsx';
 
 const initialFormValues = {
   email: '',
@@ -21,6 +23,31 @@ const LoginComponent = ({ navigation, isLoading, onLogin }) => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialErrors);
   const [isHidden, setIsHidden] = useState(true);
+  const [isTermsPopupVisible, setIsTermsPopupVisible] = useState(false)
+
+
+  /**
+  * Function to handle terms and condition popup hide show.
+  */
+
+  const handleTermsPopup = () => {
+    setIsTermsPopupVisible(true)
+  }
+  const hideTermsModal = () => {
+    setIsTermsPopupVisible(false)
+  }
+
+  // render terms and conditions popup modal
+  const renderUpdatePasswordModal = () => {
+    return (
+      <TermsAndConditions
+        isTermsPopupVisible={isTermsPopupVisible}
+        hideTermsModal={() => hideTermsModal()} />
+    );
+  };
+
+
+
 
   /**
    * Function to handle password hide show.
@@ -108,6 +135,7 @@ const LoginComponent = ({ navigation, isLoading, onLogin }) => {
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
       <Spinner />
+      {renderUpdatePasswordModal()}
       <View style={styles.body}>
         <View style={styles.mainSectionWrapper}>
           <View style={styles.headerSectionWrapper}>
@@ -175,9 +203,13 @@ const LoginComponent = ({ navigation, isLoading, onLogin }) => {
                 </Text>
               </Text>
             </View>
-            <View style={styles.buttonSectionWrapper}>
-              <ButtonComp btnText="Sign In" action={onSubmit} />
-            </View>
+            <TouchableOpacity
+              onPress={handleTermsPopup}>
+              <Text style={styles.labelPrimary}>Terms & conditions</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonSectionWrapper}>
+            <ButtonComp btnText="Sign In" action={onSubmit} />
           </View>
         </View>
       </View>
