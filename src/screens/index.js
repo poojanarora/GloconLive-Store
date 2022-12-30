@@ -9,6 +9,9 @@ import IncomingCallAdd from './incomingcall/IncomingCallAdd';
 import LocationListing from './location/LocationListing';
 import LocationDetails from './location/LocationDetails';
 
+import LocationVideoListing from './locationVideo/LocationVideoListing';
+import LocationVideoAdd from './locationVideo/LocationVideoAdd';
+
 import ViewProfile from './profile/ViewProfile';
 
 import ShopVideoPreview from './video/ShopVideoPreview';
@@ -33,5 +36,7 @@ export {
   DeviceLoginWithQR,
   ConceirgeShopperLogin,
   ConceirgeProfile,
-  Subscription
+  Subscription,
+  LocationVideoListing,
+  LocationVideoAdd,
 };

@@ -27,7 +27,9 @@ const more = require('../../assets/images/more.png');
 const video_camera = require('../../assets/images/video-camera.png');
 const hang_up = require('../../assets/images/phone-call.png');
 const gallary = require('../../assets/images/gallary.png');
-const shop = require('../../assets/images/shop.jpg')
+const shop = require('../../assets/images/shop.jpg');
+const pin_video = require('../../assets/images/pin_video.png');
+const upload_video = require('../../assets/images/upload_video.png');
 
 export default {
   splash_screen,
@@ -59,5 +61,7 @@ export default {
   logo_color,
   close_white,
   gallary,
-  shop
+  shop,
+  pin_video,
+  upload_video,
 };

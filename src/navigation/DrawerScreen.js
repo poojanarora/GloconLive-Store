@@ -11,6 +11,7 @@ import CustomDrawerScreen from './CustomDrawerScreen';
 import IncomingCallStackScreen from './IncomingCallStackScreen';
 import LocationStackScreen from './LocationStackScreen';
 import ProfileStackScreen from './ProfileStackScreen';
+import LocationVideoStackScreen from './LocationVideoStackScreen';
 
 const DrawerScreen = () => {
   const windowWidth = Dimensions.get('window').width;
@@ -36,6 +37,10 @@ const DrawerScreen = () => {
       initialRouteName="Profile">
       <Drawer.Screen name="IncomingCall" component={IncomingCallStackScreen} />
       <Drawer.Screen name="Locations" component={LocationStackScreen} />
+      <Drawer.Screen
+        name="LocationVideo"
+        component={LocationVideoStackScreen}
+      />
       <Drawer.Screen name="Profile" component={ProfileStackScreen} />
       {/*<Drawer.Screen 
                 name="Notifications" 
