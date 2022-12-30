@@ -108,56 +108,30 @@ export const modifyLocation = location => {
 };
 
 /**
- * Function to add location.
+ * Function to add location video.
  */
 export const addLocationVideo = formValues => async dispatch => {
   try {
-    console.log('In add loaction video action', formValues);
-    //dispatch(setLoading(true));
+    dispatch(setLoading(true));
     const formdata = new FormData();
     formdata.append('store_id', formValues.store_id);
     formdata.append('location_id', formValues.location_id);
     formdata.append('video_title', formValues.video_title);
-    //formdata.append('video', formValues.video);
-    // formdata.append('video', {
-    //   uri: formValues.video.fileCopyUri
-    //     ? formValues.video.uri
-    //     : formValues.video.uri,
-    //   type: formValues.video.type,
-    //   name: formValues.video.name,
-    // });
     formdata.append('video', {
-      type: 'video/mp4',
-      uri: formValues.video.fileCopyUri,
+      uri: formValues.video.fileCopyUri
+        ? formValues.video.uri
+        : formValues.video.uri,
+      type: formValues.video.type,
       name: formValues.video.name,
     });
-    console.log('add loaction video form data ', formdata);
-    //let response = await axiosPrivate.post('/store/upload-video', formdata);
-    // if (response.data.success === true) {
-    //   const data = response.data?.data;
-    //   dispatch(setLoading(false));
-    //   showAlertPopup('Success', response.data?.message, 'Ok');
-    // } else {
-    //   dispatch(setLoading(false));
-    //   showAlertPopup('Oops', response.data?.message, 'Cancel');
-    // }
-
-    //Example using fetch
-    const token = await localStorageGetAccessToken();
-    let res = await fetch(
-      'https://glocon-live.katdev.com/api/store/upload-video',
-      {
-        method: 'post',
-        body: formdata,
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'multipart/form-data;',
-          token: token,
-        },
-      },
-    );
-    let response = await res.json();
-    console.log('add loaction video response ', response);
+    let response = await axiosPrivate.post('/store/upload-video', formdata);
+    if (response.data.success === true) {
+      dispatch(setLoading(false));
+      showAlertPopup('Success', response.data?.message, 'Ok');
+    } else {
+      dispatch(setLoading(false));
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
+    }
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add location video catch block', error);

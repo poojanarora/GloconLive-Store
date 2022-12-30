@@ -39,10 +39,13 @@ const LocationVideoListingComponent = ({
 
   // Function to handel location selection
   const handelSelectLocation = selectedLocation => {
-    console.log(selectedLocation);
     navigation.navigate('LocationVideoAdd', {
       locationId: selectedLocation.id,
       locationName: selectedLocation.name,
+      locationVideoTitle: selectedLocation.video_title,
+      locationVideoUrl: selectedLocation.video_url
+        ? selectedLocation.video_url
+        : 'https://glocon-live.katdev.com/storage/video/1672391314.mp4',
     });
   };
 

@@ -24,15 +24,17 @@ const LocationVideoAddComponent = ({
   addLocationVideo,
   navigation,
 }) => {
+  const {locationId, locationName, locationVideoTitle, locationVideoUrl} =
+    route.params;
   const initialFormValue = {
-    videoTitle: '',
-    video: '',
+    videoTitle: locationVideoTitle,
+    video: {
+      uri: locationVideoUrl,
+    },
   };
-  const {locationId, locationName} = route.params;
   const [fetchData, setFetchData] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValue);
   const [formErrors, setFormErrors] = useState({});
-  const videoPlayer = useRef(null);
   useEffect(() => {
     console.log('Location video add component mounted');
 
@@ -42,25 +44,21 @@ const LocationVideoAddComponent = ({
     };
   }, [fetchData]);
 
-  //Function to handel location refresh
-  const onRefresh = () => {
-    setFetchData(!fetchData);
-  };
-
   const handelClose = () => {
     setFormValues(initialFormValue);
     setFormErrors({});
     navigation.navigate('LocationVideoListing');
   };
 
-  const handelSubmit = () => {
+  const handelSubmit = async () => {
     let payload = {
       store_id: profile.id,
       location_id: locationId,
       video_title: formValues.videoTitle,
       video: formValues.video,
     };
-    addLocationVideo(payload);
+    await addLocationVideo(payload);
+    handelClose();
   };
 
   const handelVideoTitle = e => {
@@ -69,7 +67,6 @@ const LocationVideoAddComponent = ({
   };
 
   const handelVideoSelection = selectedVideo => {
-    console.log('Selected video ', selectedVideo);
     setFormValues({...formValues, video: selectedVideo});
     setFormErrors({...formErrors, video: ''});
   };
@@ -82,7 +79,7 @@ const LocationVideoAddComponent = ({
         closeAction={handelClose}
         submitAction={handelSubmit}
         title={locationName}
-        subTitle="Add video."
+        subTitle="Location Video."
         primaryButtonText="Upload"
         dangerButtonText="Cancel">
         <IconInputWithoutLabel

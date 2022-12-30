@@ -38,7 +38,7 @@ const CustomDrawerScreen = props => {
     },
   ];
   const dispatch = useDispatch();
-  const [selectedMenu, setSelectedMenu] = useState(3);
+  const [selectedMenu, setSelectedMenu] = useState(4);
 
   //Function to handel menu click
   const handelMenuClick = menu => {
