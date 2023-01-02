@@ -5,85 +5,180 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   TouchableOpacity,
-  Image
+  Image,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styles from './style.js';
 import ButtonComp from '../../components/ButtonComp.jsx';
-import IconInput from '../../components/IconInput.jsx';
-import IconInputWithoutLabel from '../../components/IconInputWithoutLabel.jsx';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import IncrementDecrementInput from '../../components/IncermentDecrementInput.jsx';
 import images from '../../constant/images.js';
-
+import PopupModal from '../../components/PopupModal.jsx';
 
 const Subscription = () => {
-  const [id, setId] = useState(null)
-  const setColorSelect = (itemId) => {
-    setId((prev) => {
-      if (itemId === prev) {
-        return null
-      } else {
-        return itemId
-      }
-    })
-  }
-  const arr = [
-    {
-      id: 1,
-      title: "$119 per Year",
-      subtitle: "$9.99/Month billed"
-    },
-    {
-      id: 2,
-      title: "$60 per 6 Months",
-      subtitle: "$10/Month billed"
-    },
-    {
-      id: 3,
-      title: "$33 per 3 Months",
-      subtitle: "$11/Month billed"
-    },
+  const initialFormValues = {
+    deviceCount: 1,
+    subscriptionTotalAmount: 500,
+  };
+  const [modalVisible, setModalVisible] = useState(false);
+  const [subscriptionConfig, setSubscriptionConfig] = useState({
+    perDeviceSubscriptionAmount: 500,
+    perDeviceSubscriptionAmountBeyondBaseLimit: 450,
+  });
+  const [formValues, setFormValues] = useState(initialFormValues);
 
-  ]
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView>
-        <ScrollView>
-          <View style={styles.textContainer}>
-            <Text style={styles.titleText}>
-              Unlock Unlimited Access
+  // Function to handel submit
+  const handelSubmit = async () => {};
+
+  // Function to show modal
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  // Function to hide modal
+  const hideModal = () => {
+    setModalVisible(false);
+  };
+
+  const handelIncrement = () => {
+    let currentDeviceCount = formValues.deviceCount + 1;
+    let total = formValues.subscriptionTotalAmount;
+    if (currentDeviceCount <= 4) {
+      total = total + subscriptionConfig.perDeviceSubscriptionAmount;
+    } else {
+      total =
+        total + subscriptionConfig.perDeviceSubscriptionAmountBeyondBaseLimit;
+    }
+    setFormValues({
+      ...formValues,
+      deviceCount: currentDeviceCount,
+      subscriptionTotalAmount: total,
+    });
+  };
+
+  const handelDecrement = () => {
+    let currentDeviceCount = formValues.deviceCount;
+    if (currentDeviceCount > 1) {
+      let total = formValues.subscriptionTotalAmount;
+      if (currentDeviceCount <= 4) {
+        total = total - subscriptionConfig.perDeviceSubscriptionAmount;
+      } else {
+        total =
+          total - subscriptionConfig.perDeviceSubscriptionAmountBeyondBaseLimit;
+      }
+      setFormValues({
+        ...formValues,
+        deviceCount: currentDeviceCount - 1,
+        subscriptionTotalAmount: total,
+      });
+    }
+  };
+
+  const renderAddSubscriptionModal = () => {
+    return (
+      <PopupModal
+        show={modalVisible}
+        closeAction={hideModal}
+        submitAction={handelSubmit}
+        title="Subscription"
+        //subTitle="Add Subscription"
+        primaryButtonText="Subscribe"
+        dangerButtonText="Cancel">
+        <View style={styles.formSectionWrapper}>
+          <IncrementDecrementInput
+            label="Number of device"
+            placeholder="Enter number of device"
+            name="locationName"
+            value={formValues.deviceCount}
+            incrementIcon={images.add}
+            decrementIcon={images.minus}
+            incrementAction={handelIncrement}
+            decrementAction={handelDecrement}
+          />
+          <View style={styles.totalAmountWrapper}>
+            <Text style={styles.totalAmountLabel}>
+              Total Subscription Amount : {formValues.subscriptionTotalAmount}
             </Text>
+          </View>
+        </View>
+      </PopupModal>
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.safeAreaViewStyle}>
+      <View style={styles.body}>
+        {renderAddSubscriptionModal()}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flexGrow: 1}}>
+          <View style={styles.textContainer}>
+            <Text style={styles.titleText}>Unlock Unlimited Access</Text>
           </View>
           <View style={styles.imageContainer}>
             <Image style={styles.image} source={images.shop} />
-
           </View>
-          <View style={styles.formContainer}>
-            {
-              arr.map((item) => {
-                return (
-                  <TouchableOpacity style={[styles.inputSectionWrapper, id === item.id && styles.selectedInputSectionWrapper]} onPress={() => setColorSelect(item.id)} key={item.id}>
-                    <View style={styles.inputLeftSectionWrapper}>
-                      <View
-                        style={id === item.id ? styles.selectedInputImageSectionWrapper : styles.inputImageSectionWrapper}>
-                        <Image style={styles.iconImage} source={images.tick} />
-                      </View>
-                      <View style={styles.inputWrapper}>
-                        <Text style={[styles.inputLabel1, id === item.id && styles.selectedInputLabel]}>{item.title}</Text>
-                        <Text style={[styles.inputLabel2, id === item.id && styles.selectedInputLabel2]}>{item.subtitle}</Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                )
-              })
-            }
-            <View style={styles.buttonContainer}>
-              <ButtonComp btnText="CONTINUE" />
+          <View style={styles.contentWrapper}>
+            <View style={styles.contentRowWrapper}>
+              <View style={styles.contentLeftSectionWrapper}>
+                <Text style={styles.contentText}>1.</Text>
+              </View>
+              <View style={styles.contentRightSectionWrapper}>
+                <Text style={styles.contentText}>
+                  90 day free trial registration and $500.00 per device monthly
+                  with a 4 device minimum.
+                </Text>
+              </View>
+            </View>
+            <View style={styles.contentRowWrapper}>
+              <View style={styles.contentLeftSectionWrapper}>
+                <Text style={styles.contentText}>2.</Text>
+              </View>
+              <View style={styles.contentRightSectionWrapper}>
+                <Text style={styles.contentText}>
+                  10% incremental increases through year 5.
+                </Text>
+              </View>
+            </View>
+            <View style={styles.contentRowWrapper}>
+              <View style={styles.contentLeftSectionWrapper}>
+                <Text style={styles.contentText}>3.</Text>
+              </View>
+              <View style={styles.contentRightSectionWrapper}>
+                <Text style={styles.contentText}>
+                  Each additional device beyond 4 is $450.00 per device with
+                  same incremental 10% increase through year 5
+                </Text>
+              </View>
+            </View>
+            <View style={styles.contentRowWrapper}>
+              <View style={styles.contentLeftSectionWrapper}>
+                <Text style={styles.contentText}>4.</Text>
+              </View>
+              <View style={styles.contentRightSectionWrapper}>
+                <Text style={styles.contentText}>
+                  Membership is open-ended and can be canceled upon request with
+                  30-day notice.
+                </Text>
+              </View>
+            </View>
+            <View style={styles.contentRowWrapper}>
+              <View style={styles.contentLeftSectionWrapper}>
+                <Text style={styles.contentText}>5.</Text>
+              </View>
+              <View style={styles.contentRightSectionWrapper}>
+                <Text style={styles.contentText}>
+                  GLOCONLIVE reserves the rights to change membership parameters
+                  with 30-day notice.
+                </Text>
+              </View>
             </View>
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView >
+        <View style={styles.buttonSectionWrapper}>
+          <ButtonComp btnText="Continue" action={showModal} />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
