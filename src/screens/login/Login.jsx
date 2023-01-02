@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { SafeAreaView, View, Text, Image } from 'react-native';
+import React, {useState} from 'react';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import styles from './styles.js';
-import { images } from '../../constant';
+import {images} from '../../constant';
 import IconInput from '../../components/IconInput.jsx';
 import ButtonComp from '../../components/ButtonComp.jsx';
 import Spinner from '../../components/Spinner.jsx';
-import { connect } from 'react-redux';
-import { handleLogin } from '../../actions/authActions.js';
+import {connect} from 'react-redux';
+import {handleLogin} from '../../actions/authActions.js';
 
 const initialFormValues = {
   email: '',
@@ -17,7 +24,7 @@ const initialErrors = {
   password: '',
 };
 
-const LoginComponent = ({ navigation, isLoading, onLogin }) => {
+const LoginComponent = ({navigation, isLoading, onLogin}) => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialErrors);
   const [isHidden, setIsHidden] = useState(true);
@@ -93,7 +100,9 @@ const LoginComponent = ({ navigation, isLoading, onLogin }) => {
    * Function to handle login sucess.
    */
   const loginCallback = response => {
-    if (response) {
+    if (response === '0') {
+      navigation.navigate('TermsAndConditions');
+    } else {
       navigation.replace('PrivateStackScreen');
     }
   };
@@ -155,9 +164,19 @@ const LoginComponent = ({ navigation, isLoading, onLogin }) => {
                 </Text>
               </Text>
             </View>
-            <View style={styles.buttonSectionWrapper}>
-              <ButtonComp btnText="Sign In" action={onSubmit} />
+            <View style={styles.signInAsDeviceWrapper}>
+              <Text style={styles.signUpLabel}>
+                Are you a conceirge shopper?{' '}
+                <Text
+                  style={styles.labelPrimary}
+                  onPress={() => navigation.navigate('conceirgeLogin')}>
+                  Click here to login
+                </Text>
+              </Text>
             </View>
+          </View>
+          <View style={styles.buttonSectionWrapper}>
+            <ButtonComp btnText="Sign In" action={onSubmit} />
           </View>
         </View>
       </View>

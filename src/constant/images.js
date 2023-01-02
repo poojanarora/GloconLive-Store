@@ -26,7 +26,13 @@ const mute = require('../../assets/images/mute.png');
 const more = require('../../assets/images/more.png');
 const video_camera = require('../../assets/images/video-camera.png');
 const hang_up = require('../../assets/images/phone-call.png');
-const gallary = require('../../assets/images/gallary.png')
+const gallary = require('../../assets/images/gallary.png');
+const shop = require('../../assets/images/shopping_image_two.jpg');
+const pin_video = require('../../assets/images/pin_video.png');
+const upload_video = require('../../assets/images/upload_video.png');
+const dollar = require('../../assets/images/dollar.png');
+const add = require('../../assets/images/add.png');
+const minus = require('../../assets/images/minus.png');
 
 export default {
   splash_screen,
@@ -57,5 +63,11 @@ export default {
   hang_up,
   logo_color,
   close_white,
-  gallary
+  gallary,
+  shop,
+  pin_video,
+  upload_video,
+  dollar,
+  add,
+  minus,
 };

@@ -3,6 +3,7 @@ import {emitEvent, setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { SUBSCRIPTION_EVENTS } from '../utils/appConstants';
+import {localStorageGetAccessToken} from '../hooks/useAsyncStorage';
 
 /**
  * Function to fetch locations.
@@ -109,4 +110,36 @@ export const modifyLocation = location => {
     type: locationActionTypes.UPDATE_LOCATION,
     payload: location,
   };
+};
+
+/**
+ * Function to add location video.
+ */
+export const addLocationVideo = formValues => async dispatch => {
+  try {
+    dispatch(setLoading(true));
+    const formdata = new FormData();
+    formdata.append('store_id', formValues.store_id);
+    formdata.append('location_id', formValues.location_id);
+    formdata.append('video_title', formValues.video_title);
+    formdata.append('video', {
+      uri: formValues.video.fileCopyUri
+        ? formValues.video.uri
+        : formValues.video.uri,
+      type: formValues.video.type,
+      name: formValues.video.name,
+    });
+    let response = await axiosPrivate.post('/store/upload-video', formdata);
+    if (response.data.success === true) {
+      dispatch(setLoading(false));
+      showAlertPopup('Success', response.data?.message, 'Ok');
+    } else {
+      dispatch(setLoading(false));
+      showAlertPopup('Oops', response.data?.message, 'Cancel');
+    }
+  } catch (error) {
+    dispatch(setLoading(false));
+    console.log('In add location video catch block', error);
+    showAlertPopup('Oops', error?.message, 'Cancel');
+  }
 };

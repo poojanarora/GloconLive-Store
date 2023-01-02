@@ -1,10 +1,10 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   scale,
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import {COLORS} from '../../constant/index.js';
+import { COLORS } from '../../constant/index.js';
 
 const styles = StyleSheet.create({
   safeAreaViewStyle: {

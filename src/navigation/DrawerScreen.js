@@ -11,6 +11,10 @@ import CustomDrawerScreen from './CustomDrawerScreen';
 import IncomingCallStackScreen from './IncomingCallStackScreen';
 import LocationStackScreen from './LocationStackScreen';
 import ProfileStackScreen from './ProfileStackScreen';
+import LocationVideoStackScreen from './LocationVideoStackScreen';
+import {Subscription} from '../screens';
+import {COLORS} from '../constant';
+import MenuIcon from '../components/MenuIcon';
 
 const DrawerScreen = () => {
   const windowWidth = Dimensions.get('window').width;
@@ -36,7 +40,30 @@ const DrawerScreen = () => {
       initialRouteName="Profile">
       <Drawer.Screen name="IncomingCall" component={IncomingCallStackScreen} />
       <Drawer.Screen name="Locations" component={LocationStackScreen} />
+      <Drawer.Screen
+        name="LocationVideo"
+        component={LocationVideoStackScreen}
+      />
       <Drawer.Screen name="Profile" component={ProfileStackScreen} />
+      <Drawer.Screen
+        name="Subscription"
+        component={Subscription}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Subscription',
+          headerStyle: {
+            backgroundColor: COLORS.primaryTextColor,
+          },
+          headerTintColor: COLORS.white,
+          headerTitleStyle: {
+            fontWeight: '600',
+          },
+          headerLeft: () => {
+            return;
+          },
+        }}
+      />
       {/*<Drawer.Screen 
                 name="Notifications" 
                 component={Notification}
