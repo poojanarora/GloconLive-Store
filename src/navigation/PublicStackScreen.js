@@ -1,5 +1,5 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   Login,
   CheckApplicationStatus,
@@ -7,11 +7,12 @@ import {
   DeviceLoginWithQR,
   ConceirgeShopperLogin,
   Subscription,
+  TermsAndConditions,
 } from '../screens/index.js';
-import { COLORS } from '../constant/theme.js';
+import {COLORS} from '../constant/theme.js';
 import BackIcon from '../components/BackIcon.jsx';
 
-const PublicStackScreen = ({ navigation }) => {
+const PublicStackScreen = ({navigation}) => {
   const PublicStack = createNativeStackNavigator();
   return (
     <PublicStack.Navigator
@@ -97,6 +98,13 @@ const PublicStackScreen = ({ navigation }) => {
         }}
       />
       <PublicStack.Screen
+        name="TermsAndConditions"
+        component={TermsAndConditions}
+        options={{
+          headerShown: false,
+        }}
+      />
+      {/* <PublicStack.Screen
         name="subscription"
         component={Subscription}
         options={{
@@ -114,7 +122,7 @@ const PublicStackScreen = ({ navigation }) => {
             return <BackIcon navigate={navigation} />;
           },
         }}
-      />
+      /> */}
     </PublicStack.Navigator>
   );
 };

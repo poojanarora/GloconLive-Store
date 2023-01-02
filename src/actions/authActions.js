@@ -5,6 +5,7 @@ import {
 } from '../hooks/useAsyncStorage';
 import showAlertPopup from '../components/AlertComp';
 import axiosPublic from '../config/publicApi';
+import axiosPrivate from '../config/privateApi';
 import {initializeZim, logoutZimChat} from './chatActions';
 import {LOGIN_MODES} from '../utils/appConstants';
 
@@ -26,7 +27,7 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
       localStorageSetItem(obj);
       dispatch(setAuth(obj));
       dispatch(setLoading(false));
-      loginCallback(true);
+      loginCallback(response.data.terms_and_conditions_accepted);
       // dispatch(initializeZim());
     } else {
       dispatch(setLoading(false));
@@ -71,6 +72,39 @@ export const handleConceirgeLogin =
         dispatch(setLoading(false));
         loginCallback(true);
         // dispatch(initializeZim());
+      } else {
+        dispatch(setLoading(false));
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
+      }
+    } catch (error) {
+      console.log('In catch block');
+      dispatch(setLoading(false));
+      if (error?.message === 'Network Error') {
+        showAlertPopup(
+          error?.message,
+          'Please check your internet connectivity.',
+          'Ok',
+        );
+      } else {
+        showAlertPopup('Oops', error?.message, 'Cancel');
+      }
+    }
+  };
+
+/**
+ * Function to handle terms and conditions.
+ */
+export const updateTermsAndConditionFlag =
+  (payload, termsAndConditionCallBack) => async dispatch => {
+    try {
+      dispatch(setLoading(true));
+      let response = await axiosPrivate.post(
+        '/store/update-terms-and-conditions',
+        payload,
+      );
+      if (response.data.success === true) {
+        dispatch(setLoading(false));
+        termsAndConditionCallBack(true);
       } else {
         dispatch(setLoading(false));
         showAlertPopup('Oops', response.data?.message, 'Cancel');

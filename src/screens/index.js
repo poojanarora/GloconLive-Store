@@ -1,5 +1,6 @@
 import Splash from './splash/Splash';
 import Login from './login/Login';
+import TermsAndConditions from './terms-and-condition/TermsAndConditions';
 import CheckApplicationStatus from './application-status/CheckApplicationStatus';
 import ApplicationStatus from './application-status/ApplicationStatus';
 
@@ -24,6 +25,7 @@ import Subscription from './subscription/Subscription';
 export {
   Splash,
   Login,
+  TermsAndConditions,
   CheckApplicationStatus,
   ApplicationStatus,
   IncomingCallListing,
