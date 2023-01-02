@@ -16,6 +16,7 @@ import {Subscription} from '../screens';
 import {COLORS} from '../constant';
 import MenuIcon from '../components/MenuIcon';
 import BackIcon from '../components/BackIcon';
+import SubscriptionScreenStack from './SubscriptionScreenStack';
 
 const DrawerScreen = ({navigation}) => {
   const windowWidth = Dimensions.get('window').width;
@@ -48,22 +49,7 @@ const DrawerScreen = ({navigation}) => {
       <Drawer.Screen name="Profile" component={ProfileStackScreen} />
       <Drawer.Screen
         name="Subscription"
-        component={Subscription}
-        options={{
-          headerShown: true,
-          headerTitleAlign: 'center',
-          title: 'Subscription',
-          headerStyle: {
-            backgroundColor: COLORS.primaryTextColor,
-          },
-          headerTintColor: COLORS.white,
-          headerTitleStyle: {
-            fontWeight: '600',
-          },
-          headerLeft: () => {
-            return;
-          },
-        }}
+        component={SubscriptionScreenStack}
       />
       {/*<Drawer.Screen 
                 name="Notifications" 
