@@ -85,7 +85,7 @@ const ViewProfileComponent = ({
     initializeEmitter(eventEmitter)
     
     eventEmitter.on(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION, () => {
-      navigation.replace('SubscriptionScreenStack');
+      navigation.navigate('Subscription');
     })
 
     //Calling functions

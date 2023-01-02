@@ -1,8 +1,7 @@
 import {departmentActionTypes} from '../actionTypes/actionTypes';
-import {emitEvent, setLoading} from './appAction';
+import {setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
-import { SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
  * Function to fetch departments.
@@ -47,11 +46,7 @@ export const addDepartment = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add department catch block');
-    if (error.code === 300) {
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION))
-    } else {
-      showAlertPopup('Oops', error?.message, 'Cancel');
-    }
+    showAlertPopup('Oops', error?.message, 'Cancel');
   }
 };
 

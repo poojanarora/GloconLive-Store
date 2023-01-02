@@ -15,8 +15,9 @@ import LocationVideoStackScreen from './LocationVideoStackScreen';
 import {Subscription} from '../screens';
 import {COLORS} from '../constant';
 import MenuIcon from '../components/MenuIcon';
+import BackIcon from '../components/BackIcon';
 
-const DrawerScreen = () => {
+const DrawerScreen = ({navigation}) => {
   const windowWidth = Dimensions.get('window').width;
   const drawerWidth = (windowWidth * 70) / 100;
   const Drawer = createDrawerNavigator();
