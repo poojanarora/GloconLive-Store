@@ -17,6 +17,9 @@ export const fetchDevices = locationId => async dispatch => {
       const data = response.data?.data;
       dispatch(storeDevices(data));
       dispatch(setLoading(false));
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -81,6 +84,9 @@ export const updateDevice = formValues => async dispatch => {
       dispatch(modifyDevices(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');

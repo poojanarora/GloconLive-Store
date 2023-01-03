@@ -1,8 +1,9 @@
 import { profileActionTypes } from '../actionTypes/actionTypes';
-import { setLoading } from './appAction';
+import { emitEvent, setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { zimLogin } from './chatActions';
+import { SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
  * Function to fetch profile information.
@@ -34,6 +35,9 @@ export const fetchProfileInfo = email => async dispatch => {
       dispatch(setLoading(false));
       // const loginForm = { userID: data.id.toString(), userName: data.name };
       // dispatch(zimLogin(loginForm));
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -94,6 +98,9 @@ export const changePassword = formValues => async dispatch => {
     if (response.data.success === true) {
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -163,6 +170,9 @@ export const updateProfileInformation = formValues => async dispatch => {
     if (response.data.success === true) {
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');

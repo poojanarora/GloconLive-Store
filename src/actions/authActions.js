@@ -1,4 +1,4 @@
-import {setLoading, setAuth} from './appAction';
+import {setLoading, setAuth, emitEvent} from './appAction';
 import {
   localStorageSetItem,
   localStorageRemoveItem,
@@ -7,7 +7,7 @@ import showAlertPopup from '../components/AlertComp';
 import axiosPublic from '../config/publicApi';
 import axiosPrivate from '../config/privateApi';
 import {initializeZim, logoutZimChat} from './chatActions';
-import {LOGIN_MODES} from '../utils/appConstants';
+import {LOGIN_MODES, SUBSCRIPTION_EVENTS} from '../utils/appConstants';
 
 /**
  * Function to handle Login.
@@ -105,6 +105,9 @@ export const updateTermsAndConditionFlag =
       if (response.data.success === true) {
         dispatch(setLoading(false));
         termsAndConditionCallBack(true);
+      } else if(response.data.is_subscribed) {
+        dispatch(setLoading(false));
+        dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
       } else {
         dispatch(setLoading(false));
         showAlertPopup('Oops', response.data?.message, 'Cancel');

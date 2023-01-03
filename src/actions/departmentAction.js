@@ -1,7 +1,8 @@
 import {departmentActionTypes} from '../actionTypes/actionTypes';
-import {setLoading} from './appAction';
+import {emitEvent, setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
+import { SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
  * Function to fetch departments.
@@ -16,6 +17,9 @@ export const fetchDepartments = locationId => async dispatch => {
       const data = response.data?.data;
       dispatch(storeDepartments(data));
       dispatch(setLoading(false));
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -39,6 +43,9 @@ export const addDepartment = formValues => async dispatch => {
       dispatch(appendDepartment(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
+    }else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -65,6 +72,9 @@ export const updateDeparment = formValues => async dispatch => {
       dispatch(modifyDepartment(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');

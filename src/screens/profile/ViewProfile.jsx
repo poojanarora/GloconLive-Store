@@ -88,6 +88,10 @@ const ViewProfileComponent = ({
       navigation.navigate('Subscription');
     })
 
+    eventEmitter.on(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED, () => {
+      navigation.navigate('Subscription');
+    })
+
     //Calling functions
     fetchProfileInfo(auth.email);
 
@@ -95,6 +99,7 @@ const ViewProfileComponent = ({
     return () => {
       console.log('Profile component unmounted');
       eventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION);
+      eventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED);
     };
   }, []);
 

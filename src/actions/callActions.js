@@ -1,4 +1,4 @@
-import {setLoading} from './appAction';
+import {emitEvent, setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import {callActionTypes} from '../actionTypes/actionTypes';
 import axiosPrivate from '../config/privateApi';
@@ -25,6 +25,9 @@ export const getIncomingCallQueue = () => async (dispatch, getState) => {
       const formattedData = getFormattedCallQueue(data);
       dispatch(setIncomingCallQueue(formattedData));
       dispatch(setLoading(false));
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -74,6 +77,9 @@ export const updateCallStatus = (callId, status, onStatusUpdate) => async dispat
     if (response.data.success === true) {
       dispatch(setLoading(false));
       onStatusUpdate(callId);
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');

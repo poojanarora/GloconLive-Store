@@ -1,8 +1,9 @@
 import {locationActionTypes} from '../actionTypes/actionTypes';
-import {setLoading} from './appAction';
+import {emitEvent, setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import {localStorageGetAccessToken} from '../hooks/useAsyncStorage';
+import { SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
  * Function to fetch locations.
@@ -17,6 +18,9 @@ export const fetchLocations = storeId => async dispatch => {
       const data = response.data?.data;
       dispatch(storeLocations(data));
       dispatch(setLoading(false));
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -40,6 +44,9 @@ export const addLocation = formValues => async dispatch => {
       dispatch(appendLocation(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -66,6 +73,9 @@ export const updateLocation = formValues => async dispatch => {
       dispatch(modifyLocation(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -128,6 +138,9 @@ export const addLocationVideo = formValues => async dispatch => {
     if (response.data.success === true) {
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
+    } else if(response.data.is_subscribed) {
+      dispatch(setLoading(false));
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
