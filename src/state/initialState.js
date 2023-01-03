@@ -112,4 +112,10 @@ export const initialState = {
       // },
     ],
   },
+  subscription: {
+    alreadyAddedDeviceCount: 0,
+    deviceBaseLimit: 0,
+    perDeviceFee: 0,
+    perDeviceFeeAboveBaseLimit: 0,
+  },
 };
