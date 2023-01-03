@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,24 +8,38 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
 import styles from './style.js';
 import ButtonComp from '../../components/ButtonComp.jsx';
 import IncrementDecrementInput from '../../components/IncermentDecrementInput.jsx';
 import images from '../../constant/images.js';
 import PopupModal from '../../components/PopupModal.jsx';
+import Spinner from '../../components/Spinner.jsx';
+import {connect} from 'react-redux';
+import {fetchSubscriptionInfo} from '../../actions/subscriptionAction.js';
 
-const Subscription = () => {
+const SubscriptionComponent = ({
+  profile,
+  subscription,
+  fetchSubscriptionInfo,
+}) => {
   const initialFormValues = {
-    deviceCount: 1,
-    subscriptionTotalAmount: 500,
+    deviceCount: 0,
+    subscriptionTotalAmount: 0,
   };
   const [modalVisible, setModalVisible] = useState(false);
-  const [subscriptionConfig, setSubscriptionConfig] = useState({
-    perDeviceSubscriptionAmount: 500,
-    perDeviceSubscriptionAmountBeyondBaseLimit: 450,
-  });
   const [formValues, setFormValues] = useState(initialFormValues);
+
+  useEffect(() => {
+    console.log('Subscription component mounted');
+
+    //Calling function
+    fetchSubscriptionInfo(profile.id);
+
+    //Clean up function
+    return () => {
+      console.log('Subscription component unmounted');
+    };
+  }, []);
 
   // Function to handel submit
   const handelSubmit = async () => {};
@@ -42,11 +57,13 @@ const Subscription = () => {
   const handelIncrement = () => {
     let currentDeviceCount = formValues.deviceCount + 1;
     let total = formValues.subscriptionTotalAmount;
-    if (currentDeviceCount <= 4) {
-      total = total + subscriptionConfig.perDeviceSubscriptionAmount;
+    if (
+      currentDeviceCount + subscription.alreadyAddedDeviceCount <=
+      subscription.deviceBaseLimit
+    ) {
+      total = total + subscription.perDeviceFee;
     } else {
-      total =
-        total + subscriptionConfig.perDeviceSubscriptionAmountBeyondBaseLimit;
+      total = total + subscription.perDeviceFeeAboveBaseLimit;
     }
     setFormValues({
       ...formValues,
@@ -57,13 +74,15 @@ const Subscription = () => {
 
   const handelDecrement = () => {
     let currentDeviceCount = formValues.deviceCount;
-    if (currentDeviceCount > 1) {
+    if (currentDeviceCount >= 1) {
       let total = formValues.subscriptionTotalAmount;
-      if (currentDeviceCount <= 4) {
-        total = total - subscriptionConfig.perDeviceSubscriptionAmount;
+      if (
+        currentDeviceCount + subscription.alreadyAddedDeviceCount <=
+        subscription.deviceBaseLimit
+      ) {
+        total = total - subscription.perDeviceFee;
       } else {
-        total =
-          total - subscriptionConfig.perDeviceSubscriptionAmountBeyondBaseLimit;
+        total = total - subscription.perDeviceFeeAboveBaseLimit;
       }
       setFormValues({
         ...formValues,
@@ -106,6 +125,7 @@ const Subscription = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
+      <Spinner />
       <View style={styles.body}>
         {renderAddSubscriptionModal()}
         <ScrollView
@@ -124,8 +144,9 @@ const Subscription = () => {
               </View>
               <View style={styles.contentRightSectionWrapper}>
                 <Text style={styles.contentText}>
-                  90 day free trial registration and $500.00 per device monthly
-                  with a 4 device minimum.
+                  90 day free trial registration and $
+                  {subscription.perDeviceFee} per device monthly with a{' '}
+                  {subscription.deviceBaseLimit} device minimum.
                 </Text>
               </View>
             </View>
@@ -145,7 +166,8 @@ const Subscription = () => {
               </View>
               <View style={styles.contentRightSectionWrapper}>
                 <Text style={styles.contentText}>
-                  Each additional device beyond 4 is $450.00 per device with
+                  Each additional device beyond {subscription.deviceBaseLimit}{' '}
+                  is ${subscription.perDeviceFeeAboveBaseLimit} per device with
                   same incremental 10% increase through year 5
                 </Text>
               </View>
@@ -181,5 +203,23 @@ const Subscription = () => {
     </SafeAreaView>
   );
 };
+
+const mapStateToProps = state => {
+  return {
+    profile: state.profile,
+    subscription: state.subscription,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchSubscriptionInfo: storeId => dispatch(fetchSubscriptionInfo(storeId)),
+  };
+};
+
+const Subscription = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SubscriptionComponent);
 
 export default Subscription;

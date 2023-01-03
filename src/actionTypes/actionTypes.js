@@ -25,13 +25,12 @@ export const departmentActionTypes = {
   UPDATE_DEPARTMENT: 'UPDATE_DEPARTMENT',
 };
 
-
 export const deviceActionTypes = {
   STORE_DEVICE: 'STORE_DEVICE',
   APPEND_DEVICE: 'APPEND_DEVICE',
   UPDATE_DEVICE: 'UPDATE_DEVICE',
   SET_DEVICE_DATA: 'SET_DEVICE_DATA',
-}
+};
 export const chatActionTypes = {
   INIT_ZIM_INSTANCE: 'INIT_ZIM_INSTANCE',
   CLEAR_CHAT: 'CLEAR_CHAT',
@@ -43,4 +42,8 @@ export const chatActionTypes = {
 
 export const callActionTypes = {
   SET_INCOMING_CALL_QUEUE: 'SET_INCOMING_CALL_QUEUE',
-}
+};
+
+export const subscriptionActionTypes = {
+  SET_SUBSCRIPTION_DETAILS: 'SET_SUBSCRIPTION_DETAILS',
+};
