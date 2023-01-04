@@ -1,44 +1,53 @@
 import React from 'react';
+import {useStripe} from '@stripe/stripe-react-native';
+import {setLoading} from '../../actions/appAction';
 import showAlertPopup from '../../components/AlertComp';
+import axiosPrivate from '../../config/privateApi';
+import { useDispatch } from 'react-redux';
 
-export const CheckoutScreen = props => {
+export const useCheckoutScreen = (profile) => {
   const {initPaymentSheet, presentPaymentSheet} = useStripe();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
-  const fetchPaymentSheetParams = async () => {
-    const response = await fetch(`${API_URL}/payment-sheet`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  const fetchPaymentSheetParams = async (deviceCount, subscriptionTotalAmount) => {
+    let response = await axiosPrivate.post('stripe/payment-sheet', {
+      email: profile.email,
+      name: profile.name,
+      amount: subscriptionTotalAmount,
+      device_count: deviceCount,
+      currency: 'usd',
     });
-    const {paymentIntent, ephemeralKey, customer} = await response.json();
-
-    return {
-      paymentIntent,
-      ephemeralKey,
-      customer,
-    };
+    if (response.data.success === true) {
+      const {paymentIntent, ephemeralKey, customer, publishableKey} =
+        response.data.data;
+      return {
+        paymentIntent,
+        ephemeralKey,
+        customer,
+        publishableKey,
+      };
+    }
   };
 
-  const initializePaymentSheet = async () => {
+  const initializePaymentSheet = async (deviceCount, subscriptionTotalAmount) => {
     const {paymentIntent, ephemeralKey, customer, publishableKey} =
-      await fetchPaymentSheetParams();
+      await fetchPaymentSheetParams(deviceCount, subscriptionTotalAmount);
 
     const {error} = await initPaymentSheet({
-      merchantDisplayName: 'Example, Inc.',
+      merchantDisplayName: 'GLOCONLIVE',
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
       // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
       //methods that complete payment after a delay, like SEPA Debit and Sofort.
-      allowsDelayedPaymentMethods: true,
+      allowsDelayedPaymentMethods: false,
       defaultBillingDetails: {
-        name: 'Jane Doe',
+        name: profile.name,
       },
     });
+    dispatch(setLoading(false));
     if (!error) {
-      setLoading(true);
+      openPaymentSheet();
     }
   };
 
@@ -52,19 +61,9 @@ export const CheckoutScreen = props => {
     }
   };
 
-  useEffect(() => {
-    initializePaymentSheet();
-  }, []);
+  // useEffect(() => {
+  //   initializePaymentSheet();
+  // }, []);
 
-  return (
-    <Screen>
-      <Button
-        variant="primary"
-        disabled={!loading}
-        title="Checkout"
-        onPress={openPaymentSheet}
-      />
-    </Screen>
-  );
+  return initializePaymentSheet;
 };
-export default Checkout = CheckoutScreen;

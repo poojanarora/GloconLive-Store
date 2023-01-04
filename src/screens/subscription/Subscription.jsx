@@ -16,6 +16,10 @@ import PopupModal from '../../components/PopupModal.jsx';
 import Spinner from '../../components/Spinner.jsx';
 import {connect} from 'react-redux';
 import {fetchSubscriptionInfo} from '../../actions/subscriptionAction.js';
+import Payment from './Payment.jsx';
+import { useCheckoutScreen } from './Checkout.jsx';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../../actions/appAction.js';
 
 const SubscriptionComponent = ({
   profile,
@@ -28,6 +32,8 @@ const SubscriptionComponent = ({
   };
   const [modalVisible, setModalVisible] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
+  const initializePaymentSheet = useCheckoutScreen(profile);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('Subscription component mounted');
@@ -42,7 +48,15 @@ const SubscriptionComponent = ({
   }, []);
 
   // Function to handel submit
-  const handelSubmit = async () => {};
+  const handelSubmit = async () => {
+    if (formValues.deviceCount > 0) {
+      dispatch(setLoading(true));
+      initializePaymentSheet(
+        formValues.deviceCount,
+        formValues.subscriptionTotalAmount,
+      );
+    }
+  };
 
   // Function to show modal
   const showModal = () => {
@@ -94,32 +108,34 @@ const SubscriptionComponent = ({
 
   const renderAddSubscriptionModal = () => {
     return (
-      <PopupModal
-        show={modalVisible}
-        closeAction={hideModal}
-        submitAction={handelSubmit}
-        title="Subscription"
-        //subTitle="Add Subscription"
-        primaryButtonText="Subscribe"
-        dangerButtonText="Cancel">
-        <View style={styles.formSectionWrapper}>
-          <IncrementDecrementInput
-            label="Number of device"
-            placeholder="Enter number of device"
-            name="locationName"
-            value={formValues.deviceCount}
-            incrementIcon={images.add}
-            decrementIcon={images.minus}
-            incrementAction={handelIncrement}
-            decrementAction={handelDecrement}
-          />
-          <View style={styles.totalAmountWrapper}>
-            <Text style={styles.totalAmountLabel}>
-              Total Subscription Amount : {formValues.subscriptionTotalAmount}
-            </Text>
+      <Payment>
+        <PopupModal
+          show={modalVisible}
+          closeAction={hideModal}
+          submitAction={handelSubmit}
+          title="Subscription"
+          //subTitle="Add Subscription"
+          primaryButtonText="Subscribe"
+          dangerButtonText="Cancel">
+          <View style={styles.formSectionWrapper}>
+            <IncrementDecrementInput
+              label="Number of device"
+              placeholder="Enter number of device"
+              name="locationName"
+              value={formValues.deviceCount}
+              incrementIcon={images.add}
+              decrementIcon={images.minus}
+              incrementAction={handelIncrement}
+              decrementAction={handelDecrement}
+            />
+            <View style={styles.totalAmountWrapper}>
+              <Text style={styles.totalAmountLabel}>
+                Total Subscription Amount : {formValues.subscriptionTotalAmount}
+              </Text>
+            </View>
           </View>
-        </View>
-      </PopupModal>
+        </PopupModal>
+      </Payment>
     );
   };
 
