@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -9,14 +9,14 @@ import {
   RefreshControl,
 } from 'react-native';
 import styles from './locationVideoAddStyles';
-import {images} from '../../constant';
+import { images } from '../../constant';
 import ButtonComp from '../../components/ButtonComp';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import PopupModal from '../../components/PopupModal';
 import ChooseVideo from '../../components/ChooseVideo';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Spinner from '../../components/Spinner';
-import {addLocationVideo} from '../../actions/locationAction';
+import { addLocationVideo } from '../../actions/locationAction';
 const LocationVideoAddComponent = ({
   route,
   isLoading,
@@ -24,7 +24,7 @@ const LocationVideoAddComponent = ({
   addLocationVideo,
   navigation,
 }) => {
-  const {locationId, locationName, locationVideoTitle, locationVideoUrl} =
+  const { locationId, locationName, locationVideoTitle, locationVideoUrl } =
     route.params;
   const initialFormValue = {
     videoTitle: locationVideoTitle,
@@ -47,7 +47,7 @@ const LocationVideoAddComponent = ({
   const handelClose = () => {
     setFormValues(initialFormValue);
     setFormErrors({});
-    navigation.navigate('LocationVideoListing');
+    navigation.pop();
   };
 
   const handelSubmit = async () => {
@@ -58,17 +58,19 @@ const LocationVideoAddComponent = ({
       video: formValues.video,
     };
     await addLocationVideo(payload);
-    handelClose();
+    setFormValues(initialFormValue);
+    setFormErrors({});
+    navigation.replace('LocationVideoListing');
   };
 
   const handelVideoTitle = e => {
-    setFormValues({...formValues, videoTitle: e});
-    setFormErrors({...formErrors, videoTitle: ''});
+    setFormValues({ ...formValues, videoTitle: e });
+    setFormErrors({ ...formErrors, videoTitle: '' });
   };
 
   const handelVideoSelection = selectedVideo => {
-    setFormValues({...formValues, video: selectedVideo});
-    setFormErrors({...formErrors, video: ''});
+    setFormValues({ ...formValues, video: selectedVideo });
+    setFormErrors({ ...formErrors, video: '' });
   };
 
   // Function to render location listing

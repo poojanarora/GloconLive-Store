@@ -1,8 +1,8 @@
-import {locationActionTypes} from '../actionTypes/actionTypes';
-import {setLoading} from './appAction';
+import { locationActionTypes } from '../actionTypes/actionTypes';
+import { setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
-import {localStorageGetAccessToken} from '../hooks/useAsyncStorage';
+import { localStorageGetAccessToken } from '../hooks/useAsyncStorage';
 
 /**
  * Function to fetch locations.
@@ -118,11 +118,11 @@ export const addLocationVideo = formValues => async dispatch => {
     formdata.append('location_id', formValues.location_id);
     formdata.append('video_title', formValues.video_title);
     formdata.append('video', {
-      uri: formValues.video.fileCopyUri
+      uri: formValues.video.uri
         ? formValues.video.uri
         : formValues.video.uri,
       type: formValues.video.type,
-      name: formValues.video.name,
+      name: formValues.video.fileName,
     });
     let response = await axiosPrivate.post('/store/upload-video', formdata);
     if (response.data.success === true) {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -9,10 +9,10 @@ import {
   RefreshControl,
 } from 'react-native';
 import styles from './locationVideoListingStyles';
-import {images} from '../../constant';
-import {connect} from 'react-redux';
+import { images } from '../../constant';
+import { connect } from 'react-redux';
 import Spinner from '../../components/Spinner';
-import {fetchLocations} from '../../actions/locationAction';
+import { fetchLocations } from '../../actions/locationAction';
 const LocationVideoListingComponent = ({
   isLoading,
   profile,
@@ -75,7 +75,7 @@ const LocationVideoListingComponent = ({
       <View style={styles.body}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{ flexGrow: 1 }}
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
           }>

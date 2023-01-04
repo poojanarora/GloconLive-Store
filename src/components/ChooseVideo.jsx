@@ -1,27 +1,35 @@
 import React from 'react';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {StyleSheet, TouchableOpacity, Text, Image, View} from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { StyleSheet, TouchableOpacity, Text, Image, View } from 'react-native';
 import {
   moderateScale,
   moderateVerticalScale,
   scale,
 } from 'react-native-size-matters';
 import VideoThumbnail from './VideoThumbnail';
-import {COLORS} from '../constant';
+import { COLORS } from '../constant';
 import showAlertPopup from './AlertComp';
 
-import DocumentPicker, {types} from 'react-native-document-picker';
+import DocumentPicker, { types } from 'react-native-document-picker';
+import AlertComp from './AlertComp';
 
-const ChooseVideo = ({selectedVideo, onVideoSelection}) => {
+const ChooseVideo = ({ selectedVideo, onVideoSelection }) => {
   const pickVideo = async () => {
     try {
       //Document picker example
-      let result = await DocumentPicker.pick({
-        type: types.video,
-        copyTo: 'cachesDirectory',
+      // let result = await DocumentPicker.pick({
+      //   type: types.video,
+      //   copyTo: 'cachesDirectory',
+      // });
+      let result = await launchImageLibrary({
+        mediaType: 'video',
       });
-      if (result.length !== 0) {
-        onVideoSelection(result[0]);
+      if (result.assets[0]?.duration > 10) {
+        showAlertPopup('Oops', "Video duration should be less than 10 sec", 'Cancel');
+      } else if (result.assets[0]?.fileSize > 2097152) {
+        showAlertPopup('Oops', "Video file size should be less than 2 MB", 'Cancel');
+      } else if (result.length !== 0) {
+        onVideoSelection(result.assets[0]);
       }
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {

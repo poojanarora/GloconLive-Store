@@ -1,5 +1,5 @@
-import {configureStore} from '@reduxjs/toolkit';
-import {combineReducers} from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from 'redux';
 
 import app from '../reducers/app';
 import profile from '../reducers/profile';
@@ -25,6 +25,10 @@ const reducer = combineReducers({
 
 const store = configureStore({
   reducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    immutableCheck: false,
+    serializableCheck: false,
+  })
 });
 
 export default store;
