@@ -2,7 +2,7 @@ import {departmentActionTypes} from '../actionTypes/actionTypes';
 import {emitEvent, setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
-import { SUBSCRIPTION_EVENTS } from '../utils/appConstants';
+import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
  * Function to fetch departments.
@@ -17,9 +17,6 @@ export const fetchDepartments = locationId => async dispatch => {
       const data = response.data?.data;
       dispatch(storeDepartments(data));
       dispatch(setLoading(false));
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -27,7 +24,12 @@ export const fetchDepartments = locationId => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch departments catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -43,9 +45,6 @@ export const addDepartment = formValues => async dispatch => {
       dispatch(appendDepartment(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
-    }else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -53,7 +52,12 @@ export const addDepartment = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add department catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -72,9 +76,6 @@ export const updateDeparment = formValues => async dispatch => {
       dispatch(modifyDepartment(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -82,7 +83,12 @@ export const updateDeparment = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In update deparment catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 

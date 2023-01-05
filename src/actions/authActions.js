@@ -1,4 +1,4 @@
-import {setLoading, setAuth, emitEvent} from './appAction';
+import {setLoading, setAuth} from './appAction';
 import {
   localStorageSetItem,
   localStorageRemoveItem,
@@ -105,9 +105,6 @@ export const updateTermsAndConditionFlag =
       if (response.data.success === true) {
         dispatch(setLoading(false));
         termsAndConditionCallBack(true);
-      } else if(response.data.is_subscribed) {
-        dispatch(setLoading(false));
-        dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
       } else {
         dispatch(setLoading(false));
         showAlertPopup('Oops', response.data?.message, 'Cancel');

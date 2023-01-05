@@ -2,7 +2,7 @@ import {shopVideoActionTypes} from '../actionTypes/actionTypes';
 import {emitEvent, setLoading} from './appAction';
 import {storeProfile} from './profileActions';
 import axiosPrivate from '../config/privateApi';
-import { SUBSCRIPTION_EVENTS } from '../utils/appConstants';
+import {MESSAGE_CONST, SUBSCRIPTION_EVENTS} from '../utils/appConstants';
 
 export const handleVideoSelection = video => {
   return {
@@ -41,9 +41,6 @@ export const handelVideoUpload =
         dispatch(storeProfile(profileObj));
         dispatch(setLoading(false));
         showAlertPopup('Success', response.data?.message, 'Ok');
-      } else if(response.data.is_subscribed) {
-        dispatch(setLoading(false));
-        dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
       } else {
         dispatch(setLoading(false));
         showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -52,6 +49,15 @@ export const handelVideoUpload =
       console.log('In upload video catch block');
       console.log(error);
       dispatch(setLoading(false));
-      showAlertPopup('Oops', error?.message, 'Cancel');
+      const {status, data} = error.response;
+      if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+        dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+      } else {
+        showAlertPopup(
+          MESSAGE_CONST.OOPS,
+          error?.message,
+          MESSAGE_CONST.CANCEL,
+        );
+      }
     }
   };

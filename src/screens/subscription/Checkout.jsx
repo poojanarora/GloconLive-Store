@@ -1,13 +1,10 @@
 import React from 'react';
 import {useStripe} from '@stripe/stripe-react-native';
-import {setLoading} from '../../actions/appAction';
 import showAlertPopup from '../../components/AlertComp';
 import axiosPrivate from '../../config/privateApi';
-import { useDispatch } from 'react-redux';
 
 export const useCheckoutScreen = (profile) => {
   const {initPaymentSheet, presentPaymentSheet} = useStripe();
-  const dispatch = useDispatch();
 
   const fetchPaymentSheetParams = async (deviceCount, subscriptionTotalAmount) => {
     let response = await axiosPrivate.post('stripe/payment-sheet', {
@@ -29,7 +26,7 @@ export const useCheckoutScreen = (profile) => {
     }
   };
 
-  const initializePaymentSheet = async (deviceCount, subscriptionTotalAmount) => {
+  const initializePaymentSheet = async (deviceCount, subscriptionTotalAmount, onPayment) => {
     const {paymentIntent, ephemeralKey, customer, publishableKey} =
       await fetchPaymentSheetParams(deviceCount, subscriptionTotalAmount);
 
@@ -45,18 +42,19 @@ export const useCheckoutScreen = (profile) => {
         name: profile.name,
       },
     });
-    dispatch(setLoading(false));
     if (!error) {
-      openPaymentSheet();
+      openPaymentSheet(onPayment);
     }
   };
 
-  const openPaymentSheet = async () => {
+  const openPaymentSheet = async (onPayment) => {
     const {error} = await presentPaymentSheet();
 
     if (error) {
+      onPayment(error);
       showAlertPopup(`Error code: ${error.code}`, error.message, 'ok');
     } else {
+      onPayment();
       showAlertPopup('Success', 'Your order is confirmed!', 'ok');
     }
   };

@@ -20,4 +20,11 @@ export const SUBSCRIPTION_EVENTS = {
   SUBSCRIPTION_ENDED: 'SUBSCRIPTION_ENDED',
 }
 
+export const MESSAGE_CONST = {
+    OOPS: 'Oops',
+    CANCEL: 'Cancel',
+    OK: 'Ok',
+    SUCCESS: 'Success',
+}
+
 export const LOCATION_CONST = {};

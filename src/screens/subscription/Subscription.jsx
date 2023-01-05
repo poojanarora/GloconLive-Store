@@ -3,9 +3,7 @@ import {
   View,
   Text,
   SafeAreaView,
-  KeyboardAvoidingView,
   ScrollView,
-  TouchableOpacity,
   Image,
 } from 'react-native';
 import styles from './style.js';
@@ -18,8 +16,7 @@ import {connect} from 'react-redux';
 import {fetchSubscriptionInfo} from '../../actions/subscriptionAction.js';
 import Payment from './Payment.jsx';
 import { useCheckoutScreen } from './Checkout.jsx';
-import { useDispatch } from 'react-redux';
-import { setLoading } from '../../actions/appAction.js';
+import AlertComp from '../../components/AlertComp.jsx';
 
 const SubscriptionComponent = ({
   profile,
@@ -31,9 +28,9 @@ const SubscriptionComponent = ({
     subscriptionTotalAmount: 0,
   };
   const [modalVisible, setModalVisible] = useState(false);
+  const [subDisabled, setSubDisabled] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const initializePaymentSheet = useCheckoutScreen(profile);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('Subscription component mounted');
@@ -50,13 +47,20 @@ const SubscriptionComponent = ({
   // Function to handel submit
   const handelSubmit = async () => {
     if (formValues.deviceCount > 0) {
-      dispatch(setLoading(true));
+      setSubDisabled(true);
       initializePaymentSheet(
         formValues.deviceCount,
         formValues.subscriptionTotalAmount,
+        onPayment
       );
+    } else {
+      AlertComp('Error', 'Please add device', 'ok');
     }
   };
+
+  const onPayment = (error) => {
+    setSubDisabled(false);
+  }
 
   // Function to show modal
   const showModal = () => {
@@ -116,6 +120,7 @@ const SubscriptionComponent = ({
           title="Subscription"
           //subTitle="Add Subscription"
           primaryButtonText="Subscribe"
+          submitDisabled={subDisabled}
           dangerButtonText="Cancel">
           <View style={styles.formSectionWrapper}>
             <IncrementDecrementInput

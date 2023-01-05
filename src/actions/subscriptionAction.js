@@ -1,8 +1,7 @@
 import {subscriptionActionTypes} from '../actionTypes/actionTypes';
-import {emitEvent, setLoading} from './appAction';
+import {setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
-import { SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
  * Function to subscription details.
@@ -27,9 +26,6 @@ export const fetchSubscriptionInfo = storeId => async dispatch => {
         }),
       );
       dispatch(setLoading(false));
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -38,6 +34,8 @@ export const fetchSubscriptionInfo = storeId => async dispatch => {
     dispatch(setLoading(false));
     console.log('In fetch subscription details catch block');
     showAlertPopup('Oops', error?.message, 'Cancel');
+  } finally {
+    dispatch(setLoading(false));
   }
 };
 

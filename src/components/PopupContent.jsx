@@ -15,6 +15,7 @@ const PopupContent = props => {
         <View style={styles.modalContentWrapper}>
           <TouchableOpacity
             style={styles.modalCloseButtonWrapper}
+            disabled={props.submitDisabled}
             onPress={props.cancelAction || props.closeAction}>
             <Image style={styles.modalCloseImage} source={images.close} />
           </TouchableOpacity>
@@ -39,6 +40,7 @@ const PopupContent = props => {
                   }}
                   btnText={props.dangerButtonText}
                   action={props.closeAction}
+                  disabled={props.submitDisabled}
                 />
                 <ButtonComp
                   btnStyle={{
@@ -49,6 +51,7 @@ const PopupContent = props => {
                   }}
                   btnText={props.primaryButtonText}
                   action={props.submitAction}
+                  disabled={props.submitDisabled}
                 />
               </View>
 

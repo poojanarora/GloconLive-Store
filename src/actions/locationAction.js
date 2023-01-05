@@ -3,7 +3,7 @@ import {emitEvent, setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import {localStorageGetAccessToken} from '../hooks/useAsyncStorage';
-import { SUBSCRIPTION_EVENTS } from '../utils/appConstants';
+import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
  * Function to fetch locations.
@@ -18,9 +18,6 @@ export const fetchLocations = storeId => async dispatch => {
       const data = response.data?.data;
       dispatch(storeLocations(data));
       dispatch(setLoading(false));
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -28,7 +25,12 @@ export const fetchLocations = storeId => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch locations catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -44,9 +46,6 @@ export const addLocation = formValues => async dispatch => {
       dispatch(appendLocation(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -54,7 +53,12 @@ export const addLocation = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add locations catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -73,9 +77,6 @@ export const updateLocation = formValues => async dispatch => {
       dispatch(modifyLocation(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -83,7 +84,12 @@ export const updateLocation = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In update locations catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -138,9 +144,6 @@ export const addLocationVideo = formValues => async dispatch => {
     if (response.data.success === true) {
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -148,6 +151,11 @@ export const addLocationVideo = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add location video catch block', error);
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };

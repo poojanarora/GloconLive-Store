@@ -18,7 +18,6 @@ import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import { connect } from 'react-redux';
 import Spinner from '../../components/Spinner.jsx';
-import { launchImageLibrary } from 'react-native-image-picker';
 import {
   fetchProfileInfo,
   storeProfile,
@@ -98,8 +97,8 @@ const ViewProfileComponent = ({
     //Cleanup function
     return () => {
       console.log('Profile component unmounted');
-      eventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION);
-      eventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED);
+      // eventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION);
+      // eventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED);
     };
   }, []);
 

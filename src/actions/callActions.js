@@ -2,7 +2,7 @@ import {emitEvent, setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import {callActionTypes} from '../actionTypes/actionTypes';
 import axiosPrivate from '../config/privateApi';
-import {CALL_STATUS, LOGIN_MODES, SUBSCRIPTION_EVENTS} from '../utils/appConstants';
+import {CALL_STATUS, LOGIN_MODES, MESSAGE_CONST, SUBSCRIPTION_EVENTS} from '../utils/appConstants';
 
 export const getIncomingCallQueue = () => async (dispatch, getState) => {
   try {
@@ -25,9 +25,6 @@ export const getIncomingCallQueue = () => async (dispatch, getState) => {
       const formattedData = getFormattedCallQueue(data);
       dispatch(setIncomingCallQueue(formattedData));
       dispatch(setLoading(false));
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -35,7 +32,12 @@ export const getIncomingCallQueue = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch incoming call queue catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -77,9 +79,6 @@ export const updateCallStatus = (callId, status, onStatusUpdate) => async dispat
     if (response.data.success === true) {
       dispatch(setLoading(false));
       onStatusUpdate(callId);
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -87,6 +86,11 @@ export const updateCallStatus = (callId, status, onStatusUpdate) => async dispat
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In update call status catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };

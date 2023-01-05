@@ -3,7 +3,7 @@ import { emitEvent, setAuth, setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { localStorageSetItem } from '../hooks/useAsyncStorage';
-import { LOGIN_MODES, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
+import { LOGIN_MODES, MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 export const fetchDevices = locationId => async dispatch => {
   try {
@@ -17,9 +17,6 @@ export const fetchDevices = locationId => async dispatch => {
       const data = response.data?.data;
       dispatch(storeDevices(data));
       dispatch(setLoading(false));
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -27,7 +24,12 @@ export const fetchDevices = locationId => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch Device catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 /**
@@ -67,7 +69,7 @@ export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
     if (error.code === 300) {
       dispatch(emitEvent(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION))
     } else {
-      showAlertPopup('Oops', error?.message, 'Cancel');
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
     }
   }
 };
@@ -84,9 +86,6 @@ export const updateDevice = formValues => async dispatch => {
       dispatch(modifyDevices(data));
       dispatch(setLoading(false));
       showAlertPopup('Success', response.data?.message, 'Ok');
-    } else if(response.data.is_subscribed) {
-      dispatch(setLoading(false));
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
       dispatch(setLoading(false));
       showAlertPopup('Oops', response.data?.message, 'Cancel');
@@ -94,7 +93,12 @@ export const updateDevice = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In update device catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
