@@ -1,8 +1,9 @@
 import {locationActionTypes} from '../actionTypes/actionTypes';
-import {setLoading} from './appAction';
+import {emitEvent, setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import {localStorageGetAccessToken} from '../hooks/useAsyncStorage';
+import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
  * Function to fetch locations.
@@ -24,7 +25,12 @@ export const fetchLocations = storeId => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch locations catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -47,7 +53,12 @@ export const addLocation = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add locations catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -73,7 +84,12 @@ export const updateLocation = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In update locations catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -135,6 +151,11 @@ export const addLocationVideo = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add location video catch block', error);
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };

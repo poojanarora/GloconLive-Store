@@ -5,6 +5,7 @@ import PublicStackScreen from './PublicStackScreen';
 import DrawerScreen from './DrawerScreen';
 import IncomingCallStackScreen from './IncomingCallStackScreen';
 import ConceirgeShopperDrawerScreen from './ConceirgeShopperDrawerScreen';
+// import SubscriptionScreenStack from './SubscriptionScreenStack';
 
 const AppStackScreen = ({ navigation }) => {
   const AppStack = createNativeStackNavigator();
@@ -39,6 +40,7 @@ const AppStackScreen = ({ navigation }) => {
         component={DrawerScreen}
 
       />
+      {/* <AppStack.Screen name="SubscriptionScreenStack" component={SubscriptionScreenStack} /> */}
       <AppStack.Screen name="ConceirgeShopperPrivateStackScreen" component={ConceirgeShopperDrawerScreen} />
     </AppStack.Navigator>
   );

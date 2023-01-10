@@ -8,6 +8,7 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
+import EventEmitter from 'eventemitter3';
 import { scale, moderateScale } from 'react-native-size-matters';
 import styles from './viewProfileStyles';
 import { COLORS, images } from '../../constant';
@@ -17,16 +18,16 @@ import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
 import { connect } from 'react-redux';
 import Spinner from '../../components/Spinner.jsx';
-import { launchImageLibrary } from 'react-native-image-picker';
 import {
   fetchProfileInfo,
   storeProfile,
   changePassword,
   updateProfileInformation,
 } from '../../actions/profileActions';
-import { setLoading } from '../../actions/appAction';
+import { initializeEmitter, setLoading } from '../../actions/appAction';
 import ImagePickerModel from '../../components/ImagePickerModel';
 import showAlertPopup from '../../components/AlertComp';
+import { SUBSCRIPTION_EVENTS } from '../../utils/appConstants'
 
 const initialEditProfileErrors = {
   companyName: '',
@@ -56,6 +57,7 @@ const ViewProfileComponent = ({
   updateProfileInformation,
   changePassword,
   navigation,
+  initializeEmitter,
 }) => {
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
     useState(false);
@@ -77,6 +79,17 @@ const ViewProfileComponent = ({
 
   useEffect(() => {
     console.log('Profile component mounted');
+    
+    const eventEmitter = new EventEmitter();
+    initializeEmitter(eventEmitter)
+    
+    eventEmitter.on(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION, () => {
+      navigation.navigate('Subscription');
+    })
+
+    eventEmitter.on(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED, () => {
+      navigation.navigate('Subscription');
+    })
 
     //Calling functions
     fetchProfileInfo(auth.email);
@@ -84,6 +97,8 @@ const ViewProfileComponent = ({
     //Cleanup function
     return () => {
       console.log('Profile component unmounted');
+      // eventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION);
+      // eventEmitter.removeAllListeners(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED);
     };
   }, []);
 
@@ -409,6 +424,7 @@ const mapDispatchToProps = dispatch => {
     updateProfileInformation: payload =>
       dispatch(updateProfileInformation(payload)),
     changePassword: payload => dispatch(changePassword(payload)),
+    initializeEmitter: value => dispatch(initializeEmitter(value)),
   };
 };
 

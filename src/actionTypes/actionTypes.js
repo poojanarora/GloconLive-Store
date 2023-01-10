@@ -2,6 +2,7 @@ export const actionTypes = {
   IS_LOADING: 'IS_LOADING',
   SET_AUTH: 'SET_AUTH',
   UPDATE_AUTH: 'UPDATE_AUTH',
+  INIT_EMITTER: 'INIT_EMITTER',
 };
 
 export const profileActionTypes = {

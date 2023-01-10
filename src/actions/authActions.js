@@ -7,7 +7,7 @@ import showAlertPopup from '../components/AlertComp';
 import axiosPublic from '../config/publicApi';
 import axiosPrivate from '../config/privateApi';
 import {initializeZim, logoutZimChat} from './chatActions';
-import {LOGIN_MODES} from '../utils/appConstants';
+import {LOGIN_MODES, SUBSCRIPTION_EVENTS} from '../utils/appConstants';
 
 /**
  * Function to handle Login.

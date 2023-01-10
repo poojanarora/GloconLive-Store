@@ -1,7 +1,8 @@
 import {shopVideoActionTypes} from '../actionTypes/actionTypes';
-import {setLoading} from './appAction';
+import {emitEvent, setLoading} from './appAction';
 import {storeProfile} from './profileActions';
 import axiosPrivate from '../config/privateApi';
+import {MESSAGE_CONST, SUBSCRIPTION_EVENTS} from '../utils/appConstants';
 
 export const handleVideoSelection = video => {
   return {
@@ -48,6 +49,15 @@ export const handelVideoUpload =
       console.log('In upload video catch block');
       console.log(error);
       dispatch(setLoading(false));
-      showAlertPopup('Oops', error?.message, 'Cancel');
+      const {status, data} = error.response;
+      if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+        dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+      } else {
+        showAlertPopup(
+          MESSAGE_CONST.OOPS,
+          error?.message,
+          MESSAGE_CONST.CANCEL,
+        );
+      }
     }
   };

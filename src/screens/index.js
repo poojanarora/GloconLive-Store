@@ -22,6 +22,7 @@ import DeviceLoginWithQR from './login/DeviceLoginWithQR';
 import ConceirgeShopperLogin from './login/ConceirgeShopperLogin';
 import ConceirgeProfile from './conceirge-shopper/conceirge-profile/ConceirgeProfile';
 import Subscription from './subscription/Subscription';
+import Payment from './subscription/Payment';
 
 export {
   Splash,
@@ -38,6 +39,7 @@ export {
   ShopVideoPreview,
   AddStoreVideo,
   DeviceLoginWithQR,
+  Payment,
   ConceirgeShopperLogin,
   ConceirgeProfile,
   Subscription,

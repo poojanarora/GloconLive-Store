@@ -15,8 +15,10 @@ import LocationVideoStackScreen from './LocationVideoStackScreen';
 import {Subscription} from '../screens';
 import {COLORS} from '../constant';
 import MenuIcon from '../components/MenuIcon';
+import BackIcon from '../components/BackIcon';
+import SubscriptionScreenStack from './SubscriptionScreenStack';
 
-const DrawerScreen = () => {
+const DrawerScreen = ({navigation}) => {
   const windowWidth = Dimensions.get('window').width;
   const drawerWidth = (windowWidth * 70) / 100;
   const Drawer = createDrawerNavigator();
@@ -47,22 +49,7 @@ const DrawerScreen = () => {
       <Drawer.Screen name="Profile" component={ProfileStackScreen} />
       <Drawer.Screen
         name="Subscription"
-        component={Subscription}
-        options={{
-          headerShown: true,
-          headerTitleAlign: 'center',
-          title: 'Subscription',
-          headerStyle: {
-            backgroundColor: COLORS.primaryTextColor,
-          },
-          headerTintColor: COLORS.white,
-          headerTitleStyle: {
-            fontWeight: '600',
-          },
-          headerLeft: () => {
-            return;
-          },
-        }}
+        component={SubscriptionScreenStack}
       />
       {/*<Drawer.Screen 
                 name="Notifications" 

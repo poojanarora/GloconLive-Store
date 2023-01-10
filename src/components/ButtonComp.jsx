@@ -13,10 +13,13 @@ const ButtonComp = ({
   btnStyle = {},
   btnTextStyle = {},
   action,
+  disabled=false,
 }) => {
+  const disabledStyle = disabled ? { opacity: 0.2 } : {}
   return (
     <TouchableOpacity
-      style={{...styles.btnStyle, ...btnStyle}}
+      style={{...styles.btnStyle, ...btnStyle, ...disabledStyle}}
+      disabled={disabled}
       onPress={action}>
       <Text style={{...styles.btnTextStyle, ...btnTextStyle}}>{btnText}</Text>
     </TouchableOpacity>

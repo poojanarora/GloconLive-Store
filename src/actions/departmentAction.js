@@ -1,7 +1,8 @@
 import {departmentActionTypes} from '../actionTypes/actionTypes';
-import {setLoading} from './appAction';
+import {emitEvent, setLoading} from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
+import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
  * Function to fetch departments.
@@ -23,7 +24,12 @@ export const fetchDepartments = locationId => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch departments catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -46,7 +52,12 @@ export const addDepartment = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add department catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -72,7 +83,12 @@ export const updateDeparment = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In update deparment catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 

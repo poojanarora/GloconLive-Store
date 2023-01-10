@@ -20,3 +20,18 @@ export const updateAuth = value => {
     payload: value,
   };
 };
+
+export const initializeEmitter = value => {
+  return {
+    type: actionTypes.INIT_EMITTER,
+    payload: value,
+  };
+};
+
+export const emitEvent = eventType => (dispatch, getState) => {
+  const {app} = getState();
+  const eventEmitter = app.emitter;
+  if (eventEmitter) {
+    eventEmitter.emit(eventType);
+  }
+};
