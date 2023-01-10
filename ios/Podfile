@@ -1,3 +1,5 @@
+$FirebaseSDKVersion = '10.3.0'
+$RNFirebaseAsStaticFramework = true
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
@@ -5,6 +7,8 @@ platform :ios, '13.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'GLOCONLive' do
+  use_frameworks! :linkage => :static
+  
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -21,7 +25,7 @@ target 'GLOCONLive' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    :flipper_configuration => FlipperConfiguration.enabled,
+    # :flipper_configuration => FlipperConfiguration.enabled,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
@@ -45,3 +49,19 @@ target 'GLOCONLive' do
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
   
 end
+
+# $static_framework = ['FlipperKit', 'Flipper', 'Flipper-Folly',
+#      'CocoaAsyncSocket', 'ComponentKit', 'DoubleConversion',
+#      'glog', 'Flipper-PeerTalk', 'Flipper-RSocket', 'Yoga', 'YogaKit',
+#      'CocoaLibEvent', 'OpenSSL-Universal', 'boost-for-react-native']
+  
+#    pre_install do |installer|
+#      Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+#      installer.pod_targets.each do |pod|
+#          if $static_framework.include?(pod.name)
+#            def pod.build_type;
+#              Pod::BuildType.static_library
+#            end
+#          end
+#        end
+#   end
