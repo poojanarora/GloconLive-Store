@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "451021104692",
+    "project_id": "gloconlive-2c618",
+    "storage_bucket": "gloconlive-2c618.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451021104692:android:f50c5adc9c6ce06ab88c61",
+        "android_client_info": {
+          "package_name": "com.gloconlive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "451021104692-1uat3cbraqnkki2sfd0cikknidua0tmi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gloconlive",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "451021104692-pl5j9p6u5b2eqbdgqa9s6f1gpvir2qm4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZZF3olaT70m8Q9tOYDpxHFrkusBLFBoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "451021104692-pl5j9p6u5b2eqbdgqa9s6f1gpvir2qm4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

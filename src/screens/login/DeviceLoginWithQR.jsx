@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text} from 'react-native';
-import { moderateScale } from 'react-native-size-matters';
-import { connect } from 'react-redux';
+import {moderateScale} from 'react-native-size-matters';
+import {connect} from 'react-redux';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {getUniqueId, getDeviceName} from 'react-native-device-info';
 import showAlertPopup from '../../components/AlertComp';
 import {addDevice} from '../../actions/deviceAction';
+import {requestUserPermission} from '../../utils/firebaseNotificationHandler';
+import {asyncStorageGetFCMToken} from '../../hooks/useAsyncStorage';
 // import ButtonComp from '../../components/ButtonComp';
 // import {RNCamera} from 'react-native-camera';
 
@@ -29,20 +31,22 @@ const LinkDevice = ({navigation, addDevice}) => {
 
   const onDeviceAdded = () => {
     navigation.replace('IncomingCallStackScreen');
-  }
+  };
 
-  const onSuccess = e => {
+  const onSuccess = async e => {
     // Linking.openURL(e.data).catch(err =>
     //   console.error('An error occured', err)
     // );
+    const fcmToken = await asyncStorageGetFCMToken();
     const departmentId = e.data;
     const payload = {
       department_id: departmentId,
       device_id: deviceId,
       name: deviceName,
+      fcm_token: fcmToken,
       status: '1',
     };
-
+    console.log(payload);
     const error = validate(payload);
     if (error) {
       showAlertPopup('Error', error, 'ok');
@@ -52,6 +56,7 @@ const LinkDevice = ({navigation, addDevice}) => {
   };
 
   useEffect(() => {
+    requestUserPermission();
     getUniqueId()
       .then(uniqueId => {
         setDeviceId(uniqueId);
@@ -119,13 +124,11 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    addDevice: (payload, onDeviceAdded) => dispatch(addDevice(payload, onDeviceAdded))
+    addDevice: (payload, onDeviceAdded) =>
+      dispatch(addDevice(payload, onDeviceAdded)),
   };
 };
 
-const DeviceLoginWithQR = connect(
-  null,
-  mapDispatchToProps,
-)(LinkDevice);
+const DeviceLoginWithQR = connect(null, mapDispatchToProps)(LinkDevice);
 
 export default DeviceLoginWithQR;
