@@ -7,7 +7,7 @@ import { handleVideoSelection } from '../actions/shopVideoAction';
 import { COLORS } from '../constant';
 import showAlertPopup from './AlertComp';
 
-const BrowseFilesComponent = ({ onVideoSelect, video }) => {
+const BrowseFilesComponent = ({ onVideoSelect, video, browseFiles }) => {
   const pickVideo = async () => {
     try {
 
@@ -29,7 +29,7 @@ const BrowseFilesComponent = ({ onVideoSelect, video }) => {
   return (
     <TouchableOpacity
       style={styles.browseFileSectionWrapper}
-      onPress={pickVideo}>
+      onPress={browseFiles || pickVideo}>
       {!video ? (
         <>
           <Text style={styles.textStyle}>Drag & Drop here</Text>
