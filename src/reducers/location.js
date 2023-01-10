@@ -24,6 +24,11 @@ const location = (state = initialState.location, action) => {
         storeLocations: newArray,
       };
     }
+    case locationActionTypes.SET_STORE_LOCATION_VIDEO:
+      return {
+        ...state,
+        selectedLocationVideo: action.payload,
+      }
     default:
       return state;
   }

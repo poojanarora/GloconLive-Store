@@ -11,6 +11,7 @@ import {COLORS} from '../constant';
 import showAlertPopup from './AlertComp';
 
 import DocumentPicker, {types} from 'react-native-document-picker';
+import BrowseFiles from './BrowseFiles';
 
 const ChooseVideo = ({selectedVideo, onVideoSelection}) => {
   const pickVideo = async () => {
@@ -36,15 +37,17 @@ const ChooseVideo = ({selectedVideo, onVideoSelection}) => {
 
   return (
     <>
-      <TouchableOpacity
-        style={styles.browseFileSectionWrapper}
-        onPress={pickVideo}>
-        <Text style={styles.browseFiles}>Browse Files</Text>
-      </TouchableOpacity>
-      {selectedVideo?.uri && (
+      {selectedVideo?.uri ? (
         <>
+          <TouchableOpacity
+            style={styles.browseFileSectionWrapper}
+            onPress={pickVideo}>
+            <Text style={styles.browseFiles}>Browse Files</Text>
+          </TouchableOpacity>
           <VideoThumbnail url={selectedVideo.uri} />
         </>
+      ) : (
+        <BrowseFiles browseFiles={pickVideo} />
       )}
     </>
   );

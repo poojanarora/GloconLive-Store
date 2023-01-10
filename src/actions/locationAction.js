@@ -8,6 +8,48 @@ import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 /**
  * Function to fetch locations.
  */
+export const fetchStoreVideo = (storeId, locationId) => async dispatch => {
+  try {
+    dispatch(setLoading(true));
+    let response = await axiosPrivate.post('/store/get-location-video', {
+      store_id: storeId,
+      location_id: locationId
+    });
+    if (response.data.success === true) {
+      const video = response.data?.data;
+      console.warn(video);
+      dispatch(setStoreVideo(video));
+      dispatch(setLoading(false));
+    } else {
+      dispatch(setLoading(false));
+      AlertComp(
+        MESSAGE_CONST.OOPS,
+        response.data?.message,
+        MESSAGE_CONST.CANCEL,
+      );
+    }
+  } catch (error) {
+    console.log('In fetch store video catch block');
+    dispatch(setLoading(false));
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
+  }
+};
+
+const setStoreVideo = video => {
+  return {
+    type: locationActionTypes.SET_STORE_LOCATION_VIDEO,
+    payload: video,
+  };
+};
+
+/**
+ * Function to fetch locations.
+ */
 export const fetchLocations = storeId => async dispatch => {
   try {
     dispatch(setLoading(true));
@@ -135,10 +177,10 @@ export const addLocationVideo = formValues => async dispatch => {
     formdata.append('video_title', formValues.video_title);
     formdata.append('video', {
       uri: formValues.video.fileCopyUri
-        ? formValues.video.uri
+        ? formValues.video.fileCopyUri
         : formValues.video.uri,
-      type: formValues.video.type,
-      name: formValues.video.name,
+      type: formValues.video.type || 'video/.mp4',
+      name: formValues.video.name || `${formValues.video_title}_${formValues.store_id}_${formValues.location_id}`,
     });
     let response = await axiosPrivate.post('/store/upload-video', formdata);
     if (response.data.success === true) {

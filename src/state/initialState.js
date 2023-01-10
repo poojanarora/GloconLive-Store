@@ -30,6 +30,7 @@ export const initialState = {
   },
   location: {
     storeLocations: [],
+    selectedLocationVideo: {uri: ''},
     storeLocationVideos: [
       {
         id: 101,
