@@ -4,6 +4,7 @@ import TermsAndConditions from './terms-and-condition/TermsAndConditions';
 import CheckApplicationStatus from './application-status/CheckApplicationStatus';
 import ApplicationStatus from './application-status/ApplicationStatus';
 
+import Ringing from './incomingcall/Ringing';
 import IncomingCallListing from './incomingcall/IncomingCallListing';
 import IncomingCallAdd from './incomingcall/IncomingCallAdd';
 
@@ -29,6 +30,7 @@ export {
   TermsAndConditions,
   CheckApplicationStatus,
   ApplicationStatus,
+  Ringing,
   IncomingCallListing,
   IncomingCallAdd,
   LocationListing,

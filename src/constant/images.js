@@ -33,6 +33,8 @@ const upload_video = require('../../assets/images/upload_video.png');
 const dollar = require('../../assets/images/dollar.png');
 const add = require('../../assets/images/add.png');
 const minus = require('../../assets/images/minus.png');
+const disconnect = require('../../assets/images/disconnect.png');
+const call_receive = require('../../assets/images/call_receive.png');
 
 export default {
   splash_screen,
@@ -70,4 +72,6 @@ export default {
   dollar,
   add,
   minus,
+  disconnect,
+  call_receive,
 };
