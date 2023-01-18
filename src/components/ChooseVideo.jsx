@@ -10,13 +10,9 @@ import VideoThumbnail from './VideoThumbnail';
 import { COLORS } from '../constant';
 import showAlertPopup from './AlertComp';
 
-<<<<<<< HEAD
-import DocumentPicker, { types } from 'react-native-document-picker';
 import AlertComp from './AlertComp';
-=======
-import DocumentPicker, {types} from 'react-native-document-picker';
+import DocumentPicker, { types } from 'react-native-document-picker';
 import BrowseFiles from './BrowseFiles';
->>>>>>> main
 
 const ChooseVideo = ({ selectedVideo, onVideoSelection }) => {
   const pickVideo = async () => {

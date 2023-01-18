@@ -16,14 +16,10 @@ import PopupModal from '../../components/PopupModal';
 import ChooseVideo from '../../components/ChooseVideo';
 import { connect } from 'react-redux';
 import Spinner from '../../components/Spinner';
-<<<<<<< HEAD
-import { addLocationVideo } from '../../actions/locationAction';
-=======
-import {addLocationVideo, fetchStoreVideo} from '../../actions/locationAction';
+import { addLocationVideo, fetchStoreVideo } from '../../actions/locationAction';
 import PopupContent from '../../components/PopupContent';
 import AlertComp from '../../components/AlertComp';
 import { MESSAGE_CONST } from '../../utils/appConstants';
->>>>>>> main
 const LocationVideoAddComponent = ({
   route,
   isLoading,
@@ -31,11 +27,7 @@ const LocationVideoAddComponent = ({
   addLocationVideo,
   navigation,
 }) => {
-<<<<<<< HEAD
-  const { locationId, locationName, locationVideoTitle, locationVideoUrl } =
-=======
-  const {locationId, locationName, locationVideoTitle, locationVideoUrl, onVideoAdd} =
->>>>>>> main
+  const { locationId, locationName, locationVideoTitle, locationVideoUrl, onVideoAdd } =
     route.params;
   const initialFormValue = {
     videoTitle: locationVideoTitle,
@@ -60,12 +52,7 @@ const LocationVideoAddComponent = ({
   const handelClose = () => {
     setFormValues(initialFormValue);
     setFormErrors({});
-<<<<<<< HEAD
     navigation.pop();
-=======
-    onVideoAdd();
-    navigation.navigate('LocationVideoListing');
->>>>>>> main
   };
 
   const validate = values => {
@@ -88,7 +75,7 @@ const LocationVideoAddComponent = ({
         AlertComp(MESSAGE_CONST.OOPS, validateResponse.video, MESSAGE_CONST.OK)
       }
       return;
-    } 
+    }
     let payload = {
       store_id: profile.id,
       location_id: locationId,

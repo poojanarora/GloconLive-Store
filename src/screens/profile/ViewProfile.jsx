@@ -79,10 +79,10 @@ const ViewProfileComponent = ({
 
   useEffect(() => {
     console.log('Profile component mounted');
-    
+
     const eventEmitter = new EventEmitter();
     initializeEmitter(eventEmitter)
-    
+
     eventEmitter.on(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION, () => {
       navigation.navigate('Subscription');
     })
@@ -377,7 +377,7 @@ const ViewProfileComponent = ({
             </View>
             <View style={styles.buttonSectionWrapper}>
               <ButtonComp
-                btnText="Upload Store Video"
+                btnText="UPLOAD STORE VIDEO"
                 action={showAddStoreVideoModal}
                 btnStyle={{
                   backgroundColor: COLORS.secondaryColor,

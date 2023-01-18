@@ -1,15 +1,8 @@
-<<<<<<< HEAD
 import { locationActionTypes } from '../actionTypes/actionTypes';
-import { setLoading } from './appAction';
+import { emitEvent, setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { localStorageGetAccessToken } from '../hooks/useAsyncStorage';
-=======
-import {locationActionTypes} from '../actionTypes/actionTypes';
-import {emitEvent, setLoading} from './appAction';
-import showAlertPopup from '../components/AlertComp';
-import axiosPrivate from '../config/privateApi';
-import {localStorageGetAccessToken} from '../hooks/useAsyncStorage';
 import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**
@@ -53,7 +46,6 @@ const setStoreVideo = video => {
     payload: video,
   };
 };
->>>>>>> main
 
 /**
  * Function to fetch locations.
@@ -184,19 +176,11 @@ export const addLocationVideo = formValues => async dispatch => {
     formdata.append('location_id', formValues.location_id);
     formdata.append('video_title', formValues.video_title);
     formdata.append('video', {
-<<<<<<< HEAD
-      uri: formValues.video.uri
-        ? formValues.video.uri
-        : formValues.video.uri,
-      type: formValues.video.type,
-      name: formValues.video.fileName,
-=======
       uri: formValues.video.fileCopyUri
         ? formValues.video.fileCopyUri
         : formValues.video.uri,
       type: formValues.video.type || 'video/.mp4',
       name: formValues.video.name || `${formValues.video_title}_${formValues.store_id}_${formValues.location_id}`,
->>>>>>> main
     });
     let response = await axiosPrivate.post('/store/upload-video', formdata);
     if (response.data.success === true) {
