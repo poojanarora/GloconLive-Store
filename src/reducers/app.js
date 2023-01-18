@@ -13,6 +13,11 @@ const app = (state = initialState.app, action) => {
         ...state,
         auth: action.payload,
       };
+    case actionTypes.INIT_EMITTER:
+      return {
+        ...state,
+        emitter: action.payload,
+      };
     case actionTypes.UPDATE_AUTH:
       return {
         ...state,

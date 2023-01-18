@@ -3,9 +3,7 @@ import {
   View,
   Text,
   SafeAreaView,
-  KeyboardAvoidingView,
   ScrollView,
-  TouchableOpacity,
   Image,
 } from 'react-native';
 import styles from './style.js';
@@ -16,6 +14,9 @@ import PopupModal from '../../components/PopupModal.jsx';
 import Spinner from '../../components/Spinner.jsx';
 import {connect} from 'react-redux';
 import {fetchSubscriptionInfo} from '../../actions/subscriptionAction.js';
+import Payment from './Payment.jsx';
+import { useCheckoutScreen } from './Checkout.jsx';
+import AlertComp from '../../components/AlertComp.jsx';
 
 const SubscriptionComponent = ({
   profile,
@@ -27,7 +28,9 @@ const SubscriptionComponent = ({
     subscriptionTotalAmount: 0,
   };
   const [modalVisible, setModalVisible] = useState(false);
+  const [subDisabled, setSubDisabled] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
+  const initializePaymentSheet = useCheckoutScreen(profile);
 
   useEffect(() => {
     console.log('Subscription component mounted');
@@ -42,7 +45,22 @@ const SubscriptionComponent = ({
   }, []);
 
   // Function to handel submit
-  const handelSubmit = async () => {};
+  const handelSubmit = async () => {
+    if (formValues.deviceCount > 0) {
+      setSubDisabled(true);
+      initializePaymentSheet(
+        formValues.deviceCount,
+        formValues.subscriptionTotalAmount,
+        onPayment
+      );
+    } else {
+      AlertComp('Error', 'Please add device', 'ok');
+    }
+  };
+
+  const onPayment = (error) => {
+    setSubDisabled(false);
+  }
 
   // Function to show modal
   const showModal = () => {
@@ -94,32 +112,35 @@ const SubscriptionComponent = ({
 
   const renderAddSubscriptionModal = () => {
     return (
-      <PopupModal
-        show={modalVisible}
-        closeAction={hideModal}
-        submitAction={handelSubmit}
-        title="Subscription"
-        //subTitle="Add Subscription"
-        primaryButtonText="Subscribe"
-        dangerButtonText="Cancel">
-        <View style={styles.formSectionWrapper}>
-          <IncrementDecrementInput
-            label="Number of device"
-            placeholder="Enter number of device"
-            name="locationName"
-            value={formValues.deviceCount}
-            incrementIcon={images.add}
-            decrementIcon={images.minus}
-            incrementAction={handelIncrement}
-            decrementAction={handelDecrement}
-          />
-          <View style={styles.totalAmountWrapper}>
-            <Text style={styles.totalAmountLabel}>
-              Total Subscription Amount : {formValues.subscriptionTotalAmount}
-            </Text>
+      <Payment>
+        <PopupModal
+          show={modalVisible}
+          closeAction={hideModal}
+          submitAction={handelSubmit}
+          title="Subscription"
+          //subTitle="Add Subscription"
+          primaryButtonText="Subscribe"
+          submitDisabled={subDisabled}
+          dangerButtonText="Cancel">
+          <View style={styles.formSectionWrapper}>
+            <IncrementDecrementInput
+              label="Number of device"
+              placeholder="Enter number of device"
+              name="locationName"
+              value={formValues.deviceCount}
+              incrementIcon={images.add}
+              decrementIcon={images.minus}
+              incrementAction={handelIncrement}
+              decrementAction={handelDecrement}
+            />
+            <View style={styles.totalAmountWrapper}>
+              <Text style={styles.totalAmountLabel}>
+                Total Subscription Amount : {formValues.subscriptionTotalAmount}
+              </Text>
+            </View>
           </View>
-        </View>
-      </PopupModal>
+        </PopupModal>
+      </Payment>
     );
   };
 

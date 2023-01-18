@@ -15,4 +15,16 @@ export const CALL_STATUS = {
   COMPLETED: '2',
 };
 
+export const SUBSCRIPTION_EVENTS = {
+  UPGRADE_SUBSCRIPTION: 'UPGRADE_SUBSCRIPTION',
+  SUBSCRIPTION_ENDED: 'SUBSCRIPTION_ENDED',
+}
+
+export const MESSAGE_CONST = {
+    OOPS: 'Oops',
+    CANCEL: 'Cancel',
+    OK: 'Ok',
+    SUCCESS: 'Success',
+}
+
 export const LOCATION_CONST = {};

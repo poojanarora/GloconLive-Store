@@ -2,6 +2,7 @@ import {LOGIN_MODES} from '../utils/appConstants';
 
 export const initialState = {
   app: {
+    emitter: null,
     isLoading: false,
     auth: {
       accessToken: '',
@@ -29,6 +30,7 @@ export const initialState = {
   },
   location: {
     storeLocations: [],
+    selectedLocationVideo: {uri: ''},
     storeLocationVideos: [
       {
         id: 101,

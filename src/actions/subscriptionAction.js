@@ -34,6 +34,8 @@ export const fetchSubscriptionInfo = storeId => async dispatch => {
     dispatch(setLoading(false));
     console.log('In fetch subscription details catch block');
     showAlertPopup('Oops', error?.message, 'Cancel');
+  } finally {
+    dispatch(setLoading(false));
   }
 };
 

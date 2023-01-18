@@ -1,8 +1,59 @@
+<<<<<<< HEAD
 import { locationActionTypes } from '../actionTypes/actionTypes';
 import { setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { localStorageGetAccessToken } from '../hooks/useAsyncStorage';
+=======
+import {locationActionTypes} from '../actionTypes/actionTypes';
+import {emitEvent, setLoading} from './appAction';
+import showAlertPopup from '../components/AlertComp';
+import axiosPrivate from '../config/privateApi';
+import {localStorageGetAccessToken} from '../hooks/useAsyncStorage';
+import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
+
+/**
+ * Function to fetch locations.
+ */
+export const fetchStoreVideo = (storeId, locationId) => async dispatch => {
+  try {
+    dispatch(setLoading(true));
+    let response = await axiosPrivate.post('/store/get-location-video', {
+      store_id: storeId,
+      location_id: locationId
+    });
+    if (response.data.success === true) {
+      const video = response.data?.data;
+      console.warn(video);
+      dispatch(setStoreVideo(video));
+      dispatch(setLoading(false));
+    } else {
+      dispatch(setLoading(false));
+      AlertComp(
+        MESSAGE_CONST.OOPS,
+        response.data?.message,
+        MESSAGE_CONST.CANCEL,
+      );
+    }
+  } catch (error) {
+    console.log('In fetch store video catch block');
+    dispatch(setLoading(false));
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
+  }
+};
+
+const setStoreVideo = video => {
+  return {
+    type: locationActionTypes.SET_STORE_LOCATION_VIDEO,
+    payload: video,
+  };
+};
+>>>>>>> main
 
 /**
  * Function to fetch locations.
@@ -24,7 +75,12 @@ export const fetchLocations = storeId => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In fetch locations catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -47,7 +103,12 @@ export const addLocation = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add locations catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -73,7 +134,12 @@ export const updateLocation = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In update locations catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };
 
@@ -118,11 +184,19 @@ export const addLocationVideo = formValues => async dispatch => {
     formdata.append('location_id', formValues.location_id);
     formdata.append('video_title', formValues.video_title);
     formdata.append('video', {
+<<<<<<< HEAD
       uri: formValues.video.uri
         ? formValues.video.uri
         : formValues.video.uri,
       type: formValues.video.type,
       name: formValues.video.fileName,
+=======
+      uri: formValues.video.fileCopyUri
+        ? formValues.video.fileCopyUri
+        : formValues.video.uri,
+      type: formValues.video.type || 'video/.mp4',
+      name: formValues.video.name || `${formValues.video_title}_${formValues.store_id}_${formValues.location_id}`,
+>>>>>>> main
     });
     let response = await axiosPrivate.post('/store/upload-video', formdata);
     if (response.data.success === true) {
@@ -135,6 +209,11 @@ export const addLocationVideo = formValues => async dispatch => {
   } catch (error) {
     dispatch(setLoading(false));
     console.log('In add location video catch block', error);
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    const { status, data } = error.response;
+    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+      dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
+    } else {
+      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
+    }
   }
 };

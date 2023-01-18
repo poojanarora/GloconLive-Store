@@ -2,6 +2,7 @@ export const actionTypes = {
   IS_LOADING: 'IS_LOADING',
   SET_AUTH: 'SET_AUTH',
   UPDATE_AUTH: 'UPDATE_AUTH',
+  INIT_EMITTER: 'INIT_EMITTER',
 };
 
 export const profileActionTypes = {
@@ -17,6 +18,7 @@ export const locationActionTypes = {
   STORE_LOCATION: 'STORE_LOCATION',
   APPEND_LOCATION: 'APPEND_LOCATION',
   UPDATE_LOCATION: 'UPDATE_LOCATION',
+  SET_STORE_LOCATION_VIDEO: 'SET_STORE_LOCATION_VIDEO',
 };
 
 export const departmentActionTypes = {
