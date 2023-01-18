@@ -58,9 +58,7 @@ const LocationVideoAddComponent = ({
       video: formValues.video,
     };
     await addLocationVideo(payload);
-    setFormValues(initialFormValue);
-    setFormErrors({});
-    navigation.replace('LocationVideoListing');
+    handelClose()
   };
 
   const handelVideoTitle = e => {

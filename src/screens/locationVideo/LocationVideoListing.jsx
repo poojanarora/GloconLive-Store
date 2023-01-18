@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,6 +8,7 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import styles from './locationVideoListingStyles';
 import { images } from '../../constant';
 import { connect } from 'react-redux';
@@ -22,15 +23,30 @@ const LocationVideoListingComponent = ({
 }) => {
   const [fetchData, setFetchData] = useState(false);
 
-  useEffect(() => {
-    console.log('Location listing component mounted');
-    //Function callings
-    fetchLocations(profile.id);
-    //Clean up function
-    return () => {
-      console.log('Location listing component unmounted');
-    };
-  }, [fetchData]);
+  // useEffect(() => {
+  //   console.log('Location listing component mounted');
+  //   //Function callings
+  //   fetchLocations(profile.id);
+  //   //Clean up function
+  //   return () => {
+  //     console.log('Location listing component unmounted');
+  //   };
+  // }, [fetchData]);
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('Location listing component mounted');
+      //Function callings
+      fetchLocations(profile.id);
+      //Clean up function
+      return () => {
+        console.log('Location listing component unmounted');
+      };
+
+
+
+    }, [fetchData])
+  );
 
   //Function to handel location refresh
   const onRefresh = () => {
