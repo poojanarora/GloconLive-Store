@@ -34,7 +34,7 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
       showAlertPopup('Oops', response.data?.message, 'Cancel');
     }
   } catch (error) {
-    console.log('In catch block');
+    console.log('In catch block of handleLogin');
     dispatch(setLoading(false));
     if (error?.message === 'Network Error') {
       showAlertPopup(

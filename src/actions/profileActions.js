@@ -41,11 +41,12 @@ export const fetchProfileInfo = email => async dispatch => {
     }
   } catch (error) {
     dispatch(setLoading(false));
-    console.log('In catch block');
+    console.log('In catch block of fetchProfileInfo');
     const { status, data } = error.response;
     if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
       dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
     } else {
+      console.log('In catch block of fetchProfileInfo showAlertPopup');
       showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
     }
   }
