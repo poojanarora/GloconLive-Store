@@ -1,10 +1,10 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {COLORS, images} from '../constant';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { COLORS, images } from '../constant';
 import MenuIcon from '../components/MenuIcon';
-import {LocationVideoListing, LocationVideoAdd} from '../screens';
+import { LocationVideoListing, LocationVideoAdd } from '../screens';
 
-const LocationVideoStackScreen = ({navigation}) => {
+const LocationVideoStackScreen = ({ navigation }) => {
   const LocationVideoStack = createNativeStackNavigator();
   return (
     <LocationVideoStack.Navigator
@@ -33,6 +33,7 @@ const LocationVideoStackScreen = ({navigation}) => {
       <LocationVideoStack.Screen
         options={{
           headerShown: false,
+
         }}
         name="LocationVideoAdd"
         component={LocationVideoAdd}
