@@ -54,8 +54,7 @@ export const useCheckoutScreen = (profile) => {
       onPayment(error);
       showAlertPopup(`Error code: ${error.code}`, error.message, 'ok');
     } else {
-      onPayment();
-      showAlertPopup('Success', 'Your order is confirmed!', 'ok');
+      showAlertPopup('Success', 'Your order is confirmed!', 'ok', onPayment);
     }
   };
 
