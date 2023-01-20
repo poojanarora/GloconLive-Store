@@ -28,7 +28,7 @@ export const fetchSubscriptionInfo = storeId => async dispatch => {
       dispatch(setLoading(false));
     } else {
       dispatch(setLoading(false));
-      showAlertPopup('Oops', response.data?.message, 'Cancel');
+      console.log('In fetch subscription details success false block');
     }
   } catch (error) {
     dispatch(setLoading(false));

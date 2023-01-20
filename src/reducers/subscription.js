@@ -1,5 +1,5 @@
-import {subscriptionActionTypes} from '../actionTypes/actionTypes';
-import {initialState} from '../state/initialState';
+import { subscriptionActionTypes } from '../actionTypes/actionTypes';
+import { initialState } from '../state/initialState';
 
 const subscription = (state = initialState.subscription, action) => {
   switch (action.type) {

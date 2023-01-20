@@ -1,8 +1,8 @@
-import {locationActionTypes} from '../actionTypes/actionTypes';
-import {emitEvent, setLoading} from './appAction';
+import { locationActionTypes } from '../actionTypes/actionTypes';
+import { emitEvent, setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
-import {localStorageGetAccessToken} from '../hooks/useAsyncStorage';
+import { localStorageGetAccessToken } from '../hooks/useAsyncStorage';
 import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 
 /**

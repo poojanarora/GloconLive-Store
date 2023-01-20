@@ -51,7 +51,7 @@ const setIncomingCallQueue = callQueue => {
 const getFormattedCallQueue = data => {
   const callQueue = [];
   data.forEach(c => {
-    if (c.status === CALL_STATUS.WAITING) {
+    if (c.status === CALL_STATUS.WAITING && c.get_store_department?.department_caller_id) {
       const call = {
         storeId: c.store_id,
         shopperId: c.shopper_id,

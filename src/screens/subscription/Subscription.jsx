@@ -22,6 +22,7 @@ const SubscriptionComponent = ({
   profile,
   subscription,
   fetchSubscriptionInfo,
+  navigation,
 }) => {
   const initialFormValues = {
     deviceCount: 0,
@@ -60,6 +61,10 @@ const SubscriptionComponent = ({
 
   const onPayment = (error) => {
     setSubDisabled(false);
+    if (!error) {
+      navigation.navigate('Profile');
+      hideModal();
+    }
   }
 
   // Function to show modal
