@@ -56,7 +56,6 @@ const LocationVideoListingComponent = ({
   // Function to handel location selection
   const handelSelectLocation = selectedLocation => {
     navigation.navigate('LocationVideoAdd', {
-      onVideoAdd: onRefresh,
       locationId: selectedLocation.id,
       locationName: selectedLocation.name,
       locationVideoTitle: selectedLocation.video_title,

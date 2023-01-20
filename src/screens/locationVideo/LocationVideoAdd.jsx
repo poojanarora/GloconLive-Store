@@ -27,7 +27,7 @@ const LocationVideoAddComponent = ({
   addLocationVideo,
   navigation,
 }) => {
-  const { locationId, locationName, locationVideoTitle, locationVideoUrl, onVideoAdd } =
+  const { locationId, locationName, locationVideoTitle, locationVideoUrl } =
     route.params;
   const initialFormValue = {
     videoTitle: locationVideoTitle,
