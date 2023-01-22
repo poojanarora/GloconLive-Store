@@ -112,8 +112,15 @@ const ImagePickerModel = ({show, onImageSelection, onClose}) => {
     let result = await launchCamera({
       durationLimit: 10000,
       cameraType: 'front',
+      quality: 0.1,
     });
-    if (!result.didCancel) {
+    if (result.assets[0].fileSize > 1000000) {
+      showAlertPopup(
+        'Oops',
+        'Picture size should be less than 1 MB',
+        'Cancel',
+      );
+    } else if (!result.didCancel) {
       onImageSelection(result.assets[0]);
     }
   };
