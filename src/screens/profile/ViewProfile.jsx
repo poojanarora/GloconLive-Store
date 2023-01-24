@@ -376,7 +376,7 @@ const ViewProfileComponent = ({
               </TouchableOpacity>
             </View>
             <View style={styles.buttonSectionWrapper}>
-              <ButtonComp
+              {/* <ButtonComp
                 btnText="UPLOAD STORE VIDEO"
                 action={showAddStoreVideoModal}
                 btnStyle={{
@@ -388,13 +388,13 @@ const ViewProfileComponent = ({
                   fontSize: scale(12),
                   color: COLORS.black,
                 }}
-              />
+              /> */}
 
               <ButtonComp
                 btnText="SAVE"
                 action={handelEditProfileChanges}
                 btnStyle={{
-                  width: moderateScale(100),
+                  // width: moderateScale(100),
                 }}
                 btnTextStyle={{
                   fontSize: scale(12),

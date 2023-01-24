@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   buttonSectionWrapper: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginVertical: moderateVerticalScale(10),
     //backgroundColor: 'yellow'
