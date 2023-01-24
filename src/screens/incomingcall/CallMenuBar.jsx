@@ -18,7 +18,6 @@ const CallMenuBar = ({
           <Image
             style={styles.endCallImage}
             source={images.hang_up}
-            resizeMode="center"
           />
         </TouchableOpacity>
       </View>
@@ -28,14 +27,12 @@ const CallMenuBar = ({
             <Image
               style={styles.image}
               source={images.video_camera}
-              resizeMode="center"
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.imageButton} onPress={onMicToggle}>
             <Image
               style={styles.image}
               source={images.mute}
-              resizeMode="center"
             />
           </TouchableOpacity>
         </View>
@@ -46,14 +43,12 @@ const CallMenuBar = ({
             <Image
               style={styles.image}
               source={images.camera}
-              resizeMode="center"
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.imageButton} onPress={onMorePress}>
             <Image
               style={styles.image}
               source={images.more}
-              resizeMode="center"
             />
           </TouchableOpacity>
         </View>
@@ -101,6 +96,7 @@ const styles = StyleSheet.create({
   image: {
     height: moderateVerticalScale(24),
     width: moderateScale(24),
+    resizeMode:'contain',
   },
   endCallView: {
     height: moderateVerticalScale(70),
@@ -124,6 +120,7 @@ const styles = StyleSheet.create({
   endCallImage: {
     height: moderateVerticalScale(40),
     width: moderateScale(38),
+    resizeMode:'contain',
   },
 });
 
