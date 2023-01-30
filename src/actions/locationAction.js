@@ -179,9 +179,10 @@ export const addLocationVideo = formValues => async dispatch => {
       uri: formValues.video.fileCopyUri
         ? formValues.video.fileCopyUri
         : formValues.video.uri,
-      type: formValues.video.type || 'video/.mp4',
+      type: formValues.video.type,
       name: formValues.video.name || `${formValues.video_title}_${formValues.store_id}_${formValues.location_id}`,
     });
+    console.log(formValues);
     let response = await axiosPrivate.post('/store/upload-video', formdata);
     if (response.data.success === true) {
       dispatch(setLoading(false));

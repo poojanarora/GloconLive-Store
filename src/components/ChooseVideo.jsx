@@ -25,12 +25,15 @@ const ChooseVideo = ({ selectedVideo, onVideoSelection }) => {
       let result = await launchImageLibrary({
         mediaType: 'video',
       });
-      if (result.assets[0]?.duration > 10) {
+      const video = result.assets[0];
+      if (video?.duration > 10) {
         showAlertPopup('Oops', "Video duration should be less than 10 sec", 'Cancel');
-      } else if (result.assets[0]?.fileSize > 2097152) {
+      } else if (video?.fileSize > 2097152) {
         showAlertPopup('Oops', "Video file size should be less than 2 MB", 'Cancel');
+      } else if (!video?.type.includes('mp4')) {
+        showAlertPopup('Oops', 'Supported video format: .mp4', 'Ok');
       } else if (result.length !== 0) {
-        onVideoSelection(result.assets[0]);
+        onVideoSelection(video);
       }
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
