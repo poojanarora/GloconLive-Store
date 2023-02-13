@@ -98,7 +98,7 @@ const deviceListingComponent = ({
   //Function to validate add devvice form
   const validate = values => {
     let errors = {};
-    if (Object.keys(values.department).length === 0) {
+    if (!values.department.id) {
       errors.department = 'Please select department.';
     }
     // if (!values.deviceId) {
@@ -148,7 +148,6 @@ const deviceListingComponent = ({
         await fetchDevices(locationId);
       } else {
         payload.id = formValues.id;
-        console.warn(payload);
         await updateDevice(payload);
       }
       //await fetchDevices(locationId);
@@ -192,6 +191,7 @@ const deviceListingComponent = ({
           action === 'Add' ? 'Please add new device.' : 'Please update device.'
         }
         primaryButtonText={action}
+        showFooter={formValues.department.id}
         dangerButtonText="Cancel">
         <View style={{zIndex: 1}}>
           <SelectInput

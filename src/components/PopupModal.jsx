@@ -13,9 +13,10 @@ const PopupModal = ({
   primaryButtonText,
   submitAction,
   submitDisabled=false,
+  showFooter = true,
 }) => {
   return (
-    <Modal animationType="slide" transparent={false} visible={show}>
+    <Modal animationType="slide" transparent={false} visible={show} >
       <PopupContent
         closeAction={closeAction}
         title={title}
@@ -24,7 +25,7 @@ const PopupModal = ({
         dangerButtonText={dangerButtonText}
         primaryButtonText={primaryButtonText}
         submitAction={submitAction}
-        showFooter={true}
+        showFooter={showFooter}
         submitDisabled={submitDisabled}
       />
     </Modal>

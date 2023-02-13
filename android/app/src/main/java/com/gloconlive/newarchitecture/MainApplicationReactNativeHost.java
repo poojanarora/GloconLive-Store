@@ -1,4 +1,4 @@
-package com.gloconlive.newarchitecture;
+package com.gloconlive.store.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.gloconlive.BuildConfig;
-import com.gloconlive.newarchitecture.components.MainComponentsRegistry;
-import com.gloconlive.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.gloconlive.store.BuildConfig;
+import com.gloconlive.store.newarchitecture.components.MainComponentsRegistry;
+import com.gloconlive.store.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

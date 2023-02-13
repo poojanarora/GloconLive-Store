@@ -2,7 +2,7 @@ import axios from 'axios';
 import {localStorageGetAccessToken} from '../hooks/useAsyncStorage.js';
 import showAlertPopup from '../components/AlertComp';
 
-const API_URL = 'https://glocon-live.katdev.com/api';
+const API_URL = 'https://app.gloconlive.com/api';
 
 const axiosPrivate = axios.create({
   baseURL: API_URL,

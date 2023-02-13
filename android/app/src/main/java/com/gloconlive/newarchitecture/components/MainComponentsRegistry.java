@@ -1,4 +1,4 @@
-package com.gloconlive.newarchitecture.components;
+package com.gloconlive.store.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

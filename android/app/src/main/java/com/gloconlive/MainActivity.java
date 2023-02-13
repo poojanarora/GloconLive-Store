@@ -1,4 +1,4 @@
-package com.gloconlive;
+package com.gloconlive.store;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
