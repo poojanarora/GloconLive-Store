@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:451021104692:android:f50c5adc9c6ce06ab88c61",
         "android_client_info": {
-          "package_name": "com.gloconlive"
+          "package_name": "com.gloconlive.store"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "451021104692-1uat3cbraqnkki2sfd0cikknidua0tmi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.gloconlive",
+            "package_name": "com.gloconlive.store",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
