@@ -140,7 +140,7 @@ const SubscriptionComponent = ({
             />
             <View style={styles.totalAmountWrapper}>
               <Text style={styles.totalAmountLabel}>
-                Total Subscription Amount : {formValues.subscriptionTotalAmount}
+                Total Subscription Amount : ${formValues.subscriptionTotalAmount}
               </Text>
             </View>
           </View>
