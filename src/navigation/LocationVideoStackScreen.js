@@ -1,11 +1,12 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import {createStackNavigator} from '@react-navigation/stack';
 import { COLORS, images } from '../constant';
 import MenuIcon from '../components/MenuIcon';
 import { LocationVideoListing, LocationVideoAdd } from '../screens';
 
 const LocationVideoStackScreen = ({ navigation }) => {
-  const LocationVideoStack = createNativeStackNavigator();
+  const LocationVideoStack = createStackNavigator();
   return (
     <LocationVideoStack.Navigator
       screenOptions={{

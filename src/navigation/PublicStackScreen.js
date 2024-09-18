@@ -1,5 +1,5 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import {
   Login,
   CheckApplicationStatus,
@@ -13,7 +13,7 @@ import {COLORS} from '../constant/theme.js';
 import BackIcon from '../components/BackIcon.jsx';
 
 const PublicStackScreen = ({navigation}) => {
-  const PublicStack = createNativeStackNavigator();
+  const PublicStack = createStackNavigator();
   return (
     <PublicStack.Navigator
       screenOptions={{

@@ -1,11 +1,11 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {COLORS} from '../constant';
 import MenuIcon from '../components/MenuIcon';
 import {ShopVideoPreview, ViewProfile, AddStoreVideo} from '../screens';
 
 const ProfileStackScreen = ({navigation}) => {
-  const ProfileStack = createNativeStackNavigator();
+  const ProfileStack = createStackNavigator();
   return (
     <ProfileStack.Navigator
       screenOptions={{

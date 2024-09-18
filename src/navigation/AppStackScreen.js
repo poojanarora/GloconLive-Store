@@ -1,15 +1,18 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Splash } from '../screens';
 import PublicStackScreen from './PublicStackScreen';
 import DrawerScreen from './DrawerScreen';
 import IncomingCallStackScreen from './IncomingCallStackScreen';
+import { useNavigation } from '@react-navigation/native';
 import ConceirgeShopperDrawerScreen from './ConceirgeShopperDrawerScreen';
 // import SubscriptionScreenStack from './SubscriptionScreenStack';
 
-const AppStackScreen = ({ navigation }) => {
-  const AppStack = createNativeStackNavigator();
-  return (
+const AppStackScreen = () => {
+  const navigation = useNavigation()
+  const AppStack = createStackNavigator(); 
+   return (
+
     <AppStack.Navigator
       screenOptions={{
         headerShown: false,

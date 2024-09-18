@@ -1,11 +1,11 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {COLORS, images} from '../constant';
 import MenuIcon from '../components/MenuIcon';
 import {LocationListing, LocationDetails} from '../screens';
 
 const LocationStackScreen = ({navigation}) => {
-  const LocationStack = createNativeStackNavigator();
+  const LocationStack = createStackNavigator();
   return (
     <LocationStack.Navigator
       screenOptions={{

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import {COLORS, images} from '../constant';
 import MenuIcon from '../components/MenuIcon';
 import {IncomingCallListing, IncomingCallAdd, Ringing} from '../screens';
@@ -8,7 +8,7 @@ import CallPage from '../screens/incomingcall/CallPage';
 import BackIcon from '../components/BackIcon';
 import InCallChat from '../screens/chat/InCallChat';
 const IncomingCallStackScreen = ({navigation}) => {
-  const IncomingCallStack = createNativeStackNavigator();
+  const IncomingCallStack = createStackNavigator();
 
   useEffect(() => {
     console.log('Incoming call stack mounted');

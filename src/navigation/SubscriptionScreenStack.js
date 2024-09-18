@@ -1,10 +1,10 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import {Payment, Subscription} from '../screens';
 import { COLORS } from '../constant';
 import MenuIcon from '../components/MenuIcon';
 const SubscriptionScreenStack = ({navigation}) => {
-  const SubscriptionStack = createNativeStackNavigator();
+  const SubscriptionStack = createStackNavigator();
   return (
     <SubscriptionStack.Navigator
       screenOptions={{
