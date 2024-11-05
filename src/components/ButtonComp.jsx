@@ -1,27 +1,39 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import {
   scale,
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
 
-import {COLORS} from '../constant';
+import { COLORS } from '../constant';
 
 const ButtonComp = ({
   btnText = '',
   btnStyle = {},
   btnTextStyle = {},
   action,
-  disabled=false,
+  disabled = false,
+  loading = false,
 }) => {
-  const disabledStyle = disabled ? { opacity: 0.2 } : {}
+  const disabledStyle = disabled ? { opacity: 0.6 } : {}
+  const getView = () => {
+    let ele = null;
+    if (loading) {
+      ele = <ActivityIndicator size='small' color={'#000'} />;
+    } else {
+      ele = (
+        <Text style={{ ...styles.btnTextStyle, ...btnTextStyle }}>{btnText}</Text>
+      );
+    }
+    return ele;
+  };
   return (
     <TouchableOpacity
-      style={{...styles.btnStyle, ...btnStyle, ...disabledStyle}}
+      style={{ ...styles.btnStyle, ...btnStyle, ...disabledStyle }}
       disabled={disabled}
       onPress={action}>
-      <Text style={{...styles.btnTextStyle, ...btnTextStyle}}>{btnText}</Text>
+      {getView()}
     </TouchableOpacity>
   );
 };

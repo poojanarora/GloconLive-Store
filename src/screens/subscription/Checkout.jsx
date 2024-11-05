@@ -1,12 +1,15 @@
 import React from 'react';
-import {useStripe} from '@stripe/stripe-react-native';
+import { useStripe } from '@stripe/stripe-react-native';
 import showAlertPopup from '../../components/AlertComp';
 import axiosPrivate from '../../config/privateApi';
 
 export const useCheckoutScreen = (profile) => {
-  const {initPaymentSheet, presentPaymentSheet} = useStripe();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  console.log('PROFILE', profile)
+
 
   const fetchPaymentSheetParams = async (deviceCount, subscriptionTotalAmount) => {
+
     let response = await axiosPrivate.post('stripe/payment-sheet', {
       email: profile.email,
       name: profile.name,
@@ -15,7 +18,7 @@ export const useCheckoutScreen = (profile) => {
       currency: 'usd',
     });
     if (response.data.success === true) {
-      const {paymentIntent, ephemeralKey, customer, publishableKey} =
+      const { paymentIntent, ephemeralKey, customer, publishableKey } =
         response.data.data;
       return {
         paymentIntent,
@@ -27,10 +30,11 @@ export const useCheckoutScreen = (profile) => {
   };
 
   const initializePaymentSheet = async (deviceCount, subscriptionTotalAmount, onPayment) => {
-    const {paymentIntent, ephemeralKey, customer, publishableKey} =
+
+    const { paymentIntent, ephemeralKey, customer, publishableKey } =
       await fetchPaymentSheetParams(deviceCount, subscriptionTotalAmount);
 
-    const {error} = await initPaymentSheet({
+    const { error } = await initPaymentSheet({
       merchantDisplayName: 'GLOCONLIVE',
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
@@ -48,7 +52,7 @@ export const useCheckoutScreen = (profile) => {
   };
 
   const openPaymentSheet = async (onPayment) => {
-    const {error} = await presentPaymentSheet();
+    const { error } = await presentPaymentSheet();
 
     if (error) {
       onPayment(error);

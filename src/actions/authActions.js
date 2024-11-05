@@ -15,7 +15,6 @@ import {LOGIN_MODES, SUBSCRIPTION_EVENTS} from '../utils/appConstants';
 export const handleLogin = (formValues, loginCallback) => async dispatch => {
   const {email} = formValues;
   try {
-    dispatch(setLoading(true));
     let response = await axiosPublic.post('/store/login', formValues);
     if (response.data.success === true) {
       let obj = {
@@ -26,7 +25,6 @@ export const handleLogin = (formValues, loginCallback) => async dispatch => {
       };
       localStorageSetItem(obj);
       dispatch(setAuth(obj));
-      dispatch(setLoading(false));
       loginCallback(response.data.terms_and_conditions_accepted);
       // dispatch(initializeZim());
     } else {

@@ -14,6 +14,8 @@ import AppStackScreen from './src/navigation/AppStackScreen';
 import {AuthProvider} from './src/context/AuthContext';
 import store from './src/state/store';
 import {Provider} from 'react-redux';
+import {withIAPContext} from 'react-native-iap';
+
 
 const App = () => {
   return (
@@ -27,4 +29,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default withIAPContext(App);

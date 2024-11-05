@@ -1,10 +1,10 @@
-import {Dimensions, StyleSheet} from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import {
   scale,
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import {COLORS} from '../../constant';
+import { COLORS } from '../../constant';
 const windowWidth = Dimensions.get('window').width;
 const windowHight = Dimensions.get('window').height;
 const imageWidth = (windowWidth * 80) / 100;
@@ -38,8 +38,15 @@ const styles = StyleSheet.create({
     fontSize: scale(25),
     fontWeight: 'bold',
   },
+  bottomText: {
+    textAlign: 'center',
+    color: COLORS.black,
+    fontSize: scale(25),
+    fontWeight: 'bold',
+    marginBottom: 10
+  },
   textContainer: {
-    marginVertical: moderateVerticalScale(20),
+    marginTop: moderateVerticalScale(20),
   },
   contentWrapper: {
     //backgroundColor: 'red',
@@ -61,7 +68,7 @@ const styles = StyleSheet.create({
   },
   contentText: {
     color: COLORS.black,
-    fontSize: scale(15),
+    fontSize: Platform.OS === 'android' ? scale(14) : scale(13),
     fontWeight: 'bold',
   },
   formSectionWrapper: {
@@ -78,10 +85,30 @@ const styles = StyleSheet.create({
     color: COLORS.black,
   },
   buttonSectionWrapper: {
-    //backgroundColor: 'green',
-    marginVertical: moderateVerticalScale(10),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'center'
   },
+  buttonSectionNonWrapper:
+  {
+    //backgroundColor: 'green', 
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  footerWrapper: {
+    marginHorizontal: 20,
+    //backgroundColor: 'green',
+    marginVertical: moderateVerticalScale(5),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textStyle: {
+    fontSize: scale(15),
+    marginBottom: 10,
+    fontWeight: '700',
+    color: COLORS.black,
+  }
 });
 
 export default styles;
