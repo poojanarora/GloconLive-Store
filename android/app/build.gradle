@@ -160,7 +160,8 @@ android {
                 }
             }
         }
-        missingDimensionStrategy 'react-native-camera', 'general'
+        // missingDimensionStrategy 'react-native-camera', 'general'
+        missingDimensionStrategy "store", "play"
     }
 
     if (isNewArchitectureEnabled()) {
@@ -303,6 +304,14 @@ if (isNewArchitectureEnabled()) {
             substitute(module("com.facebook.react:hermes-engine"))
                     .using(project(":ReactAndroid:hermes-engine"))
                     .because("On New Architecture we're building Hermes from source")
+        }
+    }
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.jetbrains.kotlin') {
+            details.useVersion '1.8.0' // or another version you want to use consistently
         }
     }
 }
