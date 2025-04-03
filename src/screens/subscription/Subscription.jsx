@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,12 @@ import IncrementDecrementInput from '../../components/IncermentDecrementInput.js
 import images from '../../constant/images.js';
 import PopupModal from '../../components/PopupModal.jsx';
 import Spinner from '../../components/Spinner.jsx';
-import { connect } from 'react-redux';
-import { fetchSubscriptionInfo } from '../../actions/subscriptionAction.js';
+import {connect} from 'react-redux';
+import {fetchSubscriptionInfo} from '../../actions/subscriptionAction.js';
 import Payment from './Payment.jsx';
-import { useCheckoutScreen } from './Checkout.jsx';
+import {useCheckoutScreen} from './Checkout.jsx';
 import AlertComp from '../../components/AlertComp.jsx';
-import { useIAP, PurchaseError, requestSubscription } from 'react-native-iap';
+import {useIAP, PurchaseError, requestSubscription} from 'react-native-iap';
 
 const SubscriptionComponent = ({
   profile,
@@ -47,14 +47,14 @@ const SubscriptionComponent = ({
 
   const [loading, setLoading] = useState(false);
 
-  const errorLog = ({ message, error }) => {
-    console.error("An error happened", message, error);
+  const errorLog = ({message, error}) => {
+    console.error('An error happened', message, error);
   };
 
   // const isIos = Platform.OS === "ios";
 
   const subscriptionSkus = Platform.select({
-    ios: ["gloconmonthly299"],
+    ios: ['gloconmonthly299'],
   });
 
   useEffect(() => {
@@ -70,26 +70,26 @@ const SubscriptionComponent = ({
   const handelSubmit = async () => {
     if (formValues.deviceCount > 0) {
       setSubDisabled(true);
-      console.log('formValues', formValues.deviceCount)
-      console.log('formValues', formValues.subscriptionTotalAmount)
+      console.log('formValues', formValues.deviceCount);
+      console.log('formValues', formValues.subscriptionTotalAmount);
 
       initializePaymentSheet(
         formValues.deviceCount,
         formValues.subscriptionTotalAmount,
-        onPayment
+        onPayment,
       );
     } else {
       AlertComp('Error', 'Please add device', 'ok');
     }
   };
 
-  const onPayment = (error) => {
+  const onPayment = error => {
     setSubDisabled(false);
     if (!error) {
       navigation.navigate('Profile');
       hideModal();
     }
-  }
+  };
 
   // Function to show modal
   const showModal = () => {
@@ -101,7 +101,7 @@ const SubscriptionComponent = ({
     setModalVisible(false);
   };
 
-  // Function to increment price 
+  // Function to increment price
   const handelIncrement = () => {
     let currentDeviceCount = formValues.deviceCount + 1;
     let total = parseFloat(formValues.subscriptionTotalAmount);
@@ -122,7 +122,7 @@ const SubscriptionComponent = ({
     });
   };
 
-  // Function to decrement price 
+  // Function to decrement price
   const handelDecrement = () => {
     let currentDeviceCount = formValues.deviceCount;
     if (currentDeviceCount >= 1) {
@@ -142,9 +142,8 @@ const SubscriptionComponent = ({
       });
     }
   };
-  
 
-  console.log('NEW PRICE',subscription)
+  console.log('NEW PRICE', subscription);
 
   const renderAddSubscriptionModal = () => {
     return (
@@ -184,7 +183,7 @@ const SubscriptionComponent = ({
     try {
       await getPurchaseHistory();
     } catch (error) {
-      errorLog({ message: "handleGetPurchaseHistory", error });
+      errorLog({message: 'handleGetPurchaseHistory', error});
     }
   };
 
@@ -194,9 +193,9 @@ const SubscriptionComponent = ({
 
   const handleGetSubscriptions = async () => {
     try {
-      await getSubscriptions({ skus: subscriptionSkus });
+      await getSubscriptions({skus: subscriptionSkus});
     } catch (error) {
-      errorLog({ message: "handleGetSubscriptions", error });
+      errorLog({message: 'handleGetSubscriptions', error});
     }
   };
 
@@ -204,25 +203,24 @@ const SubscriptionComponent = ({
     handleGetSubscriptions();
   }, [connected]);
 
-
   useEffect(() => {
     if (
       purchaseHistory.find(
-        (x) => x.productId === (subscriptionSkus[0] || subscriptionSkus[1]),
+        x => x.productId === (subscriptionSkus[0] || subscriptionSkus[1]),
       )
     ) {
-      navigation.navigate("Home");
+      navigation.navigate('Home');
     }
   }, [connected, purchaseHistory, subscriptions]);
 
   useEffect(() => {
-    const checkCurrentPurchase = async (purchase) => {
+    const checkCurrentPurchase = async purchase => {
       if (purchase) {
         try {
           const receipt = purchase.transactionReceipt;
 
           if (receipt) {
-            if (Platform.OS === "ios") {
+            if (Platform.OS === 'ios') {
               // const isTestEnvironment = __DEV__;
               //send receipt body to apple server to validete
               // const appleReceiptResponse = await validateReceiptIos(
@@ -244,15 +242,14 @@ const SubscriptionComponent = ({
             }
           }
         } catch (error) {
-          console.log("error", error);
+          console.log('error', error);
         }
       }
     };
     checkCurrentPurchase(currentPurchase);
   }, [currentPurchase, finishTransaction]);
 
-
-  const convertToUUID = (id) => {
+  const convertToUUID = id => {
     const idString = String(id);
 
     const paddedId = idString.padStart(12, '0');
@@ -260,9 +257,9 @@ const SubscriptionComponent = ({
     const uuid = `00000000-0000-0000-0000-${paddedId}`;
 
     return uuid;
-  }
+  };
 
-  const handleBuySubscription = async (productId) => {
+  const handleBuySubscription = async productId => {
     try {
       setLoading(true);
       await requestSubscription({
@@ -273,9 +270,9 @@ const SubscriptionComponent = ({
     } catch (error) {
       setLoading(false);
       if (error instanceof PurchaseError) {
-        errorLog({ message: `[${error.code}]: ${error.message}`, error });
+        errorLog({message: `[${error.code}]: ${error.message}`, error});
       } else {
-        errorLog({ message: "handleBuySubscription", error });
+        errorLog({message: 'handleBuySubscription', error});
       }
     }
   };
@@ -287,12 +284,10 @@ const SubscriptionComponent = ({
         {renderAddSubscriptionModal()}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}>
+          contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.textContainer}>
-            <Text style={styles.titleText}>Global Seller Subscription
-            </Text>
-            <Text style={styles.bottomText}>Monthly
-            </Text>
+            <Text style={styles.titleText}>Global Seller Subscription</Text>
+            <Text style={styles.bottomText}>Monthly</Text>
           </View>
           <View style={styles.imageContainer}>
             <Image style={styles.image} source={images.shop} />
@@ -304,7 +299,8 @@ const SubscriptionComponent = ({
               </View>
               <View style={styles.contentRightSectionWrapper}>
                 <Text style={styles.contentText}>
-                  Start with a 90-day free trial, followed by a subscription of $899.99 per month per device, with a minimum of 4 devices
+                  Start with a 90-day free trial, followed by a subscription of
+                  $899.99 per month per device, with a minimum of 4 devices
                 </Text>
               </View>
             </View>
@@ -314,7 +310,8 @@ const SubscriptionComponent = ({
               </View>
               <View style={styles.contentRightSectionWrapper}>
                 <Text style={styles.contentText}>
-                  The subscription is open-ended and can be canceled anytime with a 30- days notice
+                  The subscription is open-ended and can be canceled anytime
+                  with a 30- days notice
                 </Text>
               </View>
             </View>
@@ -324,7 +321,9 @@ const SubscriptionComponent = ({
               </View>
               <View style={styles.contentRightSectionWrapper}>
                 <Text style={styles.contentText}>
-                  Subscription will auto-renew every month based on the subscription plan  unless you cancel it 24 hours prior  to the end of current billing period
+                  Subscription will auto-renew every month based on the
+                  subscription plan unless you cancel it 24 hours prior to the
+                  end of current billing period
                 </Text>
               </View>
             </View>
@@ -355,42 +354,64 @@ const SubscriptionComponent = ({
           </View>
         </ScrollView>
         <View style={styles.footerWrapper}>
-          {Platform.OS === 'android' && 
-           <View>
-           <Text style={styles.textStyle}>
-             By subscribing, You agree to our
-             <Text style={{ color: 'blue' }}
-               onPress={() => {
-                 Linking.openURL('https://app.termly.io/document/privacy-policy/aab54647-8897-4103-8424-388fee762714');
-               }}>
-               {''} Privacy Policy {''}
-             </Text>
-             and
-             <Text style={{ color: 'blue' }}
-               onPress={() => {
-                 Linking.openURL('https://gloconlive.com/wp-content/uploads/2023/02/Terms-Of-Service1-Copy-edited.pdf');
-               }}>
-               {''} Terms of Use
-             </Text>
-           </Text>
-         </View> }
-         
-          <View style={Platform.OS === 'android' ? styles.buttonSectionWrapper : styles.buttonSectionNonWrapper}>
-            {Platform.OS === 'android' &&
-              <ButtonComp btnText="Subscribe" btnStyle={{ width: '46%' }} action={() => {
-                {
-                  subscriptions.map((subscription, index) => {
-                    const owned = purchaseHistory.find(
-                      (s) => s?.productId === subscription.productId,
+          {Platform.OS === 'android' && (
+            <View>
+              <Text style={styles.textStyle}>
+                By subscribing, You agree to our
+                <Text
+                  style={{color: 'blue'}}
+                  onPress={() => {
+                    Linking.openURL(
+                      'https://app.termly.io/policy-viewer/policy.html?policyUUID=aab54647-8897-4103-8424-388fee762714',
                     );
-                    handleBuySubscription(subscription.productId)
-                  })
-                }
-              }}
+                  }}>
+                  {''} Privacy Policy {''}
+                </Text>
+                and
+                <Text
+                  style={{color: 'blue'}}
+                  onPress={() => {
+                    Linking.openURL(
+                      'https://gloconlive.com/wp-content/uploads/2023/02/Terms-Of-Service1-Copy-edited.pdf',
+                    );
+                  }}>
+                  {''} Terms of Use
+                </Text>
+              </Text>
+            </View>
+          )}
+
+          <View
+            style={
+              Platform.OS === 'android'
+                ? styles.buttonSectionWrapper
+                : styles.buttonSectionNonWrapper
+            }>
+            {Platform.OS === 'ios' && (
+              <ButtonComp
+                btnText="Subscribe"
+                btnStyle={{width: '46%'}}
+                action={() => {
+                  {
+                    subscriptions.map((subscription, index) => {
+                      const owned = purchaseHistory.find(
+                        s => s?.productId === subscription.productId,
+                      );
+                      handleBuySubscription(subscription.productId);
+                    });
+                  }
+                }}
                 disabled={loading}
                 loading={loading}
-              />}
-            <ButtonComp btnText={Platform.OS === 'android' ? "Add Device" : 'Continue'} btnStyle={{ width: Platform.OS === 'android' ? '46%' : '70%', marginLeft: 10 }} action={showModal}
+              />
+            )}
+            <ButtonComp
+              btnText={Platform.OS === 'android' ? 'Add Device' : 'Continue'}
+              btnStyle={{
+                width: Platform.OS === 'ios' ? '46%' : '90%',
+                marginLeft: 10,
+              }}
+              action={showModal}
             />
           </View>
         </View>

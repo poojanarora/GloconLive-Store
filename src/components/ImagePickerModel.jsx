@@ -7,36 +7,93 @@ import {
   Image,
   Text,
   Platform,
+  PermissionsAndroid,
+  Alert,
+  Linking,
 } from 'react-native';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import {moderateScale} from 'react-native-size-matters';
-import {
-  PERMISSIONS,
-  RESULTS,
-  check,
-  request,
-} from 'react-native-permissions';
+import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
 import {COLORS, images} from '../constant';
 import PopupContent from './PopupContent';
 
 const ImagePickerModel = ({show, onImageSelection, onClose}) => {
-  const onFileSelection = async () => {
+  const requestStoragePermission = async () => {
     try {
-      let result = await launchImageLibrary({
-        mediaType: 'photo',
-      });
-      if (result.assets[0].fileSize > 1000000) {
-        showAlertPopup(
-          'Oops',
-          'Picture size should be less than 1 MB',
-          'Cancel',
-        );
-      } else if (!result.didCancel) {
-        onImageSelection(result.assets[0]);
+      if (Platform.OS === 'android') {
+        const permission =
+          Platform.Version >= 33
+            ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
+            : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE;
+
+        const granted = await PermissionsAndroid.request(permission, {
+          title: 'Storage Permission',
+          message: 'This app needs access to your storage to select images.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        });
+
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Storage permission granted');
+          return true;
+        } else {
+          console.log('Storage permission denied');
+          Alert.alert(
+            'Permission Required',
+            'Storage permission is needed to access your gallery. Please enable it in app settings.',
+            [
+              {text: 'Cancel', style: 'cancel'},
+              {
+                text: 'Open Settings',
+                onPress: async () => {
+                  const canOpen = await Linking.canOpenURL('app-settings:');
+                  if (canOpen) {
+                    Linking.openSettings();
+                  } else {
+                    Alert.alert(
+                      'Unable to Open Settings',
+                      'Please open the settings manually to grant permissions.',
+                    );
+                  }
+                },
+              },
+            ],
+          );
+          return false;
+        }
       }
-    } catch (e) {
-      console.log('User cancelled image picker');
-      // onClose();
+      return true; // For iOS, no permissions required here
+    } catch (error) {
+      console.log('Error requesting storage permission:', error);
+      return false;
+    }
+  };
+
+  const onFileSelection = async () => {
+    const isAllowed = await requestStoragePermission();
+    if (isAllowed) {
+      try {
+        const result = await launchImageLibrary({
+          mediaType: 'photo',
+          selectionLimit: 1, // Allow selecting only one image
+        });
+
+        if (result.didCancel) {
+          console.log('User cancelled image picker');
+          return;
+        }
+
+        if (result.assets && result.assets[0].fileSize > 1000000) {
+          Alert.alert('Oops', 'Picture size should be less than 1 MB.', [
+            {text: 'OK'},
+          ]);
+        } else if (result.assets) {
+          onImageSelection(result.assets[0]); // Process selected image
+        }
+      } catch (e) {
+        console.log('Error during file selection:', e);
+      }
     }
   };
 
@@ -44,7 +101,7 @@ const ImagePickerModel = ({show, onImageSelection, onClose}) => {
     check(
       Platform.OS === 'ios'
         ? PERMISSIONS.IOS.CAMERA
-        : PERMISSIONS.ANDROID.CAMERA,
+        : PermissionsAndroid.PERMISSIONS.CAMERA,
     )
       .then(result => {
         switch (result) {
@@ -115,11 +172,7 @@ const ImagePickerModel = ({show, onImageSelection, onClose}) => {
       quality: 0.1,
     });
     if (result.assets[0].fileSize > 1000000) {
-      showAlertPopup(
-        'Oops',
-        'Picture size should be less than 1 MB',
-        'Cancel',
-      );
+      showAlertPopup('Oops', 'Picture size should be less than 1 MB', 'Cancel');
     } else if (!result.didCancel) {
       onImageSelection(result.assets[0]);
     }

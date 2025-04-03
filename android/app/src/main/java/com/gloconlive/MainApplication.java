@@ -13,6 +13,11 @@ import com.gloconlive.store.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.brentvatne.react.ReactVideoPackage;
+import android.content.Context;
+import android.content.Intent;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
+import android.os.Build;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -50,6 +55,15 @@ public class MainApplication extends Application implements ReactApplication {
       return mReactNativeHost;
     }
   }
+
+  @Override
+	public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+		if (Build.VERSION.SDK_INT >= 34 && getApplicationInfo().targetSdkVersion >= 34) {
+			return super.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED);
+		} else {
+			return super.registerReceiver(receiver, filter);
+		}
+	}
 
   @Override
   public void onCreate() {
