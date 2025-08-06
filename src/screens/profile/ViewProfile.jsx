@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,16 +7,18 @@ import {
   Image,
   ScrollView,
   RefreshControl,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import EventEmitter from 'eventemitter3';
-import { scale, moderateScale } from 'react-native-size-matters';
+import {scale, moderateScale} from 'react-native-size-matters';
 import styles from './viewProfileStyles';
-import { COLORS, images } from '../../constant';
+import {COLORS, images} from '../../constant';
 import IconInput from '../../components/IconInput';
 import ButtonComp from '../../components/ButtonComp';
 import PopupModal from '../../components/PopupModal';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Spinner from '../../components/Spinner.jsx';
 import {
   fetchProfileInfo,
@@ -24,10 +26,10 @@ import {
   changePassword,
   updateProfileInformation,
 } from '../../actions/profileActions';
-import { initializeEmitter, setLoading } from '../../actions/appAction';
+import {initializeEmitter, setLoading} from '../../actions/appAction';
 import ImagePickerModel from '../../components/ImagePickerModel';
 import showAlertPopup from '../../components/AlertComp';
-import { SUBSCRIPTION_EVENTS } from '../../utils/appConstants'
+import {SUBSCRIPTION_EVENTS} from '../../utils/appConstants';
 
 const initialEditProfileErrors = {
   companyName: '',
@@ -61,8 +63,7 @@ const ViewProfileComponent = ({
 }) => {
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
     useState(false);
-  const [imagePickerVisible, setImagePickerVisible] =
-    useState(false);
+  const [imagePickerVisible, setImagePickerVisible] = useState(false);
   const [editProfileFormErrors, setEditProfileFormErrors] = useState(
     initialEditProfileErrors,
   );
@@ -81,15 +82,15 @@ const ViewProfileComponent = ({
     console.log('Profile component mounted');
 
     const eventEmitter = new EventEmitter();
-    initializeEmitter(eventEmitter)
+    initializeEmitter(eventEmitter);
 
     eventEmitter.on(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION, () => {
       navigation.navigate('Subscription');
-    })
+    });
 
     eventEmitter.on(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED, () => {
       navigation.navigate('Subscription');
-    })
+    });
 
     //Calling functions
     fetchProfileInfo(auth.email);
@@ -189,12 +190,12 @@ const ViewProfileComponent = ({
 
   //Function to handel company name
   const handelCompanyName = e => {
-    editProfileInfo({ companyName: e });
+    editProfileInfo({companyName: e});
   };
 
   //Function to handel email
   const handelEmailId = e => {
-    editProfileInfo({ email: e });
+    editProfileInfo({email: e});
   };
 
   //Function to validate change password form
@@ -240,7 +241,7 @@ const ViewProfileComponent = ({
       ...changePasswordFormValues,
       oldPassword: e.replace(/\s/g, ''),
     });
-    setChangePasswordFormErrors({ ...changePasswordFormErrors, oldPassword: '' });
+    setChangePasswordFormErrors({...changePasswordFormErrors, oldPassword: ''});
   };
 
   //Function to handel new password
@@ -249,7 +250,7 @@ const ViewProfileComponent = ({
       ...changePasswordFormValues,
       newPassword: e.replace(/\s/g, ''),
     });
-    setChangePasswordFormErrors({ ...changePasswordFormErrors, newPassword: '' });
+    setChangePasswordFormErrors({...changePasswordFormErrors, newPassword: ''});
   };
 
   //Function to handel confirm password
@@ -277,14 +278,17 @@ const ViewProfileComponent = ({
       errors.confirmPassword = 'Please confirm password.';
     }
     if (values.newPassword != values.confirmPassword) {
-      errors.matchPassword = showAlertPopup('Oops', "Confirm password should be match with new password", 'Cancel');
-
+      errors.matchPassword = showAlertPopup(
+        'Oops',
+        'Confirm password should be match with new password',
+        'Cancel',
+      );
     }
     return errors;
   };
 
   //Funcion to update password
-  const handelChangePassword = async (e) => {
+  const handelChangePassword = async e => {
     try {
       let validateResponse = validateChangePasswordForm(
         changePasswordFormValues,
@@ -297,7 +301,7 @@ const ViewProfileComponent = ({
           old_password: changePasswordFormValues.oldPassword,
           new_password: changePasswordFormValues.newPassword,
         });
-        setChangePasswordFormValues(initialChangePasswordFormValues)
+        setChangePasswordFormValues(initialChangePasswordFormValues);
         hideUpdatePasswordModal();
       }
     } catch (error) {
@@ -314,14 +318,43 @@ const ViewProfileComponent = ({
       <ImagePickerModel
         show={imagePickerVisible}
         onImageSelection={image => {
-          editProfileInfo({ profilePic: image.uri });
-          setImagePickerVisible(false)
+          editProfileInfo({profilePic: image.uri});
+          setImagePickerVisible(false);
           setChoosenImage(image);
         }}
         onClose={() => setImagePickerVisible(false)}
       />
     );
   };
+
+  const requestStoragePermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Storage Permission',
+          message: 'App needs access to your storage',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Storage permission granted');
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log('Error requesting storage permission:', error);
+
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    requestStoragePermission();
+  });
 
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
@@ -330,19 +363,31 @@ const ViewProfileComponent = ({
       {renderImagePickerModel()}
       <View style={styles.topSectionWrapper}>
         <View style={styles.profilePictureWrapper}>
-          <Image style={styles.profileImage} source={{
-            uri: profile.profilePic !== "" ? profile.profilePic : undefined
-          }} />
+          <Image
+            style={styles.profileImage}
+            source={{
+              uri: profile.profilePic !== '' ? profile.profilePic : undefined,
+            }}
+          />
           <TouchableOpacity
             style={styles.cameraButton}
-            onPress={showImagePickerModal}>
+            onPress={() => {
+              Alert.alert(
+                'Image Upload',
+                'We need to upload your selected image to our secure servers for your profile. Do you consent?',
+                [
+                  {text: 'Cancel', onPress: () => console.log('User canceled')},
+                  {text: 'I Agree', onPress: () => showImagePickerModal()},
+                ],
+              );
+            }}>
             <Image style={styles.cameraImage} source={images.camera} />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.bottomSectionWrapper}>
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
@@ -393,9 +438,11 @@ const ViewProfileComponent = ({
               <ButtonComp
                 btnText="SAVE"
                 action={handelEditProfileChanges}
-                btnStyle={{
-                  // width: moderateScale(100),
-                }}
+                btnStyle={
+                  {
+                    // width: moderateScale(100),
+                  }
+                }
                 btnTextStyle={{
                   fontSize: scale(12),
                 }}
