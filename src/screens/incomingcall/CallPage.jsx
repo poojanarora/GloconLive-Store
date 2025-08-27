@@ -10,14 +10,24 @@ import BackIcon from '../../components/BackIcon';
 import {moderateScale} from 'react-native-size-matters';
 import CallMenuBar from './CallMenuBar';
 import {appConfig} from '../../config/config';
-import { getIncomingCallQueue, updateCallStatus } from '../../actions/callActions';
-import { CALL_STATUS, LOGIN_MODES } from '../../utils/appConstants';
+import {
+  getIncomingCallQueue,
+  updateCallStatus,
+} from '../../actions/callActions';
+import {CALL_STATUS, LOGIN_MODES} from '../../utils/appConstants';
 
 const CallPageComponent = props => {
-  const {route, profile, navigation, fetchIncomingCallQueue, updateCallStatus, auth} = props;
+  const {
+    route,
+    profile,
+    navigation,
+    fetchIncomingCallQueue,
+    updateCallStatus,
+    auth,
+  } = props;
   const {params} = route;
   const {callId, shopperName, departmentCallerId} = params;
-  const { deviceName, loginMode } = auth;
+  const {deviceName, loginMode} = auth;
   let {name} = profile;
   if (loginMode === LOGIN_MODES.DEVICE) {
     name = deviceName;
@@ -33,7 +43,7 @@ const CallPageComponent = props => {
   const onCallStatusUpdate = () => {
     fetchIncomingCallQueue();
     navigation.navigate('IncomingCallListing');
-  }
+  };
 
   const onCameraToggle = () => {
     ZegoUIKit.turnCameraOn(departmentCallerId.toString(), !isCameraOn).then(
@@ -97,6 +107,7 @@ const CallPageComponent = props => {
       {/* <Button onPress={onEndCall} title="End Call"></Button> */}
       <CallMenuBar
         style={styles.menuBar}
+        isMicOn={isMicOn}
         onEndCall={onEndCall}
         onMicToggle={onMicToggle}
         onCameraToggle={onCameraToggle}
@@ -146,10 +157,14 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue()),
-    updateCallStatus: (callId, callStatus, onCallStatusUpdate) => dispatch(updateCallStatus(callId, callStatus, onCallStatusUpdate)),
+    updateCallStatus: (callId, callStatus, onCallStatusUpdate) =>
+      dispatch(updateCallStatus(callId, callStatus, onCallStatusUpdate)),
   };
 };
 
-const CallPage = connect(mapStateToProps, mapDispatchToProps)(CallPageComponent);
+const CallPage = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CallPageComponent);
 
 export default CallPage;

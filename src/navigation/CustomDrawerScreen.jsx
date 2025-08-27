@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+} from 'react-native';
 import {
   scale,
   moderateScale,
@@ -10,6 +17,7 @@ import {StackActions, NavigationActions} from '@react-navigation/native';
 import {COLORS, images} from '../constant';
 import {useDispatch} from 'react-redux';
 import {handleLogout} from '../actions/authActions';
+import {SafeAreaView} from 'react-native-safe-area-context';
 const CustomDrawerScreen = props => {
   const menus = [
     {
@@ -75,7 +83,8 @@ const CustomDrawerScreen = props => {
   };
 
   return (
-    <View style={styles.drawerWrapper}>
+    <View style={styles.drawerWrapper} edges={['top']}>
+      <StatusBar translucent={true} backgroundColor={'#00283d'} />
       <View style={styles.drawerContentWrapper}>
         <View style={styles.drawerTopSection}>
           <View style={styles.drawerHeaderWrapper}>
@@ -87,13 +96,11 @@ const CustomDrawerScreen = props => {
                   style={{
                     width: moderateScale(20),
                     height: moderateScale(20),
-                    resizeMode: 'contain',
                   }}
                   source={images.close_white}
                 />
               </TouchableOpacity>
             </View>
-
             <Image style={styles.logoImage} source={images.logo_color} />
           </View>
           <View style={styles.drawerListWrapper}>
@@ -137,7 +144,7 @@ const styles = StyleSheet.create({
   },
   drawerTopSection: {
     flex: 1,
-    //backgroundColor: 'brown'
+    // backgroundColor: 'brown'
   },
   drawerBottomSection: {
     //backgroundColor: 'pink',
@@ -145,16 +152,17 @@ const styles = StyleSheet.create({
     paddingVertical: moderateVerticalScale(10),
   },
   drawerHeaderWrapper: {
-    height: moderateScale(125),
+    height: moderateScale(155),
     //justifyContent: 'center',
     //paddingLeft: moderateScale(20),
     //backgroundColor: 'yellow',
   },
   drawerIconWrapper: {
-    height: moderateScale(55),
+    height: moderateScale(85),
     backgroundColor: COLORS.primary,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     paddingLeft: moderateScale(20),
+    paddingBottom: moderateScale(12),
   },
   logoImage: {
     // resizeMode: 'contain',

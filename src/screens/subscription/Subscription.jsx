@@ -55,6 +55,7 @@ const SubscriptionComponent = ({
 
   const subscriptionSkus = Platform.select({
     ios: ['gloconmonthly299'],
+    android: [], // no IAP products on Android
   });
 
   useEffect(() => {
@@ -187,9 +188,9 @@ const SubscriptionComponent = ({
     }
   };
 
-  useEffect(() => {
-    handleGetPurchaseHistory();
-  }, [connected]);
+  // useEffect(() => {
+  //   handleGetPurchaseHistory();
+  // }, [connected]);
 
   const handleGetSubscriptions = async () => {
     try {
@@ -200,55 +201,25 @@ const SubscriptionComponent = ({
   };
 
   useEffect(() => {
-    handleGetSubscriptions();
+    if (Platform.OS === 'ios' && connected) {
+      handleGetPurchaseHistory();
+    }
+  }, [connected]);
+
+  useEffect(() => {
+    if (Platform.OS === 'ios' && connected) {
+      handleGetSubscriptions();
+    }
   }, [connected]);
 
   useEffect(() => {
     if (
-      purchaseHistory.find(
-        x => x.productId === (subscriptionSkus[0] || subscriptionSkus[1]),
-      )
+      Platform.OS === 'ios' &&
+      purchaseHistory.find(x => x.productId === subscriptionSkus[0])
     ) {
       navigation.navigate('Home');
     }
   }, [connected, purchaseHistory, subscriptions]);
-
-  useEffect(() => {
-    const checkCurrentPurchase = async purchase => {
-      if (purchase) {
-        try {
-          const receipt = purchase.transactionReceipt;
-
-          if (receipt) {
-            if (Platform.OS === 'ios') {
-              // const isTestEnvironment = __DEV__;
-              //send receipt body to apple server to validete
-              // const appleReceiptResponse = await validateReceiptIos(
-              //   {
-              //     "receipt-data": receipt,
-              //     password: ITUNES_SHARED_SECRET,
-              //   },
-              //   isTestEnvironment,
-              // );
-
-              // //if receipt is valid
-              // if (appleReceiptResponse) {
-              //   const { status } = appleReceiptResponse;
-              //   if (status) {
-              //     navigation.navigate("Home");
-              //   }
-              // }
-              return;
-            }
-          }
-        } catch (error) {
-          console.log('error', error);
-        }
-      }
-    };
-    checkCurrentPurchase(currentPurchase);
-  }, [currentPurchase, finishTransaction]);
-
   const convertToUUID = id => {
     const idString = String(id);
 

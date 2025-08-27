@@ -10,46 +10,36 @@ const CallMenuBar = ({
   onCameraToggle,
   toggleFrontCamera,
   onMorePress,
+  isMicOn,
 }) => {
   return (
     <View style={{...style, ...styles.mainContainer}}>
       <View style={styles.endCallView}>
         <TouchableOpacity style={styles.endCallButton} onPress={onEndCall}>
-          <Image
-            style={styles.endCallImage}
-            source={images.hang_up}
-          />
+          <Image style={styles.endCallImage} source={images.hang_up} />
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
         <View style={{...styles.subContainer, marginEnd: moderateScale(10)}}>
           <TouchableOpacity style={styles.imageButton} onPress={onCameraToggle}>
-            <Image
-              style={styles.image}
-              source={images.video_camera}
-            />
+            <Image style={styles.image} source={images.video_camera} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.imageButton} onPress={onMicToggle}>
-            <Image
-              style={styles.image}
-              source={images.mute}
-            />
+            {isMicOn ? (
+              <Image style={styles.image} source={images.unmute} />
+            ) : (
+              <Image style={styles.image} source={images.mute} />
+            )}
           </TouchableOpacity>
         </View>
         <View style={{...styles.subContainer, marginStart: moderateScale(10)}}>
           <TouchableOpacity
             style={styles.imageButton}
             onPress={toggleFrontCamera}>
-            <Image
-              style={styles.image}
-              source={images.camera}
-            />
+            <Image style={styles.image} source={images.camera} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.imageButton} onPress={onMorePress}>
-            <Image
-              style={styles.image}
-              source={images.more}
-            />
+            <Image style={styles.image} source={images.more} />
           </TouchableOpacity>
         </View>
       </View>
@@ -96,7 +86,7 @@ const styles = StyleSheet.create({
   image: {
     height: moderateVerticalScale(24),
     width: moderateScale(24),
-    resizeMode:'contain',
+    resizeMode: 'contain',
   },
   endCallView: {
     height: moderateVerticalScale(70),
@@ -120,7 +110,7 @@ const styles = StyleSheet.create({
   endCallImage: {
     height: moderateVerticalScale(40),
     width: moderateScale(38),
-    resizeMode:'contain',
+    resizeMode: 'contain',
   },
 });
 

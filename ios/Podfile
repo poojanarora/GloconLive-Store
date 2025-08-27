@@ -1,92 +1,64 @@
 $FirebaseSDKVersion = '10.3.0'
 $RNFirebaseAsStaticFramework = true
-require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '13.0'
-install! 'cocoapods', :deterministic_uuids => false
+require Pod::Executable.execute_command('node', [
+  '-p',
+  'require.resolve("react-native/scripts/react_native_pods.rb", {paths: [process.argv[1]]})',
+  __dir__
+]).strip
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+flipper_config = FlipperConfiguration.disabled
+linkage = ENV['USE_FRAMEWORKS']
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
 
 target 'GLOCONLive' do
   use_frameworks! :linkage => :static
-  
   config = use_native_modules!
-
-  # Flags change depending on the env values.
-  flags = get_default_flags()
 
   use_react_native!(
     :path => config[:reactNativePath],
-    # Hermes is now enabled by default. Disable by setting this flag to false.
-    # Upcoming versions of React Native may rely on get_default_flags(), but
-    # we make it explicit here to aid in the React Native upgrade process.
-    :hermes_enabled => true,
-    :fabric_enabled => flags[:fabric_enabled],
-    # Enables Flipper.
-    #
-    # Note that if you have use_frameworks! enabled, Flipper will not work and
-    # you should disable the next line.
-    # :flipper_configuration => FlipperConfiguration.enabled,
-    # An absolute path to your application root.
+    :flipper_configuration => flipper_config,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
   target 'GLOCONLiveTests' do
     inherit! :complete
-    # Pods for testing
   end
 
-  # Convert all permission pods into static libraries
+  # RNPermissions fix: force static libs
   pre_install do |installer|
     Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
 
     installer.pod_targets.each do |pod|
       if pod.name.eql?('RNPermissions') || pod.name.start_with?('Permission-')
         def pod.build_type;
-          # Uncomment the line corresponding to your CocoaPods version
-          Pod::BuildType.static_library # >= 1.9
-          # Pod::Target::BuildType.static_library # < 1.9
+          Pod::BuildType.static_library
         end
       end
     end
   end
 
-  bitcode_strip_path = `xcrun --find bitcode_strip`.chop!
-   def strip_bitcode_from_framework(bitcode_strip_path, framework_relative_path)
-     framework_path = File.join(Dir.pwd, framework_relative_path)
-     command = "#{bitcode_strip_path} #{framework_path} -r -o #{framework_path}"
-     puts "Stripping bitcode: #{command}"
-     system(command)
-   end
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
 
-   framework_paths = [
-     "Pods/LogRocket/LogRocket.xcframework/ios-arm64/LogRocket.framework/LogRocket",
-     "Pods/hermes-engine/destroot/Library/Frameworks/macosx/hermes.framework/hermes",
-     "Pods/hermes-engine/destroot/Library/Frameworks/macosx/hermes.framework/Versions/Current/hermes",
-     "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64/hermes.framework/hermes",
-     "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework/ios-arm64_x86_64-maccatalyst/hermes.framework/hermes"
-   ]
-
-   framework_paths.each do |framework_relative_path|
-     strip_bitcode_from_framework(bitcode_strip_path, framework_relative_path)
-   end
-  
-permissions_path = '../node_modules/react-native-permissions/ios'
-pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
-  
 end
 
-# $static_framework = ['FlipperKit', 'Flipper', 'Flipper-Folly',
-#      'CocoaAsyncSocket', 'ComponentKit', 'DoubleConversion',
-#      'glog', 'Flipper-PeerTalk', 'Flipper-RSocket', 'Yoga', 'YogaKit',
-#      'CocoaLibEvent', 'OpenSSL-Universal', 'boost-for-react-native']
+post_install do |installer|
+  react_native_post_install(
+    installer,
+    :mac_catalyst_enabled => false
+  )
   
-#    pre_install do |installer|
-#      Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
-#      installer.pod_targets.each do |pod|
-#          if $static_framework.include?(pod.name)
-#            def pod.build_type;
-#              Pod::BuildType.static_library
-#            end
-#          end
-#        end
-#   end
+  # Fix for Xcode 15 build issues (new clang + glog/folly)
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings["BUILD_LIBRARY_FOR_DISTRIBUTION"] = "YES"
+    end
+  end
+end
