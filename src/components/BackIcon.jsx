@@ -9,7 +9,9 @@ import {images} from '../constant';
 
 const BackIcon = props => {
   const handelClick = () => {
-    props.navigate.goBack();
+    if (props.navigate.canGoBack()) {
+      props.navigate.goBack();
+    }
   };
 
   return (

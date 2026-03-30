@@ -1,23 +1,26 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text} from 'react-native';
-import {moderateScale} from 'react-native-size-matters';
-import {connect} from 'react-redux';
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import {getUniqueId, getDeviceName} from 'react-native-device-info';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { moderateScale } from 'react-native-size-matters';
+import { connect } from 'react-redux';
+// import QRCodeScanner from 'react-native-qrcode-scanner';
+import { getUniqueId, getDeviceName } from 'react-native-device-info';
 import showAlertPopup from '../../components/AlertComp';
-import {addDevice} from '../../actions/deviceAction';
-import {requestUserPermission} from '../../utils/firebaseNotificationHandler';
-import {asyncStorageGetFCMToken} from '../../hooks/useAsyncStorage';
+import { addDevice } from '../../actions/deviceAction';
+import { requestUserPermission } from '../../utils/firebaseNotificationHandler';
+import { asyncStorageGetFCMToken } from '../../hooks/useAsyncStorage';
+import QRScanner from './QRScanner';
+import { COLORS } from '../../constant';
 // import ButtonComp from '../../components/ButtonComp';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import {RNCamera} from 'react-native-camera';
 
-const LinkDevice = ({navigation, addDevice}) => {
+const LinkDevice = ({ navigation, addDevice }) => {
   const [deviceId, setDeviceId] = useState('');
   const [deviceName, setDeviceName] = useState('');
 
   //Function to validate add devvice form
   const validate = values => {
-    const {department_id, device_id, name} = values;
+    const { department_id, device_id, name } = values;
     let error = '';
     if (!department_id) {
       error = 'Please select a department.';
@@ -74,38 +77,68 @@ const LinkDevice = ({navigation, addDevice}) => {
   }, []);
 
   return (
-    <QRCodeScanner
-      onRead={onSuccess}
-      // flashMode={RNCamera.Constants.FlashMode.torch}
-      topContent={
+    <View style={styles.safeAreaViewStyle}>
+      <View style={styles.center}>
         <Text style={styles.centerText}>
           Go to <Text style={styles.textBold}>Add Device</Text> on Gloconlive
           Store App from an another device.
         </Text>
-      }
-      bottomContent={
-        <Text style={styles.bottomContent}>
+      </View>
+      <View style={styles.cameraContainer}>
+        <QRScanner onRead={onSuccess} />
+      </View>
+      <View style={styles.center}>
+        <Text style={styles.centerText}>
           <Text style={styles.textBold}>
             Scan the QR Code to Link this Device
           </Text>{' '}
           with your GloconLive Store.
         </Text>
-      }
-    />
+      </View>
+    </View>
+    // <QRCodeScanner
+    //   onRead={onSuccess}
+    //   // flashMode={RNCamera.Constants.FlashMode.torch}
+    //   topContent={
+    //     <Text style={styles.centerText}>
+    //       Go to <Text style={styles.textBold}>Add Device</Text> on Gloconlive
+    //       Store App from an another device.
+    //     </Text>
+    //   }
+    //   bottomContent={
+    //     <Text style={styles.bottomContent}>
+    //       <Text style={styles.textBold}>
+    //         Scan the QR Code to Link this Device
+    //       </Text>{' '}
+    //       with your GloconLive Store.
+    //     </Text>
+    //   }
+    // />
   );
 };
 
 const styles = StyleSheet.create({
-  centerText: {
+  safeAreaViewStyle: {
     flex: 1,
+    backgroundColor: COLORS.primaryBackgroungColor,
+  },
+  center: {
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: moderateScale(16),
+  },
+  cameraContainer: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+  centerText: {
     fontSize: moderateScale(18),
     padding: moderateScale(32),
-    marginBottom: moderateScale(4),
     color: '#777',
   },
   bottomContent: {
     fontSize: moderateScale(18),
-    marginTop: moderateScale(32),
     padding: moderateScale(32),
     color: '#777',
   },

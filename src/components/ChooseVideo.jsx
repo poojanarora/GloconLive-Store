@@ -11,7 +11,8 @@ import { COLORS } from '../constant';
 import showAlertPopup from './AlertComp';
 
 import AlertComp from './AlertComp';
-import DocumentPicker, { types } from 'react-native-document-picker';
+// import DocumentPicker, { types } from 'react-native-document-picker';
+import { isCancel } from '@react-native-documents/picker'
 import BrowseFiles from './BrowseFiles';
 
 const ChooseVideo = ({ selectedVideo, onVideoSelection }) => {
@@ -36,7 +37,7 @@ const ChooseVideo = ({ selectedVideo, onVideoSelection }) => {
         onVideoSelection(video);
       }
     } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
+      if (isCancel(err)) {
         // If user canceled the document selection
         console.log('User Cancelled browser file');
       } else {
