@@ -1,16 +1,21 @@
 $FirebaseSDKVersion = '10.3.0'
-$RNFirebaseAsStaticFramework = true
 
-require Pod::Executable.execute_command('node', [
-  '-p',
-  'require.resolve("react-native/scripts/react_native_pods.rb", {paths: [process.argv[1]]})',
-  __dir__
-]).strip
+# Resolve react_native_pods.rb with node to allow for hoisting
+def node_require(script)
+  # Resolve script with node to allow for hoisting
+  require Pod::Executable.execute_command('node', ['-p',
+    "require.resolve(
+      '#{script}',
+      {paths: [process.argv[1]]},
+    )", __dir__]).strip
+end
+
+ node_require('react-native/scripts/react_native_pods.rb')
+ node_require('react-native-permissions/scripts/setup.rb')
 
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
-flipper_config = FlipperConfiguration.disabled
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
@@ -19,17 +24,13 @@ end
 
 target 'GLOCONLive' do
   use_frameworks! :linkage => :static
+  $RNFirebaseAsStaticFramework = true
   config = use_native_modules!
 
   use_react_native!(
     :path => config[:reactNativePath],
-    :flipper_configuration => flipper_config,
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-
-  target 'GLOCONLiveTests' do
-    inherit! :complete
-  end
 
   # RNPermissions fix: force static libs
   pre_install do |installer|
@@ -43,22 +44,31 @@ target 'GLOCONLive' do
       end
     end
   end
-
-  permissions_path = '../node_modules/react-native-permissions/ios'
-  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
-
+  setup_permissions(['Camera'])
 end
 
 post_install do |installer|
   react_native_post_install(
     installer,
-    :mac_catalyst_enabled => false
+    :mac_catalyst_enabled => false,
+     # :ccache_enabled => true
   )
   
   # Fix for Xcode 15 build issues (new clang + glog/folly)
+  # installer.pods_project.targets.each do |target|
+  #   target.build_configurations.each do |config|
+  #     config.build_settings["BUILD_LIBRARY_FOR_DISTRIBUTION"] = "YES"
+  #   end
+  # end
+
   installer.pods_project.targets.each do |target|
+  # Allow non-modular includes for RNFirebase pods to fix
+  # "include of non-modular header inside framework module" errors
+  if ['RNFBApp', 'RNFBAnalytics', 'RNFBCrashlytics', 'RNFBRemoteConfig', 'RNFBAppCheck'].include?(target.name)
     target.build_configurations.each do |config|
-      config.build_settings["BUILD_LIBRARY_FOR_DISTRIBUTION"] = "YES"
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      config.build_settings['DEFINES_MODULE'] = 'NO'
     end
   end
+end
 end

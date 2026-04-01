@@ -1,16 +1,19 @@
-import React, {useState} from 'react';
-import {StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Image, TouchableOpacity } from 'react-native';
 import {
   scale,
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import {images} from '../constant';
+import { images } from '../constant';
+import { useNavigation } from '@react-navigation/native';
 
 const BackIcon = props => {
+  const navigation = useNavigation();
+
   const handelClick = () => {
-    if (props.navigate.canGoBack()) {
-      props.navigate.goBack();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
     }
   };
 
