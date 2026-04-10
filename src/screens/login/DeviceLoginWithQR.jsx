@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import { connect } from 'react-redux';
@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 // import {RNCamera} from 'react-native-camera';
 
 const LinkDevice = ({ navigation, addDevice }) => {
+  const scannerRef = useRef(null);
   const [deviceId, setDeviceId] = useState('');
   const [deviceName, setDeviceName] = useState('');
 
@@ -40,10 +41,13 @@ const LinkDevice = ({ navigation, addDevice }) => {
     // Linking.openURL(e.data).catch(err =>
     //   console.error('An error occured', err)
     // );
+    const str = JSON.parse(e.data);
+    const obj = JSON.parse(str);
+    console.log('QR Code Data:', obj['department_ids']?.[0]);
     const fcmToken = await asyncStorageGetFCMToken();
     const departmentId = e.data;
     const payload = {
-      department_id: departmentId,
+      department_id: obj['department_ids']?.[0] || '',
       device_id: deviceId,
       name: deviceName,
       fcm_token: fcmToken,
@@ -52,9 +56,14 @@ const LinkDevice = ({ navigation, addDevice }) => {
     console.log(payload);
     const error = validate(payload);
     if (error) {
-      showAlertPopup('Error', error, 'ok');
+      showAlertPopup('Error', error, 'ok', () => {
+        scannerRef.current?.resetScanner();
+      });
     } else {
-      addDevice(payload, onDeviceAdded);
+      const onFail = () => {
+        scannerRef.current?.resetScanner();
+      };
+      addDevice(payload, onDeviceAdded, onFail);
     }
   };
 
@@ -85,7 +94,7 @@ const LinkDevice = ({ navigation, addDevice }) => {
         </Text>
       </View>
       <View style={styles.cameraContainer}>
-        <QRScanner onRead={onSuccess} />
+        <QRScanner ref={scannerRef} onRead={onSuccess} />
       </View>
       <View style={styles.center}>
         <Text style={styles.centerText}>
@@ -157,8 +166,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    addDevice: (payload, onDeviceAdded) =>
-      dispatch(addDevice(payload, onDeviceAdded)),
+    addDevice: (payload, onDeviceAdded, onFail) =>
+      dispatch(addDevice(payload, onDeviceAdded, onFail)),
   };
 };
 

@@ -3,7 +3,11 @@ import { emitEvent, setAuth, setLoading } from './appAction';
 import showAlertPopup from '../components/AlertComp';
 import axiosPrivate from '../config/privateApi';
 import { localStorageSetItem } from '../hooks/useAsyncStorage';
-import { LOGIN_MODES, MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
+import {
+  LOGIN_MODES,
+  MESSAGE_CONST,
+  SUBSCRIPTION_EVENTS,
+} from '../utils/appConstants';
 
 export const fetchDevices = locationId => async dispatch => {
   try {
@@ -35,44 +39,49 @@ export const fetchDevices = locationId => async dispatch => {
 /**
  * Function to add device.
  */
-export const addDevice = (formValues, onDeviceAdded) => async dispatch => {
-  try {
-    dispatch(setLoading(true));
-    let resp = await axiosPrivate.post('/store/add-device', formValues);
-    const data = resp.data;
-    console.log(data);
-    if (data?.success === true) {
-      console.log('In add device success');
-      const deviceData = data?.data.store_device_data;
-      // dispatch(appendDevices(data));
-      dispatch(setDeviceData(deviceData))
-      let obj = {
-        accessToken: data?.data.api_token,
-        email: formValues.device_id,
-        isLoggedIn: true,
-        loginMode: LOGIN_MODES.DEVICE,
-        departmentId: deviceData.department_id,
-        deviceName: deviceData.device_name,
-      };
-      localStorageSetItem(obj);
-      dispatch(setAuth(obj));
+export const addDevice =
+  (formValues, onDeviceAdded, onFail) => async dispatch => {
+    try {
+      dispatch(setLoading(true));
+      let resp = await axiosPrivate.post('/store/add-device', formValues);
+      const data = resp.data;
+      console.log(data);
+      if (data?.success === true) {
+        console.log('In add device success');
+        const deviceData = data?.data.store_device_data;
+        // dispatch(appendDevices(data));
+        dispatch(setDeviceData(deviceData));
+        let obj = {
+          accessToken: data?.data.api_token,
+          email: formValues.device_id,
+          isLoggedIn: true,
+          loginMode: LOGIN_MODES.DEVICE,
+          departmentId: deviceData.department_id,
+          deviceName: deviceData.device_name,
+        };
+        localStorageSetItem(obj);
+        dispatch(setAuth(obj));
+        dispatch(setLoading(false));
+        onDeviceAdded();
+        showAlertPopup('Success', 'Device Added Successfully', 'Ok');
+      } else {
+        dispatch(setLoading(false));
+        showAlertPopup('Oops', resp.data?.message, 'Cancel', onFail);
+      }
+    } catch (error) {
       dispatch(setLoading(false));
-      onDeviceAdded();
-      showAlertPopup('Success', 'Device Added Successfully', 'Ok');
-    } else {
-      dispatch(setLoading(false));
-      showAlertPopup('Oops', resp.data?.message, 'Cancel');
+      console.log('In add device catch block');
+      if (error.code === 300) {
+        dispatch(emitEvent(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION));
+      } else {
+        showAlertPopup(
+          MESSAGE_CONST.OOPS,
+          error?.message,
+          MESSAGE_CONST.CANCEL,
+        );
+      }
     }
-  } catch (error) {
-    dispatch(setLoading(false));
-    console.log('In add device catch block');
-    if (error.code === 300) {
-      dispatch(emitEvent(SUBSCRIPTION_EVENTS.UPGRADE_SUBSCRIPTION))
-    } else {
-      showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
-    }
-  }
-};
+  };
 
 /**
  * Function to update department.
@@ -115,7 +124,7 @@ export const storeDevices = devices => {
 /**
  * Function to set newly added devices.
  */
- export const setDeviceData = device => {
+export const setDeviceData = device => {
   return {
     type: deviceActionTypes.SET_DEVICE_DATA,
     payload: device,

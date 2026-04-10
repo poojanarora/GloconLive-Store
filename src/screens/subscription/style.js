@@ -90,11 +90,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  buttonSectionNonWrapper:
-  {
-    //backgroundColor: 'green', 
+  buttonSectionNonWrapper: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   footerWrapper: {
     marginHorizontal: 20,

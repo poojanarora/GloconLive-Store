@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {
   Camera,
@@ -6,10 +6,18 @@ import {
   useCodeScanner,
 } from 'react-native-vision-camera';
 
-const QRScanner = ({ onRead }) => {
+const QRScanner = forwardRef(({ onRead }, ref) => {
   const device = useCameraDevice('back');
   const [hasPermission, setHasPermission] = useState(false);
-  const [scanned, setScanned] = useState(false);
+  const scannedRef = useRef(false);
+  const [cameraActive, setCameraActive] = useState(true);
+
+  useImperativeHandle(ref, () => ({
+    resetScanner: () => {
+      scannedRef.current = false;
+      setCameraActive(true);
+    },
+  }));
 
   useEffect(() => {
     (async () => {
@@ -21,8 +29,9 @@ const QRScanner = ({ onRead }) => {
   const codeScanner = useCodeScanner({
     codeTypes: ['qr'],
     onCodeScanned: codes => {
-      if (codes.length > 0 && !scanned) {
-        setScanned(true);
+      if (codes.length > 0 && !scannedRef.current) {
+        scannedRef.current = true;
+        setCameraActive(false);
         onRead && onRead({ data: codes[0].value });
       }
     },
@@ -41,12 +50,12 @@ const QRScanner = ({ onRead }) => {
       <Camera
         style={{flex: 1}}
         device={device}
-        isActive={!scanned}
+        isActive={cameraActive}
         codeScanner={codeScanner}
       />
     </View>
   );
-};
+});
 
 export default QRScanner;
 

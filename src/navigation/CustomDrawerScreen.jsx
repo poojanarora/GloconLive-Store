@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -12,12 +12,12 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import {CommonActions} from '@react-navigation/native';
-import {StackActions, NavigationActions} from '@react-navigation/native';
-import {COLORS, images} from '../constant';
-import {useDispatch} from 'react-redux';
-import {handleLogout} from '../actions/authActions';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { CommonActions } from '@react-navigation/native';
+import { StackActions, NavigationActions } from '@react-navigation/native';
+import { COLORS, images } from '../constant';
+import { useDispatch } from 'react-redux';
+import { handleLogout } from '../actions/authActions';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const CustomDrawerScreen = props => {
   const menus = [
     {
@@ -91,13 +91,16 @@ const CustomDrawerScreen = props => {
             <View style={styles.drawerIconWrapper}>
               <TouchableOpacity
                 style={styles.menuIconWrapper}
-                onPress={handelMenuIconClick}>
+                onPress={handelMenuIconClick}
+              >
                 <Image
                   style={{
                     width: moderateScale(20),
                     height: moderateScale(20),
+                    resizeMode: 'contain',
+                    tintColor: '#FFFFFF',
                   }}
-                  source={images.close_white}
+                  source={images.close}
                 />
               </TouchableOpacity>
             </View>
@@ -112,7 +115,8 @@ const CustomDrawerScreen = props => {
                     selectedMenu === value.id && styles.selectedList,
                   ]}
                   key={key}
-                  onPress={() => handelMenuClick(value)}>
+                  onPress={() => handelMenuClick(value)}
+                >
                   <Image style={styles.iconImage} source={value.icon} />
                   <Text style={styles.listLabel}>{value.title}</Text>
                 </TouchableOpacity>
@@ -123,7 +127,8 @@ const CustomDrawerScreen = props => {
         <View style={styles.drawerBottomSection}>
           <TouchableOpacity
             style={styles.drawerListItem}
-            onPress={handelLogout}>
+            onPress={handelLogout}
+          >
             <Image style={styles.iconImage} source={images.logout} />
             <Text style={styles.listLabel}>Sign Out</Text>
           </TouchableOpacity>
@@ -161,8 +166,8 @@ const styles = StyleSheet.create({
     height: moderateScale(85),
     backgroundColor: COLORS.primary,
     justifyContent: 'flex-end',
-    paddingLeft: moderateScale(20),
-    paddingBottom: moderateScale(12),
+    paddingLeft: moderateScale(10),
+    paddingBottom: moderateScale(6),
   },
   logoImage: {
     // resizeMode: 'contain',

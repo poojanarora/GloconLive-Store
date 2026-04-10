@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,12 @@ import IncrementDecrementInput from '../../components/IncermentDecrementInput.js
 import images from '../../constant/images.js';
 import PopupModal from '../../components/PopupModal.jsx';
 import Spinner from '../../components/Spinner.jsx';
-import {connect} from 'react-redux';
-import {fetchSubscriptionInfo} from '../../actions/subscriptionAction.js';
+import { connect } from 'react-redux';
+import { fetchSubscriptionInfo } from '../../actions/subscriptionAction.js';
 import Payment from './Payment.jsx';
-import {useCheckoutScreen} from './Checkout.jsx';
+import { useCheckoutScreen } from './Checkout.jsx';
 import AlertComp from '../../components/AlertComp.jsx';
-import {useIAP, PurchaseError, requestSubscription} from 'react-native-iap';
+import { ErrorCode, useIAP } from 'react-native-iap';
 
 const SubscriptionComponent = ({
   profile,
@@ -38,16 +38,21 @@ const SubscriptionComponent = ({
   const {
     connected,
     subscriptions,
-    getSubscriptions,
-    currentPurchase,
-    finishTransaction,
-    purchaseHistory,
-    getPurchaseHistory,
-  } = useIAP();
+    availablePurchases,
+    getAvailablePurchases,
+    fetchProducts,
+    requestPurchase,
+  } = useIAP({
+    onPurchaseError: error => {
+      if (error.code !== ErrorCode.UserCancelled) {
+        console.error('Purchase error:', error.message);
+      }
+    },
+  });
 
   const [loading, setLoading] = useState(false);
 
-  const errorLog = ({message, error}) => {
+  const errorLog = ({ message, error }) => {
     console.error('An error happened', message, error);
   };
 
@@ -157,7 +162,8 @@ const SubscriptionComponent = ({
           //subTitle="Add Subscription"
           primaryButtonText="Add"
           submitDisabled={subDisabled}
-          dangerButtonText="Cancel">
+          dangerButtonText="Cancel"
+        >
           <View style={styles.formSectionWrapper}>
             <IncrementDecrementInput
               label="Number of device"
@@ -182,9 +188,9 @@ const SubscriptionComponent = ({
 
   const handleGetPurchaseHistory = async () => {
     try {
-      await getPurchaseHistory();
+      await getAvailablePurchases();
     } catch (error) {
-      errorLog({message: 'handleGetPurchaseHistory', error});
+      errorLog({ message: 'handleGetPurchaseHistory', error });
     }
   };
 
@@ -194,9 +200,9 @@ const SubscriptionComponent = ({
 
   const handleGetSubscriptions = async () => {
     try {
-      await getSubscriptions({skus: subscriptionSkus});
+      await fetchProducts({ skus: subscriptionSkus, type: 'subs' });
     } catch (error) {
-      errorLog({message: 'handleGetSubscriptions', error});
+      errorLog({ message: 'handleGetSubscriptions', error });
     }
   };
 
@@ -215,11 +221,11 @@ const SubscriptionComponent = ({
   useEffect(() => {
     if (
       Platform.OS === 'ios' &&
-      purchaseHistory.find(x => x.productId === subscriptionSkus[0])
+      availablePurchases?.find(x => x?.productId === subscriptionSkus[0])
     ) {
       navigation.navigate('Home');
     }
-  }, [connected, purchaseHistory, subscriptions]);
+  }, [connected, availablePurchases, subscriptions]);
   const convertToUUID = id => {
     const idString = String(id);
 
@@ -233,17 +239,25 @@ const SubscriptionComponent = ({
   const handleBuySubscription = async productId => {
     try {
       setLoading(true);
-      await requestSubscription({
-        sku: productId,
-        appAccountToken: convertToUUID(profile?.id),
+      await requestPurchase({
+        request: {
+          apple: { sku: productId },
+          google: {
+            skus: [productId],
+            subscriptionOffers: [
+              { sku: productId, offerToken: convertToUUID(profile?.id) },
+            ],
+          },
+        },
+        type: 'subs',
       });
       setLoading(false);
     } catch (error) {
       setLoading(false);
       if (error instanceof PurchaseError) {
-        errorLog({message: `[${error.code}]: ${error.message}`, error});
+        errorLog({ message: `[${error.code}]: ${error.message}`, error });
       } else {
-        errorLog({message: 'handleBuySubscription', error});
+        errorLog({ message: 'handleBuySubscription', error });
       }
     }
   };
@@ -255,7 +269,8 @@ const SubscriptionComponent = ({
         {renderAddSubscriptionModal()}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{flexGrow: 1}}>
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
           <View style={styles.textContainer}>
             <Text style={styles.titleText}>Global Seller Subscription</Text>
             <Text style={styles.bottomText}>Monthly</Text>
@@ -325,50 +340,53 @@ const SubscriptionComponent = ({
           </View>
         </ScrollView>
         <View style={styles.footerWrapper}>
-          {Platform.OS === 'android' && (
+          {
             <View>
               <Text style={styles.textStyle}>
                 By subscribing, You agree to our
                 <Text
-                  style={{color: 'blue'}}
+                  style={{ color: 'blue' }}
                   onPress={() => {
                     Linking.openURL(
                       'https://app.termly.io/policy-viewer/policy.html?policyUUID=aab54647-8897-4103-8424-388fee762714',
                     );
-                  }}>
+                  }}
+                >
                   {''} Privacy Policy {''}
                 </Text>
                 and
                 <Text
-                  style={{color: 'blue'}}
+                  style={{ color: 'blue' }}
                   onPress={() => {
                     Linking.openURL(
                       'https://gloconlive.com/wp-content/uploads/2023/02/Terms-Of-Service1-Copy-edited.pdf',
                     );
-                  }}>
+                  }}
+                >
                   {''} Terms of Use
                 </Text>
               </Text>
             </View>
-          )}
+          }
 
           <View
             style={
               Platform.OS === 'android'
                 ? styles.buttonSectionWrapper
                 : styles.buttonSectionNonWrapper
-            }>
+            }
+          >
             {Platform.OS === 'ios' && (
               <ButtonComp
                 btnText="Subscribe"
-                btnStyle={{width: '46%'}}
+                btnStyle={{ width: '46%' }}
                 action={() => {
                   {
                     subscriptions.map((subscription, index) => {
-                      const owned = purchaseHistory.find(
-                        s => s?.productId === subscription.productId,
+                      const owned = availablePurchases?.find(
+                        s => s?.productId === subscription.id,
                       );
-                      handleBuySubscription(subscription.productId);
+                      handleBuySubscription(subscription.id);
                     });
                   }
                 }}
