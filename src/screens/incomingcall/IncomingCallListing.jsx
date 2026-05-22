@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,6 +8,7 @@ import {
   FlatList,
   RefreshControl,
 } from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {connect} from 'react-redux';
 import styles from './incomingCallListingStyles';
 import {images} from '../../constant';
@@ -17,26 +18,25 @@ import {LOGIN_MODES} from '../../utils/appConstants';
 const IncomingCalls = ({
   navigation,
   fetchIncomingCallQueue,
-  callQueue,
   loginMode,
   isLoading,
-  departmentId,
+  callQueue,
 }) => {
-  const [fetchData, setFetchData] = useState(false);
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
+      fetchIncomingCallQueue();
+    }, [fetchIncomingCallQueue]),
+  );
+
+  React.useEffect(() => {
     if (loginMode === LOGIN_MODES.DEVICE) {
       navigation.setOptions({headerLeft: () => {}});
     }
-    fetchIncomingCallQueue();
-  }, [fetchData, departmentId, callQueue.length]);
+  }, [loginMode, navigation]);
 
   //Function to handel location refresh
   const onRefresh = () => {
-    setFetchData(!fetchData);
-  };
-
-  const renderItem = ({item}) => {
-    return <Item item={item} />;
+    fetchIncomingCallQueue();
   };
 
   const onJoinCall = item => {
@@ -48,7 +48,7 @@ const IncomingCalls = ({
     });
   };
 
-  const Item = ({item}) => {
+  const renderItem = ({item}) => {
     return (
       <View style={styles.listItemWrapper}>
         <View style={styles.listItemLeftSectionWrapper}>
@@ -107,7 +107,6 @@ const mapStateToProps = state => {
     callQueue: state.call.callQueue,
     isLoading: state.app.isLoading,
     loginMode: state.app.auth.loginMode,
-    departmentId: state.app.auth.departmentId,
   };
 };
 

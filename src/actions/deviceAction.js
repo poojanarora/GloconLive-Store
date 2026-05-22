@@ -9,10 +9,14 @@ import {
   SUBSCRIPTION_EVENTS,
 } from '../utils/appConstants';
 
-export const fetchDevices = locationId => async dispatch => {
+export const fetchDevices =
+  (locationId, options = {}) => async dispatch => {
+  const {showLoader = true, showErrorPopup = true} = options;
   try {
     console.log('In fetch device action');
-    dispatch(setLoading(true));
+    if (showLoader) {
+      dispatch(setLoading(true));
+    }
     let response = await axiosPrivate.post('/store/get-location-devices', {
       location_id: locationId,
     });
@@ -20,18 +24,26 @@ export const fetchDevices = locationId => async dispatch => {
     if (response.data.success === true) {
       const data = response.data?.data;
       dispatch(storeDevices(data));
-      dispatch(setLoading(false));
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
     } else {
-      dispatch(setLoading(false));
-      showAlertPopup('Oops', response.data?.message, 'Cancel');
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
+      if (showErrorPopup) {
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
+      }
     }
   } catch (error) {
-    dispatch(setLoading(false));
+    if (showLoader) {
+      dispatch(setLoading(false));
+    }
     console.log('In fetch Device catch block');
-    const { status, data } = error.response;
-    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+    const {status, data} = error.response || {};
+    if (status === 401 && data && 'is_subscribed' in data && !data.is_subscribed) {
       dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
-    } else {
+    } else if (showErrorPopup) {
       showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
     }
   }

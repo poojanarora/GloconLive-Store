@@ -223,9 +223,10 @@ const SubscriptionComponent = ({
       Platform.OS === 'ios' &&
       availablePurchases?.find(x => x?.productId === subscriptionSkus[0])
     ) {
-      navigation.navigate('Home');
+      // navigation.navigate('Home');
     }
   }, [connected, availablePurchases, subscriptions]);
+
   const convertToUUID = id => {
     const idString = String(id);
 
@@ -241,7 +242,10 @@ const SubscriptionComponent = ({
       setLoading(true);
       await requestPurchase({
         request: {
-          apple: { sku: productId },
+          apple: {
+            sku: productId,
+            appAccountToken: convertToUUID(profile?.id),
+          },
           google: {
             skus: [productId],
             subscriptionOffers: [

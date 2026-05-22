@@ -2895,7 +2895,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: e345b219fd15d325f0cf2fef28cb8ce00d851b3f
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
-  hermes-engine: 6ffb576b1b34c42a336756847f310a24d8220674
+  hermes-engine: 9e1654963fd4d9a8b019c17d92eb7d3918dad310
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   NitroIap: bf941de560890afa796003d41eff657f65cb2199
   NitroModules: e9f827e79b3fac2d24e13d0e2c18e8d2848049e2
@@ -2909,7 +2909,7 @@ SPEC CHECKSUMS:
   React: 1ba7d364ade7d883a1ec055bfc3606f35fdee17b
   React-callinvoker: bc2a26f8d84fb01f003fc6de6c9337b64715f95b
   React-Core: 7840d3a80b43a95c5e80ef75146bd70925ebab0f
-  React-Core-prebuilt: 564376af953f2c113911756dc1145e72b03199ad
+  React-Core-prebuilt: bbe8c633e9bc99852cf2d39b4539416a2e085f9e
   React-CoreModules: 2eb010400b63b89e53a324ffb3c112e4c7c3ce42
   React-cxxreact: a558e92199d26f145afa9e62c4233cf8e7950efe
   React-debug: d196e6df0599d78360b3211367e28c5583054133
@@ -2976,7 +2976,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: e96e93b493d8d86eeaee3e590ba0be53f6abe46f
   ReactCodegen: 66522f37c7e4861aec1f6a574dee83917fad4397
   ReactCommon: 07572bf9e687c8a52fbe4a3641e9e3a1a477c78e
-  ReactNativeDependencies: 2a464a42288267457f6ffb08bdbadd887fcc20a7
+  ReactNativeDependencies: c92d523f49c246e6884b3cdf9f99900589afb48d
   RNCAsyncStorage: c8407cc394627a3a4cf56b457d594bfa822b6ab8
   RNCMaskedView: ee2fc4739eb35be50bcf4f95daca19f316b5d50c
   RNDeviceInfo: 98bb51ba1519cd3f19f14e7236b5bb1c312c780f
@@ -2984,7 +2984,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: c2df2133c925e0c658730d305152035e4e145144
   RNGestureHandler: d9e942967ed2a9a555c41591c4ee9dfeabee1f01
   RNNotifee: 271cfeb505183d2cd1b858c14c3968b6ca30a642
-  RNPermissions: adab483057608d2476b940328bc09c84b1c7b527
+  RNPermissions: 9589d52484e611e72bb191b254d249765af631dd
   RNReanimated: e8365b1438aba0119ea2656b56e70b9a1708b930
   RNScreens: ca829379d20b0d1ff41a0b87bc37bdc50276cef5
   RNSound: 314cc5226453ef4a3314a196c65e8a65e5106a7b
@@ -3005,6 +3005,6 @@ SPEC CHECKSUMS:
   ZegoExpressEngine: 0064f6044b5d1d00c40d815455e6ee032f1cb56b
   ZIM-Private: 17611497652d4228263a16e57e43297556ad910a
 
-PODFILE CHECKSUM: 7304f4edff633d10a7ce0dc3a41b5d54f440b081
+PODFILE CHECKSUM: 9a275a95f0dfa6b7b52e530a09b60178c718140d
 
 COCOAPODS: 1.16.2

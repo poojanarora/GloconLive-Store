@@ -1,5 +1,5 @@
-import {locationActionTypes} from '../actionTypes/actionTypes';
-import {initialState} from '../state/initialState';
+import { locationActionTypes } from '../actionTypes/actionTypes';
+import { initialState } from '../state/initialState';
 
 const location = (state = initialState.location, action) => {
   switch (action.type) {
@@ -15,7 +15,7 @@ const location = (state = initialState.location, action) => {
       };
     case locationActionTypes.UPDATE_LOCATION: {
       const index = state.storeLocations.findIndex(
-        location => location.id === action.payload.id,
+        locationItem => locationItem.id === action.payload.id,
       );
       const newArray = [...state.storeLocations];
       newArray[index] = action.payload;
@@ -28,7 +28,23 @@ const location = (state = initialState.location, action) => {
       return {
         ...state,
         selectedLocationVideo: action.payload,
-      }
+      };
+    case locationActionTypes.SET_LOCATION_VIDEO_UPLOAD_STATE:
+      return {
+        ...state,
+        locationVideoUpload: {
+          ...state.locationVideoUpload,
+          ...action.payload,
+        },
+      };
+    case locationActionTypes.DISMISS_LOCATION_VIDEO_UPLOAD_BANNER:
+      return {
+        ...state,
+        locationVideoUpload: {
+          ...state.locationVideoUpload,
+          visible: false,
+        },
+      };
     default:
       return state;
   }

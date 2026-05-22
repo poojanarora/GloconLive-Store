@@ -125,7 +125,6 @@ const LoginComponent = ({ navigation, isLoading, onLogin }) => {
           <View style={styles.formSectionWrapper}>
             <IconInput
               label="Email"
-              placeholder="mynamein@gmail.com"
               name="email"
               value={formValues.email}
               icon={images.tick}
@@ -151,16 +150,6 @@ const LoginComponent = ({ navigation, isLoading, onLogin }) => {
                 Do you want to check application status?{' '}
                 <Text onPress={navigateToSignUp} style={styles.labelPrimary}>
                   Check
-                </Text>
-              </Text>
-            </View>
-            <View style={styles.signInAsDeviceWrapper}>
-              <Text style={styles.signUpLabel}>
-                Are you a salesman?{' '}
-                <Text
-                  style={styles.labelPrimary}
-                  onPress={() => navigation.navigate('DeviceLogin')}>
-                  Link this Device
                 </Text>
               </Text>
             </View>

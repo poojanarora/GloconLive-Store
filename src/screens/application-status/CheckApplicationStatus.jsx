@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import styles from './styles.js';
-import {images} from '../../constant';
+import { images } from '../../constant';
 import IconInput from '../../components/IconInput.jsx';
 import ButtonComp from '../../components/ButtonComp.jsx';
 import OverlaySpinnerHOC from '../../HOC/OverlaySpinnerHOC.js';
@@ -23,7 +23,7 @@ const initialErrors = {
   email: '',
 };
 
-const CheckApplicationStatus = ({navigation}) => {
+const CheckApplicationStatus = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialErrors);
@@ -95,35 +95,33 @@ const CheckApplicationStatus = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.safeAreaViewStyle}>
-      <OverlaySpinner isLoading={isLoading}>
-        {/* <ScrollView showsVerticalScrollIndicator={false}> */}
-        <View style={styles.body}>
-          <View style={styles.mainSectionWrapper}>
-            <View style={styles.headerSectionWrapper}>
-              <Image style={styles.logoImage} source={images.logo_color} />
-            </View>
-            <View style={styles.formSectionWrapper}>
-              <IconInput
-                label="Email"
-                placeholder="mynamein@gmail.com"
-                name="email"
-                value={formValues.email}
-                icon={images.tick}
-                isSecure={false}
-                error={formErrors.email}
-                onChangeText={handelEmail}
+      {/* <ScrollView showsVerticalScrollIndicator={false}> */}
+      <View style={styles.body}>
+        <View style={styles.mainSectionWrapper}>
+          <View style={styles.headerSectionWrapper}>
+            <Image style={styles.logoImage} source={images.logo_color} />
+          </View>
+          <View style={styles.formSectionWrapper}>
+            <IconInput
+              label="Email"
+              placeholder="mynamein@gmail.com"
+              name="email"
+              value={formValues.email}
+              icon={images.tick}
+              isSecure={false}
+              error={formErrors.email}
+              onChangeText={handelEmail}
+            />
+            <View style={styles.buttonSectionWrapper}>
+              <ButtonComp
+                btnText="Check Application Status"
+                action={handelCheckApplicationStatus}
               />
-              <View style={styles.buttonSectionWrapper}>
-                <ButtonComp
-                  btnText="Check Application Status"
-                  action={handelCheckApplicationStatus}
-                />
-              </View>
             </View>
           </View>
         </View>
-        {/* </ScrollView>  */}
-      </OverlaySpinner>
+      </View>
+      {/* </ScrollView>  */}
     </SafeAreaView>
   );
 };

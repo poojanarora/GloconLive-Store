@@ -5,8 +5,7 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import {CommonActions} from '@react-navigation/native';
-import {StackActions, NavigationActions} from '@react-navigation/native';
+import {StackActions} from '@react-navigation/native';
 import {COLORS, images} from '../constant';
 import {useDispatch} from 'react-redux';
 import {handleLogout} from '../actions/authActions';
@@ -31,6 +30,22 @@ const ConceirgeCustomDrawerScreen = props => {
   //Function to handel menu click
   const handelMenuClick = menu => {
     setSelectedMenu(menu.id);
+    if (menu.navigatTo === 'IncomingCall') {
+      const drawerState = props.navigation.getState();
+      const incomingCallRoute = drawerState.routes.find(
+        route => route.name === 'IncomingCall',
+      );
+
+      if (incomingCallRoute?.state?.key) {
+        props.navigation.dispatch({
+          ...StackActions.popToTop(),
+          target: incomingCallRoute.state.key,
+        });
+      }
+
+      props.navigation.navigate('IncomingCall');
+      return;
+    }
     props.navigation.navigate(menu.navigatTo);
   };
 
@@ -60,11 +75,7 @@ const ConceirgeCustomDrawerScreen = props => {
                 style={styles.menuIconWrapper}
                 onPress={handelMenuIconClick}>
                 <Image
-                  style={{
-                    width: moderateScale(20),
-                    height: moderateScale(20),
-                    resizeMode: 'contain',
-                  }}
+                  style={styles.closeIcon}
                   source={images.close_white}
                 />
               </TouchableOpacity>
@@ -165,6 +176,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginLeft: moderateScale(8),
     marginRight: moderateScale(8),
+  },
+  closeIcon: {
+    width: moderateScale(20),
+    height: moderateScale(20),
+    resizeMode: 'contain',
   },
   listLabel: {
     fontSize: scale(12),

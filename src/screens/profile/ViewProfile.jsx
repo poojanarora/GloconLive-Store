@@ -50,7 +50,6 @@ const initialChangePasswordErrors = {
 };
 
 const ViewProfileComponent = ({
-  isLoading,
   auth,
   profile,
   setLoading,
@@ -61,6 +60,7 @@ const ViewProfileComponent = ({
   navigation,
   initializeEmitter,
 }) => {
+  const [refreshing, setRefreshing] = useState(false);
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
     useState(false);
   const [imagePickerVisible, setImagePickerVisible] = useState(false);
@@ -93,7 +93,7 @@ const ViewProfileComponent = ({
     });
 
     //Calling functions
-    fetchProfileInfo(auth.email);
+    fetchProfileInfo(auth.email, {showLoader: false, showErrorPopup: false});
 
     //Cleanup function
     return () => {
@@ -170,7 +170,12 @@ const ViewProfileComponent = ({
 
   //Function to handel profile refresh
   const onRefresh = () => {
-    fetchProfileInfo(auth.email);
+    setRefreshing(true);
+    Promise.resolve(
+      fetchProfileInfo(auth.email, {showLoader: false, showErrorPopup: false}),
+    ).finally(() => {
+      setRefreshing(false);
+    });
   };
 
   //Function to launch gallery to select image
@@ -390,7 +395,7 @@ const ViewProfileComponent = ({
           contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
           <View style={styles.formSectionWrapper}>
             <View>
@@ -457,7 +462,6 @@ const ViewProfileComponent = ({
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.app.isLoading,
     auth: state.app.auth,
     profile: state.profile,
   };
@@ -466,7 +470,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setLoading: loading => dispatch(setLoading(loading)),
-    fetchProfileInfo: email => dispatch(fetchProfileInfo(email)),
+    fetchProfileInfo: (email, options) =>
+      dispatch(fetchProfileInfo(email, options)),
     editProfileInfo: obj => dispatch(storeProfile(obj)),
     updateProfileInformation: payload =>
       dispatch(updateProfileInformation(payload)),

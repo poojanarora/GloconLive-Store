@@ -12,12 +12,10 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import { CommonActions } from '@react-navigation/native';
-import { StackActions, NavigationActions } from '@react-navigation/native';
+import {StackActions} from '@react-navigation/native';
 import { COLORS, images } from '../constant';
 import { useDispatch } from 'react-redux';
 import { handleLogout } from '../actions/authActions';
-import { SafeAreaView } from 'react-native-safe-area-context';
 const CustomDrawerScreen = props => {
   const menus = [
     {
@@ -57,7 +55,21 @@ const CustomDrawerScreen = props => {
   //Function to handel menu click
   const handelMenuClick = menu => {
     setSelectedMenu(menu.id);
-    if (menu.navigatTo === 'Locations') {
+    if (menu.navigatTo === 'IncomingCall') {
+      const drawerState = props.navigation.getState();
+      const incomingCallRoute = drawerState.routes.find(
+        route => route.name === 'IncomingCall',
+      );
+
+      if (incomingCallRoute?.state?.key) {
+        props.navigation.dispatch({
+          ...StackActions.popToTop(),
+          target: incomingCallRoute.state.key,
+        });
+      }
+
+      props.navigation.navigate('IncomingCall');
+    } else if (menu.navigatTo === 'Locations') {
       props.navigation.navigate('Locations', {
         screen: 'LocationListing',
       });
@@ -94,12 +106,7 @@ const CustomDrawerScreen = props => {
                 onPress={handelMenuIconClick}
               >
                 <Image
-                  style={{
-                    width: moderateScale(20),
-                    height: moderateScale(20),
-                    resizeMode: 'contain',
-                    tintColor: '#FFFFFF',
-                  }}
+                  style={styles.closeIcon}
                   source={images.close}
                 />
               </TouchableOpacity>
@@ -202,6 +209,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginLeft: moderateScale(8),
     marginRight: moderateScale(8),
+  },
+  closeIcon: {
+    width: moderateScale(20),
+    height: moderateScale(20),
+    resizeMode: 'contain',
+    tintColor: '#FFFFFF',
   },
   listLabel: {
     fontSize: scale(12),

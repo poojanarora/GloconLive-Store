@@ -13,12 +13,15 @@ import {
 
 const AddStoreVideoComponent = ({
   navigation,
-  handelVideoTitle,
-  handelVideoUpload,
+  handelVideoTitle: handleVideoTitleAction,
+  handelVideoUpload: handleVideoUploadAction,
   videoTitle,
   video,
   profile,
+  uploadStatus,
 }) => {
+  const isUploading = uploadStatus === 'uploading';
+
   const onShowPreview = () => {
     if (video && video.uri) {
       navigation.navigate('ShopVideoPreview');
@@ -28,15 +31,41 @@ const AddStoreVideoComponent = ({
   };
 
   const onCancel = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return;
+    }
     navigation.navigate('ViewProfile');
   };
 
   const handelVideoTitleChange = e => {
-    handelVideoTitle(e);
+    handleVideoTitleAction(e);
   };
 
   const onUpload = async () => {
-    await handelVideoUpload(profile.id, videoTitle, video);
+    if (isUploading) {
+      return;
+    }
+
+    if (!videoTitle?.trim()) {
+      showAlertPopup('Error', 'Please enter a video title.', 'Ok');
+      return;
+    }
+
+    if (!video?.uri) {
+      showAlertPopup('Error', 'Please select a video to upload.', 'Ok');
+      return;
+    }
+
+    // Start upload in background and immediately return user to profile.
+    // This avoids blocking the UI with long-running upload wait time.
+    Promise.resolve(
+      handleVideoUploadAction(profile.id, videoTitle, video, {
+        showLoader: false,
+        showSuccessPopup: false,
+        showErrorPopup: false,
+      }),
+    ).catch(() => {});
     onCancel();
   };
 
@@ -50,7 +79,10 @@ const AddStoreVideoComponent = ({
         subTitle="Add store video and title for same video"
         showFooter={true}
         primaryButtonText="Upload Video"
-        dangerButtonText="Preview Video">
+        dangerButtonText="Preview Video"
+        submitDisabled={isUploading}
+        primaryButtonLoading={isUploading}
+      >
         <IconInputWithoutLabel
           placeholder="Video Title Here"
           value={videoTitle}
@@ -78,6 +110,7 @@ const mapStateToProps = state => {
   return {
     videoTitle: state.shopVideoPreview.shopVideoTitle,
     video: state.shopVideoPreview.shopVideo,
+    uploadStatus: state.shopVideoPreview.upload.status,
     profile: state.profile,
   };
 };
@@ -85,8 +118,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     handelVideoTitle: videoTitle => dispatch(handelVideoTitle(videoTitle)),
-    handelVideoUpload: (storeId, videoTitle, video) =>
-      dispatch(handelVideoUpload(storeId, videoTitle, video)),
+    handelVideoUpload: (storeId, videoTitle, video, options) =>
+      dispatch(handelVideoUpload(storeId, videoTitle, video, options)),
   };
 };
 

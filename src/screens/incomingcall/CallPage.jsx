@@ -1,20 +1,49 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import {Button, StyleSheet, View} from 'react-native';
-import {connect} from 'react-redux';
+import {
+  Alert,
+  BackHandler,
+  Linking,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { connect } from 'react-redux';
 import ZegoUIKitPrebuiltCall from '@zegocloud/zego-uikit-prebuilt-call-rn';
 // import ZegoUIKit, {ZegoToggleCameraButton} from @zego-uikit/components-rn
 // import {ZegoUIKitPrebuiltCall} from @zego-uikit/prebuilt-call-rn
 import ZegoUIKit from '@zegocloud/zego-uikit-rn';
 import BackIcon from '../../components/BackIcon';
-import {moderateScale} from 'react-native-size-matters';
+import { moderateScale } from 'react-native-size-matters';
 import CallMenuBar from './CallMenuBar';
-import {appConfig} from '../../config/config';
+import { appConfig } from '../../config/config';
+import { CommonActions, useFocusEffect } from '@react-navigation/native';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import {
   getIncomingCallQueue,
   updateCallStatus,
 } from '../../actions/callActions';
-import {CALL_STATUS, LOGIN_MODES} from '../../utils/appConstants';
+import { CALL_STATUS, LOGIN_MODES } from '../../utils/appConstants';
+
+const getRemoteParticipantCount = roomUserUpdatePayload => {
+  if (Array.isArray(roomUserUpdatePayload)) {
+    return roomUserUpdatePayload.length;
+  }
+
+  if (Array.isArray(roomUserUpdatePayload?.userList)) {
+    return roomUserUpdatePayload.userList.length;
+  }
+
+  if (Array.isArray(roomUserUpdatePayload?.users)) {
+    return roomUserUpdatePayload.users.length;
+  }
+
+  if (roomUserUpdatePayload?.userID || roomUserUpdatePayload?.userId) {
+    return 1;
+  }
+
+  return 0;
+};
 
 const CallPageComponent = props => {
   const {
@@ -22,49 +51,194 @@ const CallPageComponent = props => {
     profile,
     navigation,
     fetchIncomingCallQueue,
-    updateCallStatus,
+    updateCallStatus: updateCallStatusAction,
     auth,
   } = props;
-  const {params} = route;
-  const {callId, shopperName, departmentCallerId} = params;
-  const {deviceName, loginMode} = auth;
-  let {name} = profile;
+  const { params } = route;
+  const { callId, departmentCallerId } = params;
+  const { deviceName, loginMode } = auth;
+  let { name } = profile;
   if (loginMode === LOGIN_MODES.DEVICE) {
     name = deviceName;
   }
   const [isMicOn, setMicOn] = useState(true);
   const [isCameraOn, setCameraOn] = useState(true);
   const [frontCamera, setFrontCamera] = useState(true);
+  const hasCompletedCallRef = useRef(false);
+  const isEndingCallRef = useRef(false);
+  const isMicToggleInFlightRef = useRef(false);
+  const isCameraToggleInFlightRef = useRef(false);
+  const isFrontCameraToggleInFlightRef = useRef(false);
+  const hasPeerJoinedRef = useRef(false);
 
-  const onEndCall = () => {
-    updateCallStatus(callId, CALL_STATUS.COMPLETED, onCallStatusUpdate);
-  };
+  const ensureMicrophonePermission = React.useCallback(async () => {
+    const microphonePermission =
+      Platform.OS === 'android'
+        ? PERMISSIONS.ANDROID.RECORD_AUDIO
+        : PERMISSIONS.IOS.MICROPHONE;
 
-  const onCallStatusUpdate = () => {
-    fetchIncomingCallQueue();
-    navigation.navigate('IncomingCallListing');
-  };
+    try {
+      let permissionStatus = await check(microphonePermission);
 
-  const onCameraToggle = () => {
-    ZegoUIKit.turnCameraOn(departmentCallerId.toString(), !isCameraOn).then(
-      () => {
-        setCameraOn(!isCameraOn);
-      },
-    );
-  };
+      if (permissionStatus === RESULTS.GRANTED) {
+        return true;
+      }
 
-  const onUseFrontFacingCamera = () => {
-    ZegoUIKit.useFrontFacingCamera(!frontCamera).then(() => {
-      setFrontCamera(!frontCamera);
+      if (permissionStatus === RESULTS.DENIED) {
+        permissionStatus = await request(microphonePermission);
+        if (permissionStatus === RESULTS.GRANTED) {
+          return true;
+        }
+      }
+
+      if (permissionStatus === RESULTS.BLOCKED) {
+        Alert.alert(
+          'Permission Required',
+          'Microphone access is blocked. Please enable it in app settings to continue the call.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Open Settings',
+              onPress: () => {
+                Linking.openSettings();
+              },
+            },
+          ],
+        );
+      }
+    } catch (error) {
+      console.log('ensureMicrophonePermission error', error);
+    }
+
+    return false;
+  }, []);
+
+  useEffect(() => {
+    ensureMicrophonePermission();
+  }, [ensureMicrophonePermission]);
+
+  useEffect(() => {
+    updateCallStatusAction(callId, CALL_STATUS.IN_PROGRESS, undefined, {
+      showLoader: false,
+      showErrorPopup: false,
     });
+  }, [callId, updateCallStatusAction]);
+
+  const navigateAfterCallEnd = React.useCallback(() => {
+    const parentNavigation = navigation.getParent?.();
+
+    if (parentNavigation && auth?.loginMode !== LOGIN_MODES.DEVICE) {
+      parentNavigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Profile' }],
+        }),
+      );
+      return;
+    }
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'IncomingCallListing' }],
+      }),
+    );
+  }, [auth?.loginMode, navigation]);
+
+  const onCallStatusUpdate = React.useCallback(() => {
+    fetchIncomingCallQueue();
+    navigateAfterCallEnd();
+  }, [fetchIncomingCallQueue, navigateAfterCallEnd]);
+
+  const onEndCall = React.useCallback(async () => {
+    if (hasCompletedCallRef.current || isEndingCallRef.current) {
+      return;
+    }
+
+    hasCompletedCallRef.current = true;
+    isEndingCallRef.current = true;
+
+    try {
+      await ZegoUIKit.leaveRoom();
+    } catch (error) {
+      console.log('leaveRoom error', error);
+    }
+
+    updateCallStatusAction(callId, CALL_STATUS.COMPLETED, onCallStatusUpdate, {
+      showLoader: false,
+      showErrorPopup: false,
+    });
+  }, [callId, onCallStatusUpdate, updateCallStatusAction]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onHardwareBackPress = () => {
+        onEndCall();
+        return true;
+      };
+
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onHardwareBackPress,
+      );
+
+      return () => {
+        subscription.remove();
+      };
+    }, [onEndCall]),
+  );
+
+  const onCameraToggle = async () => {
+    if (isCameraToggleInFlightRef.current) {
+      return;
+    }
+
+    isCameraToggleInFlightRef.current = true;
+
+    try {
+      await ZegoUIKit.turnCameraOn(departmentCallerId.toString(), !isCameraOn);
+      setCameraOn(!isCameraOn);
+    } catch (error) {
+      console.log('turnCameraOn error', error);
+    } finally {
+      isCameraToggleInFlightRef.current = false;
+    }
   };
 
-  const onMicToggle = () => {
-    ZegoUIKit.turnMicrophoneOn(departmentCallerId.toString(), !isMicOn).then(
-      () => {
-        setMicOn(!isMicOn);
-      },
-    );
+  const onUseFrontFacingCamera = async () => {
+    if (isFrontCameraToggleInFlightRef.current) {
+      return;
+    }
+
+    isFrontCameraToggleInFlightRef.current = true;
+
+    try {
+      // The SDK exposes this method name; bracket access avoids a false hook lint hit.
+      // eslint-disable-next-line dot-notation
+      await ZegoUIKit['useFrontFacingCamera'](!frontCamera);
+      setFrontCamera(!frontCamera);
+    } catch (error) {
+      console.log('useFrontFacingCamera error', error);
+    } finally {
+      isFrontCameraToggleInFlightRef.current = false;
+    }
+  };
+
+  const onMicToggle = async () => {
+    if (isMicToggleInFlightRef.current) {
+      return;
+    }
+
+    isMicToggleInFlightRef.current = true;
+
+    try {
+      await ZegoUIKit.turnMicrophoneOn('', !isMicOn);
+      setMicOn(!isMicOn);
+    } catch (error) {
+      console.log('turnMicrophoneOn error', error);
+    } finally {
+      isMicToggleInFlightRef.current = false;
+    }
   };
 
   const onMorePress = () => {
@@ -79,7 +253,7 @@ const CallPageComponent = props => {
     <View style={styles.container}>
       {/* {!isJoin && <View style={styles.videoContainer} />} */}
       <View style={styles.backIcon}>
-        <BackIcon navigate={navigation} />
+        <BackIcon navigate={navigation} onBack={onEndCall} />
       </View>
       <ZegoUIKitPrebuiltCall
         appID={appConfig.appID}
@@ -88,18 +262,34 @@ const CallPageComponent = props => {
         userName={name}
         callID={callId}
         config={{
+          scenario: 'Communication',
+          turnOnMicrophoneWhenJoining: true,
+          turnOnCameraWhenJoining: true,
+          useSpeakerWhenJoining: true,
           onOnlySelfInRoom: () => {
             console.log('onOnlySelfInRoom', 'onOnlySelfInRoom');
-            onEndCall();
+            if (hasPeerJoinedRef.current) {
+              onEndCall();
+            }
           },
           onHangUp: () => {
             onEndCall();
           },
           roomUserUpdate: user => {
             console.log('roomUserUpdate', user);
+            if (getRemoteParticipantCount(user) > 0) {
+              hasPeerJoinedRef.current = true;
+            }
           },
           bottomMenuBarConfig: {
             buttons: [],
+          },
+          audioConfig: {
+            bitrate: 32000,
+            codec: 'AAC',
+            enableANS: true,
+            enableAGC: true,
+            enableAEC: true,
           },
         }}
       />
@@ -138,7 +328,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     top: 0,
     left: 0,
-    margin: moderateScale(20),
+    margin: moderateScale(40),
   },
   menuBar: {
     position: 'absolute',
@@ -157,8 +347,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchIncomingCallQueue: () => dispatch(getIncomingCallQueue()),
-    updateCallStatus: (callId, callStatus, onCallStatusUpdate) =>
-      dispatch(updateCallStatus(callId, callStatus, onCallStatusUpdate)),
+    updateCallStatus: (callId, callStatus, onCallStatusUpdate, options) =>
+      dispatch(
+        updateCallStatus(callId, callStatus, onCallStatusUpdate, options),
+      ),
   };
 };
 

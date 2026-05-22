@@ -33,12 +33,11 @@ const initialFormErrors = {
 const deviceListingComponent = ({
   locationId,
   fetchDevices,
-  isLoading,
   updateDevice,
   departments,
   devices,
 }) => {
-  const [fetchData, setFetchData] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [addDeviceModalVisible, setAddDeviceModalVisible] = useState(false);
@@ -47,16 +46,21 @@ const deviceListingComponent = ({
   useEffect(() => {
     console.log('Device component mounted');
 
-    fetchDevices(locationId);
+    fetchDevices(locationId, {showLoader: false, showErrorPopup: false});
 
     return () => {
       console.log('Device component unmounted');
     };
-  }, [fetchData]);
+  }, [fetchDevices, locationId]);
 
   //Function to handel device refresh
   const onRefresh = () => {
-    setFetchData(!fetchData);
+    setRefreshing(true);
+    Promise.resolve(
+      fetchDevices(locationId, {showLoader: false, showErrorPopup: false}),
+    ).finally(() => {
+      setRefreshing(false);
+    });
   };
 
   //Function to show add device modal
@@ -243,7 +247,7 @@ const deviceListingComponent = ({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
         <View style={styles.listSectionWrapper}>{renderDeviceListing()}</View>
       </ScrollView>
@@ -256,7 +260,6 @@ const deviceListingComponent = ({
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.app.isLoading,
     devices: state.device.storeDevices,
     departments: state.department.storeDepartments,
   };
@@ -264,7 +267,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchDevices: locationId => dispatch(fetchDevices(locationId)),
+    fetchDevices: (locationId, options) =>
+      dispatch(fetchDevices(locationId, options)),
     updateDevice: payload => dispatch(updateDevice(payload)),
   };
 };

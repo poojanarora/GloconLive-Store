@@ -84,7 +84,7 @@ android {
         applicationId "com.gloconlive.store"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 11
+        versionCode 12
         versionName "4.0"
         missingDimensionStrategy 'store', 'play'
         // missingDimensionStrategy 'react-native-camera', 'general'

@@ -136,6 +136,16 @@ const ConceirgeShopperLoginComponent = ({ navigation, isLoading, onLogin }) => {
               onChangeText={handelPassword}
               onClick={togglePassword}
             />
+                <View style={styles.signInAsDeviceWrapper}>
+              <Text style={[styles.signUpLabel,{marginTop:10}]}>
+                Are you a salesman?{' '}
+                <Text
+                  style={styles.labelPrimary}
+                  onPress={() => navigation.navigate('DeviceLogin')}>
+                  Link this Device
+                </Text>
+              </Text>
+            </View>
             <View style={styles.buttonSectionWrapper}>
               <ButtonComp btnText="Sign In" action={onSubmit} />
             </View>

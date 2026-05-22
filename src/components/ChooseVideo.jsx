@@ -1,5 +1,5 @@
 import React from 'react';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { StyleSheet, TouchableOpacity, Text, Image, View } from 'react-native';
 import {
   moderateScale,
@@ -12,37 +12,82 @@ import showAlertPopup from './AlertComp';
 
 import AlertComp from './AlertComp';
 // import DocumentPicker, { types } from 'react-native-document-picker';
-import { isCancel } from '@react-native-documents/picker'
+import { isCancel } from '@react-native-documents/picker';
 import BrowseFiles from './BrowseFiles';
 
 const ChooseVideo = ({ selectedVideo, onVideoSelection }) => {
+  const hasUploadedVideo =
+    !!selectedVideo?.uri && (!!selectedVideo?.fileName || !!selectedVideo?.type);
+
+  const logSelectedVideoDiagnostics = video => {
+    const durationInSeconds = video?.duration || 0;
+    const fileSizeBytes = video?.fileSize || 0;
+    const fileSizeInMB = fileSizeBytes ? (fileSizeBytes / (1024 * 1024)).toFixed(2) : '0.00';
+    const estimatedBitrateKbps =
+      durationInSeconds > 0
+        ? ((fileSizeBytes * 8) / durationInSeconds / 1000).toFixed(2)
+        : '0.00';
+
+    console.log('[video-diagnostics] selection', {
+      fileName: video?.fileName || video?.name,
+      type: video?.type,
+      durationInSeconds,
+      fileSizeBytes,
+      fileSizeInMB,
+      estimatedBitrateKbps,
+      uri: video?.uri,
+      note: 'Client sends original selected file. No client-side compression is applied in this flow.',
+    });
+  };
+
+  const validateAndSelectVideo = result => {
+    const video = result?.assets?.[0];
+
+    if (result?.didCancel || !video) {
+      return;
+    }
+
+    if (video?.duration > 40) {
+      showAlertPopup('Oops', 'Video duration should be 40 seconds or less', 'Cancel');
+      return;
+    }
+
+    if (video?.fileSize > 209715200) {
+      showAlertPopup('Oops', 'Video file size should be 200 MB or less', 'Cancel');
+      return;
+    }
+    
+    logSelectedVideoDiagnostics(video);
+    onVideoSelection(video);
+  };
+
   const pickVideo = async () => {
     try {
-      //Document picker example
-      // let result = await DocumentPicker.pick({
-      //   type: types.video,
-      //   copyTo: 'cachesDirectory',
-      // });
-      let result = await launchImageLibrary({
+      const result = await launchImageLibrary({
         mediaType: 'video',
       });
-      const video = result.assets[0];
-      if (video?.duration > 10) {
-        showAlertPopup('Oops', "Video duration should be less than 10 sec", 'Cancel');
-      } else if (video?.fileSize > 2097152) {
-        showAlertPopup('Oops', "Video file size should be less than 2 MB", 'Cancel');
-      } else if (!video?.type.includes('mp4')) {
-        showAlertPopup('Oops', 'Supported video format: .mp4', 'Ok');
-      } else if (result.length !== 0) {
-        onVideoSelection(video);
-      }
+      validateAndSelectVideo(result);
     } catch (err) {
       if (isCancel(err)) {
-        // If user canceled the document selection
-        console.log('User Cancelled browser file');
+        console.log('User cancelled gallery picker');
       } else {
-        // For Unknown Error
-        console.log('Unknown Error ', JSON.stringify(err));
+        console.log('Unknown error selecting video', JSON.stringify(err));
+      }
+    }
+  };
+
+  const recordVideo = async () => {
+    try {
+      const result = await launchCamera({
+        mediaType: 'video',
+        durationLimit: 40,
+      });
+      validateAndSelectVideo(result);
+    } catch (err) {
+      if (isCancel(err)) {
+        console.log('User cancelled camera recording');
+      } else {
+        console.log('Unknown error recording video', JSON.stringify(err));
       }
     }
   };
@@ -51,15 +96,29 @@ const ChooseVideo = ({ selectedVideo, onVideoSelection }) => {
     <>
       {selectedVideo?.uri ? (
         <>
-          <TouchableOpacity
-            style={styles.browseFileSectionWrapper}
-            onPress={pickVideo}>
-            <Text style={styles.browseFiles}>Browse Files</Text>
-          </TouchableOpacity>
-          <VideoThumbnail url={selectedVideo.uri} />
+          <View style={styles.actionWrapper}>
+            <TouchableOpacity
+              style={[styles.browseFileSectionWrapper, styles.actionButton]}
+              onPress={pickVideo}>
+              <Text style={styles.browseFiles}>Browse Files</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.browseFileSectionWrapper, styles.actionButton]}
+              onPress={recordVideo}>
+              <Text style={styles.browseFiles}>Record Video</Text>
+            </TouchableOpacity>
+          </View>
+          {hasUploadedVideo ? <VideoThumbnail url={selectedVideo.uri} /> : null}
         </>
       ) : (
-        <BrowseFiles browseFiles={pickVideo} />
+        <View style={styles.actionWrapper}>
+          <BrowseFiles browseFiles={pickVideo} />
+          <TouchableOpacity
+            style={[styles.browseFileSectionWrapper, styles.recordButton]}
+            onPress={recordVideo}>
+            <Text style={styles.browseFiles}>Record Video</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </>
   );
@@ -85,6 +144,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: moderateVerticalScale(5),
+  },
+  actionWrapper: {
+    marginHorizontal: moderateScale(15),
+    marginTop: moderateScale(20),
+    gap: moderateScale(10),
+  },
+  actionButton: {
+    marginHorizontal: 0,
+    marginTop: 0,
+  },
+  recordButton: {
+    marginHorizontal: 0,
+    marginTop: 0,
+    borderStyle: 'solid',
   },
   textStyle: {
     color: COLORS.primaryTextColor,

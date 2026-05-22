@@ -30,13 +30,12 @@ const initialFormErrors = {
 
 const DepartmentListingComponent = ({
   locationId,
-  isLoading,
   departments,
   fetchDepartments,
   addDepartment,
   updateDeparment,
 }) => {
-  const [fetchData, setFetchData] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [addDepartmentModalVisible, setAddDepartmentModalVisible] =
@@ -47,16 +46,21 @@ const DepartmentListingComponent = ({
     console.log('Department component mounted');
 
     //Function callings
-    fetchDepartments(locationId);
+    fetchDepartments(locationId, {showLoader: false, showErrorPopup: false});
 
     return () => {
       console.log('Department component unmounted');
     };
-  }, [fetchData]);
+  }, [fetchDepartments, locationId]);
 
   //Function to handel department refresh
   const onRefresh = () => {
-    setFetchData(!fetchData);
+    setRefreshing(true);
+    Promise.resolve(
+      fetchDepartments(locationId, {showLoader: false, showErrorPopup: false}),
+    ).finally(() => {
+      setRefreshing(false);
+    });
   };
 
   //Function to show add department modal
@@ -185,7 +189,7 @@ const DepartmentListingComponent = ({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
         refreshControl={
-          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
         <View style={styles.listSectionWrapper}>
           {renderDepartmentListing()}
@@ -200,14 +204,14 @@ const DepartmentListingComponent = ({
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.app.isLoading,
     departments: state.department.storeDepartments,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchDepartments: locationId => dispatch(fetchDepartments(locationId)),
+    fetchDepartments: (locationId, options) =>
+      dispatch(fetchDepartments(locationId, options)),
     addDepartment: payload => dispatch(addDepartment(payload)),
     updateDeparment: payload => dispatch(updateDeparment(payload)),
   };

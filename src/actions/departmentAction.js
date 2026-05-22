@@ -7,27 +7,39 @@ import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 /**
  * Function to fetch departments.
  */
-export const fetchDepartments = locationId => async dispatch => {
+export const fetchDepartments =
+  (locationId, options = {}) => async dispatch => {
+  const {showLoader = true, showErrorPopup = true} = options;
   try {
-    dispatch(setLoading(true));
+    if (showLoader) {
+      dispatch(setLoading(true));
+    }
     let response = await axiosPrivate.post('/shopper/get-departments', {
       location_id: locationId,
     });
     if (response.data.success === true) {
       const data = response.data?.data;
       dispatch(storeDepartments(data));
-      dispatch(setLoading(false));
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
     } else {
-      dispatch(setLoading(false));
-      showAlertPopup('Oops', response.data?.message, 'Cancel');
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
+      if (showErrorPopup) {
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
+      }
     }
   } catch (error) {
-    dispatch(setLoading(false));
+    if (showLoader) {
+      dispatch(setLoading(false));
+    }
     console.log('In fetch departments catch block');
-    const { status, data } = error.response;
-    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+    const {status, data} = error.response || {};
+    if (status === 401 && data && 'is_subscribed' in data && !data.is_subscribed) {
       dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
-    } else {
+    } else if (showErrorPopup) {
       showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
     }
   }

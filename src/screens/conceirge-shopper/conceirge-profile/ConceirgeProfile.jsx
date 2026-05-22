@@ -48,7 +48,6 @@ const initialChangePasswordErrors = {
 };
 
 const ConceirgeProfileComponent = ({
-  isLoading,
   auth,
   profile,
   setLoading,
@@ -59,6 +58,7 @@ const ConceirgeProfileComponent = ({
   changeConceirgeShopperPassword,
   navigation,
 }) => {
+  const [refreshing, setRefreshing] = useState(false);
   const [updatePasswordModalVisible, setUpdatePasswordModalVisible] =
     useState(false);
   const [imagePickerVisible, setImagePickerVisible] = useState(false);
@@ -80,7 +80,10 @@ const ConceirgeProfileComponent = ({
     console.log('Profile component mounted');
 
     //Calling functions
-    fetchConceirgeShopperProfileInfo(auth.email);
+    fetchConceirgeShopperProfileInfo(auth.email, {
+      showLoader: false,
+      showErrorPopup: false,
+    });
 
     //Cleanup function
     return () => {
@@ -110,7 +113,15 @@ const ConceirgeProfileComponent = ({
 
   //Function to handel profile refresh
   const onRefresh = () => {
-    fetchConceirgeShopperProfileInfo(auth.email);
+    setRefreshing(true);
+    Promise.resolve(
+      fetchConceirgeShopperProfileInfo(auth.email, {
+        showLoader: false,
+        showErrorPopup: false,
+      }),
+    ).finally(() => {
+      setRefreshing(false);
+    });
   };
 
   //Function to launch gallery to select image
@@ -368,7 +379,7 @@ const ConceirgeProfileComponent = ({
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
           <View style={styles.formSectionWrapper}>
             <View>
@@ -436,7 +447,6 @@ const ConceirgeProfileComponent = ({
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.app.isLoading,
     auth: state.app.auth,
     profile: state.profile,
   };
@@ -445,8 +455,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setLoading: loading => dispatch(setLoading(loading)),
-    fetchConceirgeShopperProfileInfo: email =>
-      dispatch(fetchConceirgeShopperProfileInfo(email)),
+    fetchConceirgeShopperProfileInfo: (email, options) =>
+      dispatch(fetchConceirgeShopperProfileInfo(email, options)),
     editProfileInfo: obj => dispatch(storeProfile(obj)),
     updateConceirgeShopperProfileInformation: payload =>
       dispatch(updateConceirgeShopperProfileInformation(payload)),

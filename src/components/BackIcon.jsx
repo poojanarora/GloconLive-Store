@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Image, TouchableOpacity } from 'react-native';
-import {
-  scale,
-  moderateScale,
-  moderateVerticalScale,
-} from 'react-native-size-matters';
+import { scale, moderateScale } from 'react-native-size-matters';
 import { images } from '../constant';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,6 +8,11 @@ const BackIcon = props => {
   const navigation = useNavigation();
 
   const handelClick = () => {
+    if (typeof props.onBack === 'function') {
+      props.onBack();
+      return;
+    }
+
     if (navigation.canGoBack()) {
       navigation.goBack();
     }
@@ -19,14 +20,7 @@ const BackIcon = props => {
 
   return (
     <TouchableOpacity style={styles.menuIconWrapper} onPress={handelClick}>
-      <Image
-        style={{
-          width: moderateScale(22),
-          height: moderateScale(22),
-          resizeMode: 'contain',
-        }}
-        source={images.arrow_left}
-      />
+      <Image style={styles.backImage} source={images.arrow_left} />
     </TouchableOpacity>
   );
 };
@@ -39,6 +33,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#7dacaf',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  backImage: {
+    width: moderateScale(22),
+    height: moderateScale(22),
+    resizeMode: 'contain',
   },
 });
 

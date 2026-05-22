@@ -15,13 +15,13 @@ import { connect } from 'react-redux';
 import Spinner from '../../components/Spinner';
 import { fetchLocations } from '../../actions/locationAction';
 const LocationVideoListingComponent = ({
-  isLoading,
   profile,
   locations,
-  fetchLocations,
+  fetchLocations: fetchLocationsAction,
   navigation,
+  uploadStatus,
 }) => {
-  const [fetchData, setFetchData] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   // useEffect(() => {
   //   console.log('Location listing component mounted');
@@ -37,20 +37,37 @@ const LocationVideoListingComponent = ({
     useCallback(() => {
       console.log('Location listing component mounted');
       //Function callings
-      fetchLocations(profile.id);
+      fetchLocationsAction(profile.id, {
+        showLoader: false,
+        showErrorPopup: false,
+      });
       //Clean up function
       return () => {
         console.log('Location listing component unmounted');
       };
-
-
-
-    }, [fetchData])
+    }, [fetchLocationsAction, profile.id]),
   );
+
+  useEffect(() => {
+    if (uploadStatus === 'success') {
+      fetchLocationsAction(profile.id, {
+        showLoader: false,
+        showErrorPopup: false,
+      });
+    }
+  }, [fetchLocationsAction, profile.id, uploadStatus]);
 
   //Function to handel location refresh
   const onRefresh = () => {
-    setFetchData(!fetchData);
+    setRefreshing(true);
+    Promise.resolve(
+      fetchLocationsAction(profile.id, {
+        showLoader: false,
+        showErrorPopup: false,
+      }),
+    ).finally(() => {
+      setRefreshing(false);
+    });
   };
 
   // Function to handel location selection
@@ -68,12 +85,13 @@ const LocationVideoListingComponent = ({
   // Function to render location listing
   const renderLocationListing = () => {
     if (locations) {
-      return locations.map((item, key) => {
+      return locations.map(item => {
         return (
           <TouchableOpacity
             key={item.id}
             style={[styles.listItemWrapper, styles.shadow]}
-            onPress={() => handelSelectLocation(item)}>
+            onPress={() => handelSelectLocation(item)}
+          >
             {/* <TouchableOpacity style={styles.editIconWrapper}>
               <Image style={styles.editIconStyle} source={images.edit} />
             </TouchableOpacity> */}
@@ -91,10 +109,11 @@ const LocationVideoListingComponent = ({
       <View style={styles.body}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={styles.scrollContent}
           refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
-          }>
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           <View style={styles.listSectionWrapper}>
             {renderLocationListing()}
           </View>
@@ -106,15 +125,16 @@ const LocationVideoListingComponent = ({
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.app.isLoading,
     profile: state.profile,
     locations: state.location.storeLocations,
+    uploadStatus: state.location.locationVideoUpload.status,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchLocations: storeId => dispatch(fetchLocations(storeId)),
+    fetchLocations: (storeId, options) =>
+      dispatch(fetchLocations(storeId, options)),
   };
 };
 

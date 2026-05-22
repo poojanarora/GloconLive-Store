@@ -1,5 +1,5 @@
-import {shopVideoActionTypes} from '../actionTypes/actionTypes';
-import {initialState} from '../state/initialState';
+import { shopVideoActionTypes } from '../actionTypes/actionTypes';
+import { initialState } from '../state/initialState';
 
 const shopVideoPreview = (state = initialState.shopVideoPreview, action) => {
   switch (action.type) {
@@ -12,6 +12,28 @@ const shopVideoPreview = (state = initialState.shopVideoPreview, action) => {
       return {
         ...state,
         shopVideoTitle: action.payload,
+      };
+    case shopVideoActionTypes.SET_SHOP_VIDEO_UPLOAD_STATE:
+      return {
+        ...state,
+        upload: {
+          ...state.upload,
+          ...action.payload,
+        },
+      };
+    case shopVideoActionTypes.DISMISS_SHOP_VIDEO_UPLOAD_BANNER:
+      return {
+        ...state,
+        upload: {
+          ...state.upload,
+          visible: false,
+        },
+      };
+    case shopVideoActionTypes.RESET_SHOP_VIDEO_FORM:
+      return {
+        ...state,
+        shopVideoTitle: '',
+        shopVideo: null,
       };
     default:
       return state;

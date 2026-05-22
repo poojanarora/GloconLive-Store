@@ -1,38 +1,29 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  RefreshControl,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, View } from 'react-native';
 import styles from './locationVideoAddStyles';
 import { images } from '../../constant';
-import ButtonComp from '../../components/ButtonComp';
 import IconInputWithoutLabel from '../../components/IconInputWithoutLabel';
-import PopupModal from '../../components/PopupModal';
 import ChooseVideo from '../../components/ChooseVideo';
 import { connect } from 'react-redux';
 import Spinner from '../../components/Spinner';
-import { addLocationVideo, fetchStoreVideo } from '../../actions/locationAction';
+import { addLocationVideo } from '../../actions/locationAction';
 import PopupContent from '../../components/PopupContent';
 import AlertComp from '../../components/AlertComp';
 import { MESSAGE_CONST } from '../../utils/appConstants';
 const LocationVideoAddComponent = ({
   route,
-  isLoading,
   profile,
-  addLocationVideo,
+  addLocationVideo: addLocationVideoAction,
   navigation,
+  uploadStatus,
 }) => {
+  const isUploading = uploadStatus === 'uploading';
   const { locationId, locationName, locationVideoTitle, locationVideoUrl } =
     route.params;
   const initialFormValue = {
     videoTitle: locationVideoTitle,
     video: {
-      uri: locationVideoUrl
+      uri: locationVideoUrl,
     },
   };
   // const [fetchData, setFetchData] = useState(false);
@@ -68,22 +59,33 @@ const LocationVideoAddComponent = ({
   };
 
   const handelSubmit = async () => {
+    if (isUploading) {
+      return;
+    }
+
     let validateResponse = validate(formValues);
     if (Object.keys(validateResponse).length > 0) {
       setFormErrors(validateResponse);
       if (validateResponse.video) {
-        AlertComp(MESSAGE_CONST.OOPS, validateResponse.video, MESSAGE_CONST.OK)
+        AlertComp(MESSAGE_CONST.OOPS, validateResponse.video, MESSAGE_CONST.OK);
       }
       return;
     }
     let payload = {
       store_id: profile.id,
       location_id: locationId,
+      locationName,
       video_title: formValues.videoTitle,
       video: formValues.video,
     };
-    await addLocationVideo(payload);
-    handelClose()
+    Promise.resolve(
+      addLocationVideoAction(payload, {
+        showLoader: false,
+        showSuccessPopup: false,
+        showErrorPopup: false,
+      }),
+    ).catch(() => {});
+    handelClose();
   };
 
   const handelVideoTitle = e => {
@@ -105,8 +107,11 @@ const LocationVideoAddComponent = ({
         title={locationName}
         subTitle="Location Video."
         primaryButtonText="Upload"
+        submitDisabled={isUploading}
+        primaryButtonLoading={isUploading}
         showFooter={true}
-        dangerButtonText="Cancel">
+        dangerButtonText="Cancel"
+      >
         <IconInputWithoutLabel
           placeholder="Video Title"
           name="videoTitle"
@@ -135,15 +140,16 @@ const LocationVideoAddComponent = ({
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.app.isLoading,
     profile: state.profile,
+    uploadStatus: state.location.locationVideoUpload.status,
     // selectedLocationVideo: state.location.selectedLocationVideo,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    addLocationVideo: payload => dispatch(addLocationVideo(payload)),
+    addLocationVideo: (payload, options) =>
+      dispatch(addLocationVideo(payload, options)),
     // fetchLocationVideo: (storeId, LocationId) => dispatch(fetchStoreVideo(storeId, LocationId))
   };
 };

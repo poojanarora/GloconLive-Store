@@ -4,7 +4,9 @@ import {callActionTypes} from '../actionTypes/actionTypes';
 import axiosPrivate from '../config/privateApi';
 import {CALL_STATUS, LOGIN_MODES, MESSAGE_CONST, SUBSCRIPTION_EVENTS} from '../utils/appConstants';
 
-export const getIncomingCallQueue = () => async (dispatch, getState) => {
+export const getIncomingCallQueue =
+  ({showLoader = true, showErrorPopup = true} = {}) =>
+  async (dispatch, getState) => {
   try {
     const {profile, app} = getState();
     let payload = {
@@ -15,7 +17,9 @@ export const getIncomingCallQueue = () => async (dispatch, getState) => {
         department_id: app.auth.departmentId,
       };
     }
-    dispatch(setLoading(true));
+    if (showLoader) {
+      dispatch(setLoading(true));
+    }
     let response = await axiosPrivate.post(
       '/store/get-incomming-call-details',
       payload,
@@ -24,18 +28,26 @@ export const getIncomingCallQueue = () => async (dispatch, getState) => {
       const data = response.data?.data;
       const formattedData = getFormattedCallQueue(data);
       dispatch(setIncomingCallQueue(formattedData));
-      dispatch(setLoading(false));
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
     } else {
-      dispatch(setLoading(false));
-      showAlertPopup('Oops', response.data?.message, 'Cancel');
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
+      if (showErrorPopup) {
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
+      }
     }
   } catch (error) {
-    dispatch(setLoading(false));
+    if (showLoader) {
+      dispatch(setLoading(false));
+    }
     console.log('In fetch incoming call queue catch block');
-    const { status, data } = error.response;
+    const { status, data } = error.response || {};
     if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
       dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
-    } else {
+    } else if (showErrorPopup) {
       showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
     }
   }
@@ -45,6 +57,13 @@ const setIncomingCallQueue = callQueue => {
   return {
     type: callActionTypes.SET_INCOMING_CALL_QUEUE,
     payload: callQueue,
+  };
+};
+
+export const removeIncomingCall = callId => {
+  return {
+    type: callActionTypes.REMOVE_INCOMING_CALL,
+    payload: callId,
   };
 };
 
@@ -68,29 +87,56 @@ const getFormattedCallQueue = data => {
   return callQueue;
 };
 
-export const updateCallStatus = (callId, status, onStatusUpdate) => async dispatch => {
+export const updateCallStatus =
+  (
+    callId,
+    status,
+    onStatusUpdate,
+    {showLoader = true, showErrorPopup = true} = {},
+  ) =>
+  async dispatch => {
   try {
-    payload = {
+    const payload = {
       call_id: callId,
       call_status: status,
+    };
+    if (showLoader) {
+      dispatch(setLoading(true));
     }
-    dispatch(setLoading(true));
     let response = await axiosPrivate.post('/store/call-status-update', payload);
     if (response.data.success === true) {
-      dispatch(setLoading(false));
-      onStatusUpdate(callId);
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
+      if (typeof onStatusUpdate === 'function') {
+        onStatusUpdate(callId);
+      }
+      return response.data;
     } else {
-      dispatch(setLoading(false));
-      showAlertPopup('Oops', response.data?.message, 'Cancel');
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
+      if (showErrorPopup) {
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
+      }
+      return null;
     }
   } catch (error) {
-    dispatch(setLoading(false));
+    if (showLoader) {
+      dispatch(setLoading(false));
+    }
     console.log('In update call status catch block');
-    const { status, data } = error.response;
-    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+    const {status: responseStatus, data} = error.response || {};
+    if (
+      responseStatus === 401 &&
+      data &&
+      'is_subscribed' in data &&
+      !data.is_subscribed
+    ) {
       dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
-    } else {
+    } else if (showErrorPopup) {
       showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
     }
+    throw error;
   }
 };

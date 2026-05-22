@@ -44,7 +44,7 @@ target 'GLOCONLive' do
       end
     end
   end
-  setup_permissions(['Camera'])
+  setup_permissions(['Camera', 'Microphone'])
 end
 
 post_install do |installer|

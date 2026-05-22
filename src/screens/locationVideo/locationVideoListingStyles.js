@@ -1,10 +1,10 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import {
   scale,
   moderateScale,
   moderateVerticalScale,
 } from 'react-native-size-matters';
-import {COLORS} from '../../constant';
+import { COLORS } from '../../constant';
 
 const styles = StyleSheet.create({
   safeAreaViewStyle: {
@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     justifyContent: 'space-between',
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   listSectionWrapper: {
     //backgroundColor: 'orange',

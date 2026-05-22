@@ -8,9 +8,13 @@ import { MESSAGE_CONST, SUBSCRIPTION_EVENTS } from '../utils/appConstants';
 /**
  * Function to fetch profile information.
  */
-export const fetchProfileInfo = email => async dispatch => {
+export const fetchProfileInfo =
+  (email, options = {}) => async dispatch => {
+  const {showLoader = true, showErrorPopup = true} = options;
   try {
-    dispatch(setLoading(true));
+    if (showLoader) {
+      dispatch(setLoading(true));
+    }
     let response = await axiosPrivate.post('/store/get-profile', {
       email: email,
     });
@@ -32,20 +36,28 @@ export const fetchProfileInfo = email => async dispatch => {
         video: data.video_url,
       };
       dispatch(storeProfile(profileObj));
-      dispatch(setLoading(false));
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
       // const loginForm = { userID: data.id.toString(), userName: data.name };
       // dispatch(zimLogin(loginForm));
     } else {
-      dispatch(setLoading(false));
-      showAlertPopup('Oops', response.data?.message, 'Cancel');
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
+      if (showErrorPopup) {
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
+      }
     }
   } catch (error) {
-    dispatch(setLoading(false));
+    if (showLoader) {
+      dispatch(setLoading(false));
+    }
     console.log('In catch block of fetchProfileInfo');
-    const { status, data } = error.response;
-    if (status === 401 && 'is_subscribed' in data && !data.is_subscribed) {
+    const {status, data} = error.response || {};
+    if (status === 401 && data && 'is_subscribed' in data && !data.is_subscribed) {
       dispatch(emitEvent(SUBSCRIPTION_EVENTS.SUBSCRIPTION_ENDED));
-    } else {
+    } else if (showErrorPopup) {
       console.log('In catch block of fetchProfileInfo showAlertPopup');
       showAlertPopup(MESSAGE_CONST.OOPS, error?.message, MESSAGE_CONST.CANCEL);
     }
@@ -55,9 +67,13 @@ export const fetchProfileInfo = email => async dispatch => {
 /**
  * Function to fetch conceirge shopper profile information.
  */
-export const fetchConceirgeShopperProfileInfo = email => async dispatch => {
+export const fetchConceirgeShopperProfileInfo =
+  (email, options = {}) => async dispatch => {
+  const {showLoader = true, showErrorPopup = true} = options;
   try {
-    dispatch(setLoading(true));
+    if (showLoader) {
+      dispatch(setLoading(true));
+    }
     let response = await axiosPrivate.post('/conceirge-shopper/get-profile', {
       email: email,
     });
@@ -74,17 +90,27 @@ export const fetchConceirgeShopperProfileInfo = email => async dispatch => {
         shopperCalledId: data?.conceirge_shopper_information.shopper_caller_id,
       };
       dispatch(storeProfile(profileObj));
-      dispatch(setLoading(false));
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
       // const loginForm = { userID: data.id.toString(), userName: data.name };
       // dispatch(zimLogin(loginForm));
     } else {
-      dispatch(setLoading(false));
-      showAlertPopup('Oops', response.data?.message, 'Cancel');
+      if (showLoader) {
+        dispatch(setLoading(false));
+      }
+      if (showErrorPopup) {
+        showAlertPopup('Oops', response.data?.message, 'Cancel');
+      }
     }
   } catch (error) {
-    dispatch(setLoading(false));
+    if (showLoader) {
+      dispatch(setLoading(false));
+    }
     console.log('In catch block');
-    showAlertPopup('Oops', error?.message, 'Cancel');
+    if (showErrorPopup) {
+      showAlertPopup('Oops', error?.message, 'Cancel');
+    }
   }
 };
 

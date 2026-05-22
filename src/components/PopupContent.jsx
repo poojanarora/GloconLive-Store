@@ -52,6 +52,7 @@ const PopupContent = props => {
                   btnText={props.primaryButtonText}
                   action={props.submitAction}
                   disabled={props.submitDisabled}
+                  loading={props.primaryButtonLoading}
                 />
               </View>
 

@@ -1,5 +1,3 @@
-import {LOGIN_MODES} from '../utils/appConstants';
-
 export const initialState = {
   app: {
     emitter: null,
@@ -30,7 +28,17 @@ export const initialState = {
   },
   location: {
     storeLocations: [],
-    selectedLocationVideo: {uri: ''},
+    selectedLocationVideo: { uri: '' },
+    locationVideoUpload: {
+      status: 'idle',
+      visible: false,
+      message: '',
+      locationId: null,
+      locationName: '',
+      startedAt: null,
+      completedAt: null,
+      error: '',
+    },
     storeLocationVideos: [
       {
         id: 101,
@@ -78,6 +86,15 @@ export const initialState = {
   shopVideoPreview: {
     shopVideoTitle: '',
     shopVideo: null,
+    upload: {
+      status: 'idle',
+      visible: false,
+      message: '',
+      videoTitle: '',
+      startedAt: null,
+      completedAt: null,
+      error: '',
+    },
   },
   chat: {
     zim: null,

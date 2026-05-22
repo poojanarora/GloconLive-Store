@@ -10,26 +10,28 @@ import showAlertPopup from './AlertComp';
 const BrowseFilesComponent = ({ onVideoSelect, video, browseFiles }) => {
   const pickVideo = async () => {
     try {
-
-
       let result = await launchImageLibrary({
         mediaType: 'video',
       });
-      if (result.assets[0].fileSize > 3000000) {
-        showAlertPopup('Oops', "Video file size should be less than 3 MB", 'Cancel');
-      }
-      else if (!result.didCancel) {
+      if (result.assets[0].fileSize > 209715200) {
+        showAlertPopup(
+          'Oops',
+          'Video file size should be 200 MB or less',
+          'Cancel',
+        );
+      } else if (!result.didCancel) {
         onVideoSelect(result.assets[0]);
       }
     } catch (e) {
-      console.log("User Cancelled browse file")
+      console.log('User Cancelled browse file');
     }
   };
 
   return (
     <TouchableOpacity
       style={styles.browseFileSectionWrapper}
-      onPress={browseFiles || pickVideo}>
+      onPress={browseFiles || pickVideo}
+    >
       {!video ? (
         <>
           <Text style={styles.textStyle}>Drag & Drop here</Text>
@@ -38,7 +40,7 @@ const BrowseFilesComponent = ({ onVideoSelect, video, browseFiles }) => {
         </>
       ) : (
         <Image source={{ uri: video.uri }} style={styles.imgStyle} />
-        //<Text style={styles.textStyle}>{video.uri}</Text> 
+        //<Text style={styles.textStyle}>{video.uri}</Text>
       )}
     </TouchableOpacity>
   );
@@ -68,12 +70,10 @@ const styles = StyleSheet.create({
     color: COLORS.primaryTextColor,
     fontSize: scale(12),
     fontWeight: '500',
-
   },
   imgStyle: {
     height: moderateScale(124),
-    width: moderateScale(100)
-
+    width: moderateScale(100),
   },
   browseFiles: {
     fontWeight: '500',

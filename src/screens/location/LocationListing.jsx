@@ -30,7 +30,6 @@ const initialFormErrors = {
   locationAddress: '',
 };
 const LocationListingComponent = ({
-  isLoading,
   profile,
   locations,
   fetchLocations,
@@ -38,7 +37,7 @@ const LocationListingComponent = ({
   updateLocation,
   navigation,
 }) => {
-  const [fetchData, setFetchData] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [modalVisible, setModalVisible] = useState(false);
@@ -48,17 +47,22 @@ const LocationListingComponent = ({
     console.log('Location listing component mounted');
 
     //Function callings
-    fetchLocations(profile.id);
+    fetchLocations(profile.id, {showLoader: false, showErrorPopup: false});
 
     //Clean up function
     return () => {
       console.log('Location listing component unmounted');
     };
-  }, [fetchData]);
+  }, [profile.id, fetchLocations]);
 
   //Function to handel location refresh
   const onRefresh = () => {
-    setFetchData(!fetchData);
+    setRefreshing(true);
+    Promise.resolve(
+      fetchLocations(profile.id, {showLoader: false, showErrorPopup: false}),
+    ).finally(() => {
+      setRefreshing(false);
+    });
   };
 
   // Function to show add location modal
@@ -218,7 +222,7 @@ const LocationListingComponent = ({
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}
           refreshControl={
-            <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
           <View style={styles.listSectionWrapper}>
             {renderLocationListing()}
@@ -234,7 +238,6 @@ const LocationListingComponent = ({
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.app.isLoading,
     profile: state.profile,
     locations: state.location.storeLocations,
   };
@@ -242,7 +245,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchLocations: storeId => dispatch(fetchLocations(storeId)),
+    fetchLocations: (storeId, options) =>
+      dispatch(fetchLocations(storeId, options)),
     addLocation: payload => dispatch(addLocation(payload)),
     updateLocation: payload => dispatch(updateLocation(payload)),
   };

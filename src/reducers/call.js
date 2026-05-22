@@ -8,6 +8,13 @@ const call = (state = initialState.call, action) => {
         ...state,
         callQueue: [...action.payload],
       };
+    case callActionTypes.REMOVE_INCOMING_CALL:
+      return {
+        ...state,
+        callQueue: state.callQueue.filter(
+          queueItem => queueItem.callId !== action.payload,
+        ),
+      };
     default:
       return state;
   }

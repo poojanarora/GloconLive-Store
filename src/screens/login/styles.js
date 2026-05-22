@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     marginVertical: moderateVerticalScale(5),
   },
   signUpLabelWrapper: {
-    marginTop: moderateVerticalScale(40),
+    marginTop: moderateVerticalScale(20),
     justifyContent: 'center',
     alignItems: 'center',
   },
