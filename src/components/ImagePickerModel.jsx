@@ -21,10 +21,11 @@ const ImagePickerModel = ({show, onImageSelection, onClose}) => {
   const requestStoragePermission = async () => {
     try {
       if (Platform.OS === 'android') {
-        const permission =
-          Platform.Version >= 33
-            ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
-            : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE;
+        if (Platform.Version >= 33) {
+          return true;
+        }
+
+        const permission = PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE;
 
         const granted = await PermissionsAndroid.request(permission, {
           title: 'Storage Permission',
